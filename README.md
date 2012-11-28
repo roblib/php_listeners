@@ -31,7 +31,7 @@ Installation instructions
 
 4\. At the bottom of this file add a third datastore section:
 
-  <datastore id="apimListenerMessages">
+    <datastore id="apimListenerMessages">
     <comment>Messaging Destination for API-M events which update the repository</comment>
     <param name="messageTypes" value="apimUpdate">
       <comment>A space-separated list of message types that will be
@@ -42,7 +42,7 @@ Installation instructions
     <param name="type" value="queue">
       <comment>Optional, defaults to topic.</comment>
     </param>
-  </datastore>
+    </datastore>
 
 5\. Restart Fedora.
 
