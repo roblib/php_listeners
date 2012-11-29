@@ -6,7 +6,6 @@
  * 
  * @author Richard Wincewicz
  */
-
 $connect = new Connect();
 $connect->listen();
 unset($connect);
@@ -17,7 +16,7 @@ class Connect {
     include_once 'message.php';
     include_once 'fedoraConnection.php';
     include_once 'connect.php';
-    include_once 'Derivatives.php';
+    //include_once 'Derivatives.php';
     include_once 'Logging.php';
 
     // Load config file
@@ -40,7 +39,11 @@ class Connect {
     $channel = $this->config_xml->stomp->channel;
 
     // Make a connection
-    $this->con = new Stomp($stomp_url);
+    try {
+      $this->con = new Stomp($stomp_url);
+    } catch (StompException $e) {
+      file_put_contents('php://stderr', "Could not open a connection to $stomp_url - $e");
+    }
     $this->con->sync = TRUE;
     $this->con->setReadTimeout(1);
 
@@ -48,15 +51,13 @@ class Connect {
     try {
       $this->con->subscribe((string) $channel[0], array('activemq.prefetchSize' => 1));
     } catch (Exception $e) {
-      $this->log->lwrite("Could not subscribe to the channel $channel - $e", 'SERVER', NULL, NULL, NULL, 'ERROR');
+      file_put_contents('php://stderr', "Could not subscribe to the channel $channel - $e");
     }
   }
 
   function listen() {
-
     // Receive a message from the queue
     if ($this->msg = $this->con->readFrame()) {
-
       // do what you want with the message
       if ($this->msg != NULL) {
 //        sleep(1);
@@ -111,11 +112,37 @@ class Connect {
 //                    $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
 //                    $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");
                     if (in_array($message->dsID, $trigger_datastreams) || $message->dsID == NULL) {
-                      $derivative = new Derivative($fedora_object, $datastream, $extension, $this->log, $message->dsID);
                       foreach ($new_datastreams as $new_datastream) {
-//                      $this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
-                        $function = (string) $new_datastream->function;
-                        $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
+                        $include_file = (string) $new_datastream->file;
+                        $class = (string) $new_datastream->class;
+                        if (empty($include_file)) {
+                          $include_file = 'Derivatives.php';
+                        }
+                       
+                        if (empty($class)) {
+                          $class = 'Derivative';
+                        }
+                        $this->log->lwrite("File: $include_file Class: $class for $new_datastream->dsid", 'SERVER_INFO');
+                        $include_file =  __DIR__ . $include_file;
+                        require_once 'Derivatives.php';
+                        require_once $include_file;
+                         
+                        if (!class_exists($class)) {
+                          $this->log->lwrite("Error loading class $class, check your config file", $pid, NULL, $message->author, 'ERROR');
+                          //continue;
+                        }
+                        else {
+                          $derivative = new $class ($fedora_object, $datastream, $extension, $this->log, $message->dsID);
+                          //$derivative = call_user_func_array()                
+//$this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
+                          $function = (string) $new_datastream->function;
+                          if (!method_exists($derivative, $function)) {
+                            $this->log->lwrite("Error calling $class->$function for $new_datastream->dsid, check your config file", $pid, NULL, $message->author, 'ERROR');
+                            //continue;
+                          }                          
+                            $output = $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label); 
+                            $this->log->lwrite("File: $include_file Class: $class for $new_datastream->dsid output = $output", 'SERVER_INFO');
+                        }
                       }
                     }
                   }

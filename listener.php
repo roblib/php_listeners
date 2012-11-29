@@ -20,7 +20,6 @@ include_once 'connect.php';
 
 $config_file = file_get_contents('config.xml');
 $config_xml = new SimpleXMLElement($config_file);
-
 $children = $config_xml->listeners->child_processes;
 
 // Handle interrupt signals

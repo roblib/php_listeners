@@ -5,17 +5,15 @@
  *  
  * @author Richard Wincewicz
  */
-
-//do this until we expost these in a module or library
-@include_once 'tuque/Datastream.php';
-@include_once 'tuque/FedoraApi.php';
-@include_once 'tuque/FedoraApiSerializer.php';
-@include_once 'tuque/Object.php';
-@include_once 'tuque/RepositoryConnection.php';
-@include_once 'tuque/Cache.php';
-@include_once 'tuque/RepositoryException.php';
-@include_once 'tuque/Repository.php';
-@include_once 'tuque/FedoraRelationships.php';
+require_once 'tuque/Datastream.php';
+require_once 'tuque/FedoraApi.php';
+require_once 'tuque/FedoraApiSerializer.php';
+require_once 'tuque/Object.php';
+require_once 'tuque/RepositoryConnection.php';
+require_once 'tuque/Cache.php';
+require_once 'tuque/RepositoryException.php';
+require_once 'tuque/Repository.php';
+require_once 'tuque/FedoraRelationships.php';
 
 class ListenerObject {
 
@@ -46,24 +44,31 @@ class ListenerObject {
    * @var FedoraRepository
    */
   public $repository = NULL;
+  public $object = NULL;
 
   function __construct($user = NULL, $url = NULL, $pid = NULL) {
 
     $user_string = $user->name;
     $pass_string = $user->pass;
 
+
+
     if (!isset($url)) {
       $url = 'http://localhost:8080/fedora';
     }
 
-    if (self::exists()) {
+    //if (self::exists()) {
+    try {
       $this->connection = new RepositoryConnection($url, $user_string, $pass_string);
       $this->connection->reuseConnection = TRUE;
       $this->api = new FedoraApi($this->connection);
       $this->cache = new SimpleCache();
       $this->repository = new FedoraRepository($this->api, $this->cache);
       $this->object = new FedoraObject($pid, $this->repository);
+    } catch (Exception $e) {
+      file_put_contents('php://stderr', "Could not create fedora object $pid - $e");
     }
+    //}
   }
 
   function saveDatastream($dsid = NULL, $extension = NULL) {

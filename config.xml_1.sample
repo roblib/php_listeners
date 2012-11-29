@@ -23,10 +23,10 @@
              make sure that the firewall rules allow the listeners to
              contact the Fedora server and set up any XACML policies 
              to allow write access from the listener IP address -->
-        <host>192.168.56.195</host>
+        <host>192.168.200.140</host>
         <port>8080</port>
         <username>fedoraAdmin</username>
-        <password>islandora</password>
+        <password>fedoraAdmin</password>
     </fedora>
     
     <stomp>
@@ -35,7 +35,7 @@
              the JMS broker has been set up as in the installation 
              instructions then you'll connect on port 61613 and use the
              /queue/listener.update channel -->
-        <host>192.168.56.195</host>
+        <host>192.168.200.140</host>
         <port>61613</port>
         <channel>/queue/listener.update</channel>
     </stomp>
@@ -56,7 +56,7 @@
             <!-- Filter on the mimetype of the added/updated datastream -->
             <extension>tif</extension>            
             <!-- Filter on the datastream that has been added/updated -->
-            <trigger_datastream>MODS</trigger_datastream>
+            <trigger_datastream>TIFF</trigger_datastream>
             <!-- Define which datastream to grab to create the derivatives. If 
                  you want to create derivatives from more than one datastream 
                  then create a second rule. -->
