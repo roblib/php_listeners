@@ -1,7 +1,7 @@
 <?php
-include_once 'Deriviatives.php';
-class Relationships extends Derivative {
-  
+
+class Technical extends Derivative {
+
   function TECHMD($dsid = 'TECHMD', $label = 'Technical metadata') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
@@ -22,4 +22,5 @@ class Relationships extends Derivative {
   }
 
 }
+
 ?>

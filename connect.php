@@ -117,15 +117,14 @@ class Connect {
                         $class = (string) $new_datastream->class;
                         if (empty($include_file)) {
                           $include_file = 'Derivatives.php';
-                        }
-                       
+                        }                       
                         if (empty($class)) {
                           $class = 'Derivative';
                         }
                         $this->log->lwrite("File: $include_file Class: $class for $new_datastream->dsid", 'SERVER_INFO');
                         $include_file =  __DIR__ . $include_file;
                         require_once 'Derivatives.php';
-                        require_once $include_file;
+                        include_once $include_file;
                          
                         if (!class_exists($class)) {
                           $this->log->lwrite("Error loading class $class, check your config file", $pid, NULL, $message->author, 'ERROR');
@@ -133,8 +132,6 @@ class Connect {
                         }
                         else {
                           $derivative = new $class ($fedora_object, $datastream, $extension, $this->log, $message->dsID);
-                          //$derivative = call_user_func_array()                
-//$this->log->lwrite("Adding datastream '$new_datastream->dsid' with label '$new_datastream->label' using function '$new_datastream->function'", 'START_DATASTREAM', $pid, $new_datastream->dsid, $message->author);
                           $function = (string) $new_datastream->function;
                           if (!method_exists($derivative, $function)) {
                             $this->log->lwrite("Error calling $class->$function for $new_datastream->dsid, check your config file", $pid, NULL, $message->author, 'ERROR');
