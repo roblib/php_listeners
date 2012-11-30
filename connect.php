@@ -121,24 +121,25 @@ class Connect {
                         if (empty($class)) {
                           $class = 'Derivative';
                         }
-                        $this->log->lwrite("File: $include_file Class: $class for $new_datastream->dsid", 'SERVER_INFO');
+                        $this->log->lwrite("File: $include_file Class: $class for dsid $new_datastream->dsid", 'SERVER_INFO');
                         $include_file =  __DIR__ . $include_file;
                         require_once 'Derivatives.php';
                         include_once $include_file;
-                         
                         if (!class_exists($class)) {
                           $this->log->lwrite("Error loading class $class, check your config file", $pid, NULL, $message->author, 'ERROR');
-                          //continue;
+                          continue;
                         }
                         else {
                           $derivative = new $class ($fedora_object, $datastream, $extension, $this->log, $message->dsID);
                           $function = (string) $new_datastream->function;
                           if (!method_exists($derivative, $function)) {
                             $this->log->lwrite("Error calling $class->$function for $new_datastream->dsid, check your config file", $pid, NULL, $message->author, 'ERROR');
-                            //continue;
+                            continue;
                           }                          
-                            $output = $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label); 
-                            $this->log->lwrite("File: $include_file Class: $class for $new_datastream->dsid output = $output", 'SERVER_INFO');
+                            $output = $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
+                            if(isset($output)){
+                              $this->log->lwrite("PID: $pid File: $include_file Class: $class for $new_datastream->dsid output = $output", 'SERVER_INFO');
+                            }
                         }
                       }
                     }

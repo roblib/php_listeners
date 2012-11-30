@@ -9,6 +9,15 @@ include_once 'PREMIS.php';
 
 class Derivative {
 
+  protected $log;
+  protected $fedora_object;
+  protected $object;
+  protected $pid;
+  protected $created_datastream;
+  protected $incoming_dsid;
+  protected $extension;
+  protected $temp_file;
+
   function __construct($fedora_object, $incoming_dsid, $extension = NULL, $log, $created_datastream) {
     include_once 'message.php';
     include_once 'fedoraConnection.php';
@@ -34,18 +43,19 @@ class Derivative {
     unlink($this->temp_file);
   }
 
-  protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE) {
+  protected function add_derivative($dsid, $label, $content, $mimetype, $stream_type = "M", $log_message = NULL, $delete = TRUE, $from_file = TRUE) {
     $return = FALSE;
+    //we are don't seem to be sending custom log message for updates only ingests
     if (isset($this->object[$dsid])) {
       if ($from_file) {
         $this->object[$dsid]->content = file_get_contents($content);
       }
       else {
-        $this->object[$dsid]->content = content;
+        $this->object[$dsid]->content = $content;
       }
     }
     else {
-      $datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
+      $datastream = new NewFedoraDatastream($dsid, $stream_type, $this->object, $this->fedora_object->repository);
       if ($from_file) {
         $datastream->setContentFromFile($content);
       }

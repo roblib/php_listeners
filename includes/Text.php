@@ -1,6 +1,6 @@
 <?php
 
-class Ocr extends Derivative {
+class Text extends Derivative {
 
   /**
    * Creates all ocr datastreams in one call
