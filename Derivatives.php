@@ -34,7 +34,7 @@ class Derivative {
     unlink($this->temp_file);
   }
 
-  private function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE) {
+  protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE) {
     $return = FALSE;
     if (isset($this->object[$dsid])) {
       if ($from_file) {
