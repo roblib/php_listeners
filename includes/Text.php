@@ -1,6 +1,10 @@
 <?php
 
 class Text extends Derivative {
+  
+  function __destruct() {
+    parent::__destruct();
+  }
 
   /**
    * Creates all ocr datastreams in one call

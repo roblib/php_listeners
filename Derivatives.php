@@ -41,6 +41,9 @@ class Derivative {
 
   function __destruct() {
     unlink($this->temp_file);
+    if(isset($this->object)){
+      unset($this->object);
+    }
   }
 
   protected function add_derivative($dsid, $label, $content, $mimetype, $stream_type = "M", $log_message = NULL, $delete = TRUE, $from_file = TRUE) {

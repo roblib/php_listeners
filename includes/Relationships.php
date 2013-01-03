@@ -1,6 +1,10 @@
 <?php
 
 class Relationship extends Derivative {
+  
+  function __destruct() {
+    parent::__destruct();
+  }
 
   /**
    * update the object so the RELS-INT datastream contains the height and width of the 

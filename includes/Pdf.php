@@ -1,6 +1,10 @@
 <?php
 
 class Pdf extends Derivative {
+  
+  function __destruct() {
+    parent::__destruct();
+  }
 
   function Scholar_PDFA($dsid = 'PDF', $label = 'PDF') {
     if ($this->created_datastream == 'OBJ') {

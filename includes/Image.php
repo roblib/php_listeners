@@ -1,6 +1,10 @@
 <?php
 
 class Image extends Derivative {
+  
+  function __destruct() {
+    parent::__destruct();
+  }
 
   function JP2($dsid = 'JP2', $label = 'Compressed jp2') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);

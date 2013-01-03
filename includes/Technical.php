@@ -1,6 +1,10 @@
 <?php
 
 class Technical extends Derivative {
+  
+  function __destruct() {
+    parent::__destruct();
+  }
 
   function TECHMD($dsid = 'TECHMD', $label = 'Technical metadata') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
