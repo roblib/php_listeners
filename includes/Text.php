@@ -29,10 +29,10 @@ class Text extends Derivative {
           $convert_command = "convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.png";
           exec($convert_command);
           $command = "tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language -psm 1 hocr";
-          exec($command, $hocr2_output, $return);
+          exec($command, $hocr_output, $return);
           if (file_exists($output_file . '.html')) {
             $log_message = "HOCR derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.02.02 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a PNG and reprocessed.";
-            $ingest = $this->add_derivative('HOCR', 'HOCR', $output_file . '.html', 'text/html', $log_message, FALSE);
+            $ingest = $this->add_derivative('HOCR', 'HOCR', $output_file . '.html', 'text/html',$log_message, FALSE);
           }
           else {
             $this->log->lwrite("Could not find the file '$output_file.html' for the HOCR derivative!\nTesseract output: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');
@@ -49,6 +49,7 @@ class Text extends Derivative {
         unlink($output_file . '.html');
       }
     }
+    unlink($output_file . '.html');
     return $return;
   }
 

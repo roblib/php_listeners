@@ -46,7 +46,7 @@ class Derivative {
     }
   }
 
-  protected function add_derivative($dsid, $label, $content, $mimetype, $stream_type = "M", $log_message = NULL, $delete = TRUE, $from_file = TRUE) {
+  protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE, $stream_type = "M") {
     $return = FALSE;
     //we are don't seem to be sending custom log message for updates only ingests
     if (isset($this->object[$dsid])) {

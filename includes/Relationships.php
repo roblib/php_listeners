@@ -39,12 +39,20 @@ XML;
      // $rels_int_ds->mimetype = 'text/xml';
      // $rels_int_ds->label = $label;
      // $rels_int_ds->content = $rels_int_str;
-      $this->add_derivative($dsid, $label, $rels_int_str, 'text/xml','X', $log_message, FALSE, FALSE);
+      $this->add_derivative($dsid, $label, $rels_int_str, 'text/xml', $log_message, FALSE, FALSE, 'X');
     }
     else {
       $rels_ds = $item[$dsid];
       $doc = DomDocument::loadXML($rels_ds->content);
       $rdf = $doc->documentElement;
+      $descriptions = $rdf->getElementsByTagName('Description');
+      foreach ($descriptions as $description) {
+        $about = $description->getAttribute('rdf:about');
+        $length = strlen($source_dsid);        
+        if(substr($about, -$length) === $source_dsid){
+          return 'Relationship already Exists';
+        }
+      }
       $description = $doc->createElement('rdf:Description');
       $about = $doc->createAttribute('rdf:about');
       $about->value = "info:fedora/$item->id/$source_dsid";
@@ -57,7 +65,7 @@ XML;
       $description->appendChild($height);
       $rdf->appendChild($description);
       $xml = $doc->saveXML();
-      $this->add_derivative($dsid, $label, $xml, 'text/xml','X', $log_message, FALSE, FALSE);
+      $this->add_derivative($dsid, $label, $xml, 'text/xml', $log_message, FALSE, FALSE, 'X');
       //$item[$dsid]->content = $xml;
     }
     return 'SUCCESS';

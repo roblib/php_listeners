@@ -61,7 +61,7 @@ class Image extends Derivative {
         return FALSE;
       }
       $log_message = "$dsid derivative uploaded from file system || SUCCESS";
-      $this->add_derivative($dsid, $label, $tn_filename, 'image/png', $log_message);
+      $this->add_derivative($dsid, $label, $tn_filename, 'image/png',$log_message);
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
