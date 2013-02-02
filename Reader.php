@@ -1,8 +1,9 @@
 <?php
 
-$reader = new Reader();
+// These lines give some example usage. Uncomment/change them to try it out.
+//$reader = new Reader();
 //$reader->read("islandora:283", "OBJ", "mp3", "/opt/php_listeners/reader-test");
-$reader->write("writer-test.ogg", "islandora:1337", "OBJ", "audio/ogg", "Song", TRUE, FALSE);
+//$reader->write("writer-test.ogg", "islandora:1337", "OBJ", "audio/ogg", "Song", TRUE, FALSE);
 
 unset($reader);
 
