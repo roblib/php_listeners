@@ -4,8 +4,7 @@
 //$reader = new Reader();
 //$reader->read("islandora:283", "OBJ", "mp3", "/opt/php_listeners/reader-test");
 //$reader->write("writer-test.ogg", "islandora:1337", "OBJ", "audio/ogg", "Song", TRUE, FALSE);
-
-unset($reader);
+//unset($reader);
 
 class Reader {
 
