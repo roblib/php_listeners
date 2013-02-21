@@ -1,7 +1,9 @@
 <?php
 
+require_once 'Derivatives.php';
+
 class Image extends Derivative {
-  
+
   function __destruct() {
     parent::__destruct();
   }

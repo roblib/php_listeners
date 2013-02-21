@@ -20,7 +20,7 @@ class Derivative {
 
   function __construct($fedora_object, $incoming_dsid, $extension = NULL, $log, $created_datastream) {
     include_once 'message.php';
-    include_once 'fedoraConnection.php';
+    include_once 'FedoraConnect.php';
 
     $this->log = $log;
     $this->fedora_object = $fedora_object;
@@ -28,12 +28,12 @@ class Derivative {
     $this->pid = $fedora_object->object->id;
     $this->created_datastream = $created_datastream;
     $this->incoming_dsid = $incoming_dsid;
-    $this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object->object, $this->fedora_object->repository);
+    $this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object, $this->fedora_object->repository);
     //$this->mimetype = $this->incoming_datastream->mimetype;
     //$this->log->lwrite('Mimetype: ' . $this->mimetype, 'SERVER_INFO');
     $this->extension = $extension;
     if ($this->incoming_dsid != NULL) {
-      $this->temp_file = $fedora_object->saveDatastream($incoming_dsid, $extension);
+     	$this->temp_file = $this->create_temp_file();
     }
     $extension_array = explode('.', $this->temp_file);
     $extension = $extension_array[1];
@@ -45,6 +45,34 @@ class Derivative {
       unset($this->object);
     }
   }
+
+	protected function create_temp_file()
+	{
+		$datastream_array = array();
+
+    	foreach ($this->fedora_object as $datastream) {
+      		$datastream_array[] = $datastream->id;
+    	}
+
+    	if (!in_array($this->incoming_dsid, $datastream_array)) {
+      		print "Could not find the $this->incoming_dsid datastream!";
+    	}
+    	try {
+      		$datastream = $this->fedora_object->getDatastream($dsid);
+      		$mime_type = $datastream->mimetype;
+      		if (!$this->extension) {
+        		$this->extension = system_mime_type_extension($mime_type);
+      		}	
+      		$tempfile = temp_filename($extension);
+      		$file_handle = fopen($tempfile, 'w');
+      		fwrite($file_handle, $datastream->content);
+      		fclose($file_handle);
+    	} catch (Exception $e) {
+      		print "Could not save datastream - $e";
+    	}
+
+    	return $tempfile;
+	}
 
   protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE, $stream_type = "M") {
     $return = FALSE;
@@ -58,7 +86,7 @@ class Derivative {
       }
     }
     else {
-      $datastream = new NewFedoraDatastream($dsid, $stream_type, $this->object, $this->fedora_object->repository);
+      $datastream = new NewFedoraDatastream($dsid, $stream_type, $this->fedora_object, $this->fedora_object->repository);
       if ($from_file) {
         $datastream->setContentFromFile($content);
       }
@@ -73,7 +101,7 @@ class Derivative {
       if ($log_message) {
         $datastream->logMessage = $log_message;
       }
-      $return = $this->object->ingestDatastream($datastream);
+      $return = $this->fedora_object->ingestDatastream($datastream);
     }
     if ($delete && $from_file) {
       unlink($content);
