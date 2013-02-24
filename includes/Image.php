@@ -73,8 +73,13 @@ class Image extends Derivative {
   function JPG($dsid = 'JPEG', $label = 'JPEG image', $resize = '800') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
-      $output_file = $this->temp_file . '_JPG.jpg';
-      $command = "convert -resize $resize $this->temp_file $output_file";
+		echo "$this->temp_file\n";
+		$pathinfo = pathinfo($this->temp_file);
+		echo $pathinfo['basename'] . "\n";
+      $output_file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'] . '_JPG.jpg';
+      $command = "convert $this->temp_file -resize $resize $output_file";
+		echo "$output_file\n";
+		echo "$command\n";
       exec($command, $jpg_output, $return);
       $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
       $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);

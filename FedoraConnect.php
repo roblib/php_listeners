@@ -15,7 +15,7 @@ require_once 'tuque/RepositoryException.php';
 require_once 'tuque/Repository.php';
 require_once 'tuque/FedoraRelationships.php';
 
-class FedoraConnect {
+class FedoraConnection {
 
   /**
    * Connection to the repository
@@ -62,6 +62,7 @@ class FedoraConnect {
       $this->cache = new SimpleCache();
       $this->repository = new FedoraRepository($this->api, $this->cache);
     } catch (Exception $e) {
+		echo "Could not connect: $e";
       file_put_contents('php://stderr', "Could not connect to Fedora - $e");
     }
     //}

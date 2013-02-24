@@ -11,7 +11,6 @@ class Derivative {
 
   protected $log;
   protected $fedora_object;
-  protected $object;
   protected $pid;
   protected $created_datastream;
   protected $incoming_dsid;
@@ -24,11 +23,10 @@ class Derivative {
 
     $this->log = $log;
     $this->fedora_object = $fedora_object;
-    $this->object = $fedora_object->object;
-    $this->pid = $fedora_object->object->id;
+    $this->pid = $fedora_object->id;
     $this->created_datastream = $created_datastream;
     $this->incoming_dsid = $incoming_dsid;
-    $this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object, $this->fedora_object->repository);
+    //$this->incoming_datastream = new FedoraDatastream($this->incoming_dsid, $this->fedora_object, $this->fedora_object->repository);
     //$this->mimetype = $this->incoming_datastream->mimetype;
     //$this->log->lwrite('Mimetype: ' . $this->mimetype, 'SERVER_INFO');
     $this->extension = $extension;
@@ -58,12 +56,13 @@ class Derivative {
       		print "Could not find the $this->incoming_dsid datastream!";
     	}
     	try {
-      		$datastream = $this->fedora_object->getDatastream($dsid);
+      		$datastream = $this->fedora_object->getDatastream($this->incoming_dsid);
       		$mime_type = $datastream->mimetype;
       		if (!$this->extension) {
         		$this->extension = system_mime_type_extension($mime_type);
       		}	
-      		$tempfile = temp_filename($extension);
+			echo "$mime_type : $this->extension\n";
+      		$tempfile = temp_filename($this->extension);
       		$file_handle = fopen($tempfile, 'w');
       		fwrite($file_handle, $datastream->content);
       		fclose($file_handle);
