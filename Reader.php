@@ -6,12 +6,12 @@
 //$reader->write("writer-test.ogg", "islandora:1337", "OBJ", "audio/ogg", "Song", TRUE, FALSE);
 //unset($reader);
 
-class Reader {
+class FedoraAccess {
 
 	function __construct() {
 
 		include_once 'message.php';
-		include_once 'fedoraConnection.php';
+		include_once 'FedoraConnect.php';
 		include_once 'connect.php';
 		include_once 'Logging.php';
 	

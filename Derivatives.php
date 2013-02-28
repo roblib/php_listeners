@@ -61,7 +61,6 @@ class Derivative {
       		if (!$this->extension) {
         		$this->extension = system_mime_type_extension($mime_type);
       		}	
-			echo "$mime_type : $this->extension\n";
       		$tempfile = temp_filename($this->extension);
       		$file_handle = fopen($tempfile, 'w');
       		fwrite($file_handle, $datastream->content);
