@@ -29,6 +29,7 @@
   }
 
 //$service->JPG('islandora:313', 'JPG', 'thumbnail', 400);
+//$service->read('islandora:313', 'JPG');
 
 class IslandoraService {
 
@@ -59,9 +60,10 @@ class IslandoraService {
 		$this->__dispatch_map['read'] = array(
 			'in' => array(
 				'pid' => 'string',
-				'dsid' => 'string'
+				'dsid' => 'string',
+				'extension' => 'string'
 			),
-			'out' => array('content' => 'string')
+			'out' => array('base64_content' => 'string')
 		);
 
   	}
@@ -81,13 +83,12 @@ class IslandoraService {
     	}
   	}
 
-	function read($pid, $dsid, $extension, $store_filename) {
+	function read($pid, $dsid, $extension) {
 		
 		try {
         	if (fedora_object_exists($this->fedora_url, $this->user, $pid)) {
-       			$fedora_object = $this->fedora_connect->repository->getObject($pid);
-				$tempfile = $fedora_object->saveDatastream($dsid, $extension);
-				copy($tempfile, $store_filename);
+				$tempfile = $this->fedora_connect->saveDatastream($pid, $dsid, $extension);
+				return base64_encode(file_get_contents($tempfile));
          	}
 		} catch (Exception $e) {
         	$this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
@@ -95,7 +96,6 @@ class IslandoraService {
 	}
 
 	function JPG($pid, $dsid = "JPEG", $label = "JPEG image", $resize = "800") {
-		//$fedora_object = new FedoraObject($pid, $this->fedora_connect->repository);
 		$fedora_object = $this->fedora_connect->repository->getObject($pid);
 		$image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
 		return $image->JPG($dsid . '_JPG', $label, $resize);

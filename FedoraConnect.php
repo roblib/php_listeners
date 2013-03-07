@@ -71,7 +71,7 @@ class FedoraConnection {
 	function saveDatastream($pid = NULL, $dsid = NULL, $extension = NULL) {
 		if (!isset($pid) || !isset($dsid))
 			return;
-		
+
 		$fedora_object = new FedoraObject($pid, $this->repository);
 
 		$datastream_array = array();
