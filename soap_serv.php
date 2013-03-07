@@ -105,7 +105,7 @@ class IslandoraService {
         }
 	}
 
-	function write($pid, $dsid, $label, $content, $mimetype) {
+	function write($pid, $dsid, $label, $base64_content, $mimetype) {
 		return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($content), $mimetype, null, true, false);
 	}
 
