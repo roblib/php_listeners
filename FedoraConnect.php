@@ -100,6 +100,45 @@ class FedoraConnection {
     	return $tempfile;
 	}
 
+	function addDerivative($pid, $dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE, $stream_type = "M") {
+
+    	$return = "success";
+    	//we are don't seem to be sending custom log message for updates only ingests
+		$fedora_object = $this->repository->getObject($pid);
+    	if (isset($fedora_object[$dsid])) {
+      		if ($from_file) {
+        		$fedora_object[$dsid]->content = file_get_contents($content);
+      		}
+      		else {
+        		$fedora_object[$dsid]->content = $content;
+      		}
+    	}
+    	else {
+      		$datastream = new NewFedoraDatastream($dsid, $stream_type, $fedora_object, $fedora_object->repository);
+      		if ($from_file) {
+        		$datastream->setContentFromFile($content);
+      		}
+      		else {
+        		$datastream->setContentFromString($content);
+      		}
+
+      		$datastream->label = $label;
+      		$datastream->mimetype = $mimetype;
+      		$datastream->state = 'A';
+      		$datastream->checksum = TRUE;
+      		$datastream->checksumType = 'MD5';
+      		if ($log_message) {
+        		$datastream->logMessage = $log_message;
+      		}
+      		$return = $fedora_object->ingestDatastream($datastream);
+    	}
+    	if ($delete && $from_file) {
+      		unlink($content);
+    	}
+    	//$this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+    	return $return;
+  	}
+
   static function exists() {
     return class_exists('RepositoryConnection');
   }

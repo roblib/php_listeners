@@ -30,6 +30,7 @@
 
 //$service->JPG('islandora:313', 'JPG', 'thumbnail', 400);
 //$service->read('islandora:313', 'JPG');
+//$service->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("tiny_stanley.jpg")), "image/jpeg");
 
 class IslandoraService {
 
@@ -65,7 +66,16 @@ class IslandoraService {
 			),
 			'out' => array('base64_content' => 'string')
 		);
-
+		$this->__dispatch_map['write'] = array(
+			'in' => array(
+				'pid' => 'string',
+				'dsid' => 'string',
+				'label' => 'string',
+				'base64_content' => 'string',
+				'mimetype' => 'string'
+			),
+			'out' => array('message' => 'string')
+		);
   	}
 
 	function connect() {
@@ -95,12 +105,15 @@ class IslandoraService {
         }
 	}
 
+	function write($pid, $dsid, $label, $content, $mimetype) {
+		return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($content), $mimetype, null, true, false);
+	}
+
 	function JPG($pid, $dsid = "JPEG", $label = "JPEG image", $resize = "800") {
 		$fedora_object = $this->fedora_connect->repository->getObject($pid);
 		$image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
 		return $image->JPG($dsid . '_JPG', $label, $resize);
 	}
-
 }
   
 ?>
