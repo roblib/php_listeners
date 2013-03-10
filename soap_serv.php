@@ -58,6 +58,27 @@ class IslandoraService {
 			),
       		'out' => array('exit_status' => 'int')
     	);
+
+		$this->__dispatch_map['TN'] = array(
+                        'in'  => array(
+                                'pid' => 'string',
+                                'dsid' => 'string',
+                                'label' => 'string',
+                                'height' => 'int',
+                                'width' => 'int'
+                        ),
+                        'out' => array('exit_status' => 'int')
+                );
+
+                $this->__dispatch_map['JP2'] = array(
+                        'in'  => array(
+                                'pid' => 'string',
+                                'dsid' => 'string',
+                                'label' => 'string'
+                        ),
+                        'out' => array('exit_status' => 'int')
+                );
+
 		$this->__dispatch_map['read'] = array(
 			'in' => array(
 				'pid' => 'string',
@@ -114,6 +135,18 @@ class IslandoraService {
 		$image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
 		return $image->JPG($dsid . '_JPG', $label, $resize);
 	}
+
+	function JP2($pid, $dsid = "OBJ", $label = "Compressed jp2") {
+                $fedora_object = $this->fedora_connect->repository->getObject($pid);
+                $image = new Image($fedora_object, $dsid, 'jp2', $this->log, null);
+                return $image->JP2($dsid . '_JP2', $label);
+        }
+
+        function TN($pid, $dsid = "JPG", $label = "Thumbnail", $height = 200, $width = 200) {
+                $fedora_object = $this->fedora_connect->repository->getObject($pid);
+                $image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
+                return $image->TN($dsid . '_TN', $label, $height, $width);
+        }
 }
   
 ?>
