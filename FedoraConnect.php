@@ -68,7 +68,7 @@ class FedoraConnection {
     //}
   }
 
-	function saveDatastream($pid = NULL, $dsid = NULL, $extension = NULL) {
+	function getDatastream($pid = NULL, $dsid = NULL) {
 		if (!isset($pid) || !isset($dsid))
 			return;
 
@@ -76,15 +76,26 @@ class FedoraConnection {
 
 		$datastream_array = array();
 
-    	foreach ($fedora_object as $datastream) {
+    	foreach ($fedora_object as $datastream)
       		$datastream_array[] = $datastream->id;
+
+    	if (!in_array($dsid, $datastream_array))
+      		print "Could not find the $dsid datastream!";
+
+		try {
+      		$datastream = $fedora_object->getDatastream($dsid);
+    	} catch (Exception $e) {
+      		print "Could not retrieve datastream - $e";
     	}
 
-    	if (!in_array($dsid, $datastream_array)) {
-      		print "Could not find the $dsid datastream!";
-    	}
+    	return $datastream;
+	}
+
+	function saveDatastream($datastream, $extension = NULL) {
+		if (!$datastream)
+			return;
+
     	try {
-      		$datastream = $fedora_object->getDatastream($dsid);
       		$mime_type = $datastream->mimetype;
       		if (!$extension) {
         		$extension = system_mime_type_extension($mime_type);

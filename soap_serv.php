@@ -118,8 +118,8 @@ class IslandoraService {
 		
 		try {
         	if (fedora_object_exists($this->fedora_url, $this->user, $pid)) {
-				$tempfile = $this->fedora_connect->saveDatastream($pid, $dsid, $extension);
-				return base64_encode(file_get_contents($tempfile));
+				$content = $this->fedora_connect->getDatastream($pid, $dsid)->content;
+				return base64_encode($content);
          	}
 		} catch (Exception $e) {
         	$this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
