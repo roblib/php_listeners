@@ -2,7 +2,7 @@
 
   	error_reporting(E_ALL ^ E_NOTICE);
 
-	set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/php_listeners_backup');
+	set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/php_listeners');
 
   	require_once 'SOAP/Server.php';
 	require_once 'FedoraConnect.php';
