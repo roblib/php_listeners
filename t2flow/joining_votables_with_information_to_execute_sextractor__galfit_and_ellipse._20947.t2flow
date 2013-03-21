@@ -1,0 +1,1644 @@
+<workflow xmlns="http://taverna.sf.net/2008/xml/t2flow" version="1" producedBy="taverna-2.4.0"><dataflow id="3ed76c98-e156-4cff-9fc4-fa4624a80780" role="top"><name>Joining_VOtables_wit</name><inputPorts><port><name>band</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:23
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="/tmp/astro8492655870915179745.tmp" nrows="6"&gt;
+&lt;FIELD arraysize="1" datatype="char" name="band"/&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;g&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;i&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;r&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;g&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;i&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;r&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:30:39.458 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOtable with the list of characters (g,r,i,u,z) indicating the band of imaga of this specific row</text>
+      </annotationBean>
+      <date>2012-08-13 08:30:58.904 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>filenames</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:15
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="/tmp/astro8100238633013858269.tmp" nrows="6"&gt;
+&lt;FIELD arraysize="82" datatype="char" name="cat"/&gt;
+&lt;FIELD arraysize="82" datatype="char" name="sex"/&gt;
+&lt;FIELD arraysize="86" datatype="char" name="sexparam"/&gt;
+&lt;FIELD arraysize="87" datatype="char" name="checkimage_name"/&gt;
+&lt;FIELD arraysize="88" datatype="char" name="galfit"/&gt;
+&lt;FIELD arraysize="92" datatype="char" name="galfit_exp"/&gt;
+&lt;FIELD arraysize="94" datatype="char" name="galfit2nd"/&gt;
+&lt;FIELD arraysize="92" datatype="char" name="galfitgal"/&gt;
+&lt;FIELD arraysize="92" datatype="char" name="model"/&gt;
+&lt;FIELD arraysize="86" datatype="char" name="ellip_tab"/&gt;
+&lt;FIELD arraysize="91" datatype="char" name="ellip_resultheader"/&gt;
+&lt;FIELD arraysize="93" datatype="char" name="ellip_resultdata"/&gt;
+&lt;FIELD arraysize="88" datatype="char" name="ellip_tab2"/&gt;
+&lt;FIELD arraysize="93" datatype="char" name="ellip_resultheader2"/&gt;
+&lt;FIELD arraysize="95" datatype="char" name="ellip_resultdata2"/&gt;
+&lt;FIELD arraysize="92" datatype="char" name="ellip_script1"/&gt;
+&lt;FIELD arraysize="92" datatype="char" name="ellip_script2"/&gt;
+&lt;FIELD arraysize="84" datatype="char" name="ellip_plot"/&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_g.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_g.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/init_data/config_files/fbCIG0011_g.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_g_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_g.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_g_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_g_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_g_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_g_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_g.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_g_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_g_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_g_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_g_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_g_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_g_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_g_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/plots/fbCIG0011_g.png&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_i.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_i.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/init_data/config_files/fbCIG0011_i.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_i_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_i.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_i_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_i_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_i_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_i_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_i.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_i_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_i_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_i_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_i_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_i_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_i_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_i_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/plots/fbCIG0011_i.png&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_r.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_r.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/init_data/config_files/fbCIG0011_r.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0011_r_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_r.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_r_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_r_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_r_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0011_r_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_r.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_r_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_r_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_r_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_r_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_r_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_r_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0011_r_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/plots/fbCIG0011_r.png&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_g.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_g.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/init_data/config_files/fbCIG0033_g.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_g_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_g.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_g_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_g_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_g_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_g_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_g.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_g_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_g_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_g_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_g_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_g_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_g_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_g_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/plots/fbCIG0033_g.png&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_i.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_i.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/init_data/config_files/fbCIG0033_i.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_i_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_i.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_i_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_i_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_i_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_i_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_i.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_i_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_i_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_i_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_i_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_i_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_i_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_i_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/plots/fbCIG0033_i.png&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_r.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_r.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/init_data/config_files/fbCIG0033_r.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/sex/fbCIG0033_r_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_r.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_r_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_r_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_r_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/galfit/fbCIG0033_r_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_r.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_r_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_r_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_r_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_r_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_r_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_r_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/ellipse/fbCIG0033_r_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/plots/fbCIG0033_r.png&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:31:14.871 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOTable with the list of paths needed to execute Sextractor, Galfit and Ellipse</text>
+      </annotationBean>
+      <date>2012-08-13 08:31:37.829 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>psf</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOTable with the list of psf file paths</text>
+      </annotationBean>
+      <date>2012-08-13 08:32:10.467 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:25
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="/tmp/astro7117409029378822972.tmp" nrows="6"&gt;
+&lt;FIELD arraysize="84" datatype="char" name="psf"/&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/psf/CIG11_psfield.fit&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/psf/CIG11_psfield.fit&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/psf/CIG11_psfield.fit&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/psf/CIG33_psfield.fit&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/psf/CIG33_psfield.fit&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/Files/workflow_results/psf/CIG33_psfield.fit&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:31:51.549 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>ra</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:05
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="/tmp/astro8061312321029861160.tmp" nrows="6"&gt;
+&lt;FIELD datatype="double" name="ra"/&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;3.63404435&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;3.63404435&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;3.63404435&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;10.86600634&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;10.86600634&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;10.86600634&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:32:22.266 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOTable with the list of Right Ascension coordinates</text>
+      </annotationBean>
+      <date>2012-08-13 08:32:52.287 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>dec</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:05
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="/tmp/astro1073055085866338236.tmp" nrows="6"&gt;
+&lt;FIELD datatype="double" name="dec"/&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-0.73569511&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-0.73569511&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-0.73569511&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-0.1249298&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-0.1249298&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-0.1249298&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:33:03.863 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOTable with the list of Declination coordinate.</text>
+      </annotationBean>
+      <date>2012-08-13 08:33:16.397 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>satur_level</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOTable with the value list of saturation level (from SDSS)</text>
+      </annotationBean>
+      <date>2012-08-13 08:38:45.854 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:40
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="sdssdr7.field" nrows="6"&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;FIELD ID="col206" datatype="int" name="saturation" ucd="INST_DET_LIMIT"&gt;
+&lt;DESCRIPTION&gt;Saturation Level&lt;/DESCRIPTION&gt;
+&lt;VALUES null='-2147483648'/&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;62160&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;51453&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;50631&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;54640&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;42540&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;47306&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:33:27.637 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>gain</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:40
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="sdssdr7.field" nrows="6"&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;FIELD ID="col407" datatype="float" name="gain" ucd="INST_SETUP" unit="electrons/DN"&gt;
+&lt;DESCRIPTION&gt;Gain Averaged over Amplifiers&lt;/DESCRIPTION&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;3.855&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;6.565&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;4.6&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;3.845&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;4.86&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;4.72&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:34:20.881 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOTable with the value list of Gain Averaged over Amplifiers (from SDSS)</text>
+      </annotationBean>
+      <date>2012-08-13 08:38:38.218 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>nx</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOtable with the value list of NAXIS1</text>
+      </annotationBean>
+      <date>2012-08-13 08:34:41.271 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:25
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="/tmp/astro2287341739186823665.tmp" nrows="6"&gt;
+&lt;FIELD datatype="short" name="nx"&gt;
+&lt;VALUES null='-32768'/&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;791&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;791&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;791&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:34:30.737 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>ny</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOTable with the value list of NAXIS2</text>
+      </annotationBean>
+      <date>2012-08-13 08:35:02.347 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:23
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="/tmp/astro187031585473174599.tmp" nrows="6"&gt;
+&lt;FIELD datatype="short" name="ny"&gt;
+&lt;VALUES null='-32768'/&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;951&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;791&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;791&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;791&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:34:48.160 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>bar</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOTable with a list of 1s or 0s, indicanting if the galaxy of the corresponding row is barred or not</text>
+      </annotationBean>
+      <date>2012-08-13 08:36:20.117 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:05
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="/tmp/astro777493682845136558.tmp" nrows="6"&gt;
+&lt;FIELD datatype="short" name="bar"&gt;
+&lt;VALUES null='-32768'/&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:35:09.177 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>aa</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:40
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="sdssdr7.field" nrows="6"&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;FIELD ID="col155" datatype="float" name="aa" ucd="PHOT_ZP" unit="mag"&gt;
+&lt;DESCRIPTION&gt;Zero-point&lt;/DESCRIPTION&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-24.3651&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-23.553&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-23.9633&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-24.4419&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-23.7458&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;-24.0641&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:36:36.304 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOtable with the value list of aa (Zero-point extracted from SDSS).</text>
+      </annotationBean>
+      <date>2012-08-13 08:37:55.794 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>kk</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:40
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="sdssdr7.field" nrows="6"&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;FIELD ID="col185" datatype="float" name="kk" ucd="PHOT_TRANS_PARAM" unit="mag"&gt;
+&lt;DESCRIPTION&gt;Extinction coefficient&lt;/DESCRIPTION&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0.295617&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0.124635&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0.167985&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0.159439&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0.052967&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;0.0909058&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:40:11.445 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOtable with the value list of kk (Extinction coefficient extracted from SDSS).</text>
+      </annotationBean>
+      <date>2012-08-13 08:39:25.867 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port><port><name>air</name><depth>0</depth><granularDepth>0</granularDepth><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOtable with the value list of airmass (from SDSS).</text>
+      </annotationBean>
+      <date>2012-08-13 08:39:42.915 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-08-13T08:26:40
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="sdssdr7.field" nrows="6"&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;FIELD ID="col133" datatype="double" name="airmass" ucd="PHOT_ATM_AIRMASS" unit="mag"&gt;
+&lt;DESCRIPTION&gt;Airmass for star at frame center (mid exposure)&lt;/DESCRIPTION&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;1.20884547251578&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;1.2114863779467&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;1.21243677390076&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;1.39307679180111&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;1.3800919551487&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;1.37589506942977&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;</text>
+      </annotationBean>
+      <date>2012-08-13 08:39:54.959 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port></inputPorts><outputPorts><port><name>votable</name><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>VOtable with all the information needed to execute Sextractor, Galfit and ellipse.
+The columns of this votable are:
+
+- image: Path of the fits image
+- cat:  File path where sextractor results is allocated. 
+- sex:  File path where the sextractor config file is allocated (one for each galaxy).
+- sexparam: File path for general sextractor configuration file (the same for all the galaxies)
+- checkimage_name:  File path where the sextractor image result is allocated
+- galfit: File path where the input for the first galfit execution is allocated. 
+- galfit_exp: File path where the output for the first galfit execution is allocated. 
+- galfit2nd: File path where the input for the second galfit execution is allocated. 
+- galfitgal: File path where the output for the second galfit execution is allocated.
+- model:  File path where the galfit image result is allocated.
+- ellip_tab: File path where the output for the first ellipse execution is allocated.
+- ellip_resultheader: File path that contains the column descriptions for the ellipse results (first iteration).
+- ellip_resultdata: File path that contains an ascii table with the ellipse results (first iteration).
+- ellip_tab2: File path where the output for the second ellipse execution is allocated.
+- ellip_resultheader2: File path that contains the column descriptions for the ellipse results (second iteration).
+- ellip_resultdata2: File path that contains an ascii table with the ellipse results (second iteration).
+- ellip_script1: File path where python the script that is used run pyraf is allocated (first iteration)
+- ellip_script2: File path where python the script that is used run pyraf is allocated (second iteration)
+- ellip_plot: File path where the plot that represent galfit and ellipse results is allocated.
+- band: Band (g,r,i,z,u) of the image
+- psf: Path of the psf file
+- ra: Right ascension
+- dec: Declination
+- saturation: saturation level
+- gain:Gain Averaged over Amplifiers
+- nx :NAXIS1
+- ny: NAXIS2
+- bar: 1 or 0, indicating if the galaxy is barred or not.
+- aa: Zero-point
+- kk: Extinction coefficient
+- airmass: Airmass for star at frame center (mid exposure)
+- zp: it is calculated as -( aa + kk * airmass )
+- mag_zeropoint: It is calculated as zp + 2.5 * log10(53.907456)
+- xconvsize: it is calculated as  roundUp(nx/10)
+ -yconvsize: it is calculated as  roundUp(ny/10)</text>
+      </annotationBean>
+      <date>2012-09-07 09:30:45.183 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.ExampleValue">
+        <text>&lt;?xml version='1.0'?&gt;
+&lt;VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.ivoa.net/xml/VOTable/v1.1 http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"&gt;
+&lt;!--
+ !  VOTable written by STIL version 3.0-3 (uk.ac.starlink.votable.VOTableWriter)
+ !  at 2012-09-07T09:14:33
+ !--&gt;
+&lt;RESOURCE&gt;
+&lt;TABLE name="astro6676573640654660949.tmp" nrows="3"&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;PARAM arraysize="*" datatype="char" name="INFO" value=""&gt;
+&lt;DESCRIPTION&gt;Cone search result from catalogue: sdssdr7, table: field
+RA=3.63404435 DEC=-0.73569511 SR=1.0
+Contact saicas@sai.msu.ru in case of problems&lt;/DESCRIPTION&gt;
+&lt;/PARAM&gt;
+&lt;FIELD arraysize="83" datatype="char" name="image"/&gt;
+&lt;FIELD arraysize="82" datatype="char" name="cat"/&gt;
+&lt;FIELD arraysize="82" datatype="char" name="sex"/&gt;
+&lt;FIELD arraysize="65" datatype="char" name="sexparam"/&gt;
+&lt;FIELD arraysize="87" datatype="char" name="checkimage_name"/&gt;
+&lt;FIELD arraysize="81" datatype="char" name="galfit"/&gt;
+&lt;FIELD arraysize="85" datatype="char" name="galfit_exp"/&gt;
+&lt;FIELD arraysize="87" datatype="char" name="galfit2nd"/&gt;
+&lt;FIELD arraysize="85" datatype="char" name="galfitgal"/&gt;
+&lt;FIELD arraysize="85" datatype="char" name="model"/&gt;
+&lt;FIELD arraysize="79" datatype="char" name="ellip_tab"/&gt;
+&lt;FIELD arraysize="84" datatype="char" name="ellip_resultheader"/&gt;
+&lt;FIELD arraysize="86" datatype="char" name="ellip_resultdata"/&gt;
+&lt;FIELD arraysize="81" datatype="char" name="ellip_tab2"/&gt;
+&lt;FIELD arraysize="86" datatype="char" name="ellip_resultheader2"/&gt;
+&lt;FIELD arraysize="88" datatype="char" name="ellip_resultdata2"/&gt;
+&lt;FIELD arraysize="85" datatype="char" name="ellip_script1"/&gt;
+&lt;FIELD arraysize="85" datatype="char" name="ellip_script2"/&gt;
+&lt;FIELD arraysize="77" datatype="char" name="ellip_plot"/&gt;
+&lt;FIELD arraysize="1" datatype="char" name="band"/&gt;
+&lt;FIELD arraysize="89" datatype="char" name="psf"/&gt;
+&lt;FIELD datatype="double" name="ra"/&gt;
+&lt;FIELD datatype="double" name="dec"/&gt;
+&lt;FIELD ID="col206" datatype="int" name="satur_level" ucd="INST_DET_LIMIT"&gt;
+&lt;DESCRIPTION&gt;Saturation Level&lt;/DESCRIPTION&gt;
+&lt;VALUES null='-2147483648'/&gt;
+&lt;/FIELD&gt;
+&lt;FIELD ID="col407" datatype="float" name="gain" ucd="INST_SETUP" unit="electrons/DN"&gt;
+&lt;DESCRIPTION&gt;Gain Averaged over Amplifiers&lt;/DESCRIPTION&gt;
+&lt;/FIELD&gt;
+&lt;FIELD datatype="short" name="nx"&gt;
+&lt;VALUES null='-32768'/&gt;
+&lt;/FIELD&gt;
+&lt;FIELD datatype="short" name="ny"&gt;
+&lt;VALUES null='-32768'/&gt;
+&lt;/FIELD&gt;
+&lt;FIELD datatype="short" name="bar"&gt;
+&lt;VALUES null='-32768'/&gt;
+&lt;/FIELD&gt;
+&lt;FIELD ID="col155" datatype="float" name="aa" ucd="PHOT_ZP" unit="mag"&gt;
+&lt;DESCRIPTION&gt;Zero-point&lt;/DESCRIPTION&gt;
+&lt;/FIELD&gt;
+&lt;FIELD ID="col185" datatype="float" name="kk" ucd="PHOT_TRANS_PARAM" unit="mag"&gt;
+&lt;DESCRIPTION&gt;Extinction coefficient&lt;/DESCRIPTION&gt;
+&lt;/FIELD&gt;
+&lt;FIELD ID="col133" datatype="double" name="airmass" ucd="PHOT_ATM_AIRMASS" unit="mag"&gt;
+&lt;DESCRIPTION&gt;Airmass for star at frame center (mid exposure)&lt;/DESCRIPTION&gt;
+&lt;/FIELD&gt;
+&lt;FIELD datatype="double" name="zp"/&gt;
+&lt;FIELD datatype="double" name="mag_zeropoint"/&gt;
+&lt;FIELD datatype="int" name="xconvsize"&gt;
+&lt;VALUES null='-2147483648'/&gt;
+&lt;/FIELD&gt;
+&lt;FIELD datatype="int" name="yconvsize"&gt;
+&lt;VALUES null='-2147483648'/&gt;
+&lt;/FIELD&gt;
+&lt;DATA&gt;
+&lt;TABLEDATA&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/init/common/images/fbCIG0011_g.fit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_g.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_g.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/config/files/CIG000.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_g_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_g.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_g_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_g_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_g_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_g_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_g.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_g_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_g_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_g_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_g_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_g_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_g_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_g_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/plots/fbCIG0011_g.png&lt;/TD&gt;
+    &lt;TD&gt;g&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/preprocessing/fbCIG0011_g_psf.fit&lt;/TD&gt;
+    &lt;TD&gt;3.63404435&lt;/TD&gt;
+    &lt;TD&gt;-0.73569511&lt;/TD&gt;
+    &lt;TD&gt;62160&lt;/TD&gt;
+    &lt;TD&gt;3.855&lt;/TD&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+    &lt;TD&gt;951&lt;/TD&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+    &lt;TD&gt;-24.3651&lt;/TD&gt;
+    &lt;TD&gt;0.295617&lt;/TD&gt;
+    &lt;TD&gt;1.20884547251578&lt;/TD&gt;
+    &lt;TD&gt;24.007745571418038&lt;/TD&gt;
+    &lt;TD&gt;28.336867664148993&lt;/TD&gt;
+    &lt;TD&gt;95&lt;/TD&gt;
+    &lt;TD&gt;95&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/init/common/images/fbCIG0011_i.fit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_i.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_i.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/config/files/CIG000.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_i_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_i.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_i_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_i_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_i_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_i_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_i.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_i_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_i_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_i_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_i_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_i_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_i_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_i_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/plots/fbCIG0011_i.png&lt;/TD&gt;
+    &lt;TD&gt;i&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/preprocessing/fbCIG0011_i_psf.fit&lt;/TD&gt;
+    &lt;TD&gt;3.63404435&lt;/TD&gt;
+    &lt;TD&gt;-0.73569511&lt;/TD&gt;
+    &lt;TD&gt;51453&lt;/TD&gt;
+    &lt;TD&gt;6.565&lt;/TD&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+    &lt;TD&gt;-23.553&lt;/TD&gt;
+    &lt;TD&gt;0.124635&lt;/TD&gt;
+    &lt;TD&gt;1.2114863779467&lt;/TD&gt;
+    &lt;TD&gt;23.402005887495726&lt;/TD&gt;
+    &lt;TD&gt;27.73112798022668&lt;/TD&gt;
+    &lt;TD&gt;95&lt;/TD&gt;
+    &lt;TD&gt;95&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/init/common/images/fbCIG0011_r.fit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_r.cat&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_r.sex&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/config/files/CIG000.param&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/sextractor/fbCIG0011_r_seg.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_r.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_r_exp.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_r_in2it.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_r_gal.galfit&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/galfit/fbCIG0011_r_model.fits&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_r.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_r_cd.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_r_data.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_r_2.tab&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_r_cd_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_r_data_2.ellip&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_r_ellip1.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/ellipse/fbCIG0011_r_ellip2.py&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/plots/fbCIG0011_r.png&lt;/TD&gt;
+    &lt;TD&gt;r&lt;/TD&gt;
+    &lt;TD&gt;/home/susana/Documents/workflows/2GE/RO/data/all/output/preprocessing/fbCIG0011_r_psf.fit&lt;/TD&gt;
+    &lt;TD&gt;3.63404435&lt;/TD&gt;
+    &lt;TD&gt;-0.73569511&lt;/TD&gt;
+    &lt;TD&gt;50631&lt;/TD&gt;
+    &lt;TD&gt;4.6&lt;/TD&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+    &lt;TD&gt;950&lt;/TD&gt;
+    &lt;TD&gt;0&lt;/TD&gt;
+    &lt;TD&gt;-23.9633&lt;/TD&gt;
+    &lt;TD&gt;0.167985&lt;/TD&gt;
+    &lt;TD&gt;1.21243677390076&lt;/TD&gt;
+    &lt;TD&gt;23.75962950480297&lt;/TD&gt;
+    &lt;TD&gt;28.088751597533925&lt;/TD&gt;
+    &lt;TD&gt;95&lt;/TD&gt;
+    &lt;TD&gt;95&lt;/TD&gt;
+  &lt;/TR&gt;
+&lt;/TABLEDATA&gt;
+&lt;/DATA&gt;
+&lt;/TABLE&gt;
+&lt;/RESOURCE&gt;
+&lt;/VOTABLE&gt;
+</text>
+      </annotationBean>
+      <date>2012-09-07 09:30:37.62 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain></annotations></port></outputPorts><processors><processor><name>tjoin_2</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_3</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_4</name><inputPorts><port><name>votable2</name><depth>0</depth></port><port><name>votable1</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable2" depth="0" /><port name="votable1" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_5</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_6</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_7</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_8</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_9</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_10</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_11</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_12</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>tjoin_13</name><inputPorts><port><name>votable1</name><depth>0</depth></port><port><name>votable2</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputFileOut</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tjoin.TjoinActivity</class><inputMap><map from="votable1" to="votable1" /><map from="votable2" to="votable2" /></inputMap><outputMap><map from="outputFileOut" to="outputFileOut" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tjoin.TjoinActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="votable1" depth="0" /><port name="votable2" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>Add_ZP</name><inputPorts><port><name>voTable</name><depth>0</depth></port><port><name>nameNewCol</name><depth>0</depth></port><port><name>expression</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputTable</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivity</class><inputMap><map from="expression" to="expression" /><map from="voTable" to="voTable" /><map from="nameNewCol" to="nameNewCol" /></inputMap><outputMap><map from="outputTable" to="outputTable" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="voTable" depth="0" /><port name="nameNewCol" depth="0" /><port name="expression" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>zp_value</name><inputPorts /><outputPorts><port><name>value</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>stringconstant-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.stringconstant.StringConstantActivity</class><inputMap /><outputMap><map from="value" to="value" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean xmlns="">
+  <value>zp</value>
+</net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy /></iteration></iterationStrategyStack></processor><processor><name>expression_value</name><inputPorts /><outputPorts><port><name>value</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>stringconstant-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.stringconstant.StringConstantActivity</class><inputMap /><outputMap><map from="value" to="value" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean xmlns="">
+  <value>-( aa + kk * airmass )</value>
+</net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy /></iteration></iterationStrategyStack></processor><processor><name>Add_MAGZEROPOINT</name><inputPorts><port><name>voTable</name><depth>0</depth></port><port><name>nameNewCol</name><depth>0</depth></port><port><name>expression</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputTable</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivity</class><inputMap><map from="expression" to="expression" /><map from="voTable" to="voTable" /><map from="nameNewCol" to="nameNewCol" /></inputMap><outputMap><map from="outputTable" to="outputTable" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="voTable" depth="0" /><port name="nameNewCol" depth="0" /><port name="expression" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>magZeropoint_value</name><inputPorts /><outputPorts><port><name>value</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>stringconstant-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.stringconstant.StringConstantActivity</class><inputMap /><outputMap><map from="value" to="value" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean xmlns="">
+  <value>mag_zeropoint</value>
+</net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy /></iteration></iterationStrategyStack></processor><processor><name>expression_value_1</name><inputPorts /><outputPorts><port><name>value</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>stringconstant-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.stringconstant.StringConstantActivity</class><inputMap /><outputMap><map from="value" to="value" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean xmlns="">
+  <value>zp + 2.5 * log10(53.907456)</value>
+</net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy /></iteration></iterationStrategyStack></processor><processor><name>Add_XCONVSIZE</name><inputPorts><port><name>voTable</name><depth>0</depth></port><port><name>expression</name><depth>0</depth></port><port><name>nameNewCol</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputTable</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivity</class><inputMap><map from="expression" to="expression" /><map from="voTable" to="voTable" /><map from="nameNewCol" to="nameNewCol" /></inputMap><outputMap><map from="outputTable" to="outputTable" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="voTable" depth="0" /><port name="expression" depth="0" /><port name="nameNewCol" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>expression_value_2</name><inputPorts /><outputPorts><port><name>value</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>stringconstant-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.stringconstant.StringConstantActivity</class><inputMap /><outputMap><map from="value" to="value" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean xmlns="">
+  <value>roundUp(nx/10)</value>
+</net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy /></iteration></iterationStrategyStack></processor><processor><name>nameNewCol_value</name><inputPorts /><outputPorts><port><name>value</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>stringconstant-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.stringconstant.StringConstantActivity</class><inputMap /><outputMap><map from="value" to="value" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean xmlns="">
+  <value>xconvsize</value>
+</net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy /></iteration></iterationStrategyStack></processor><processor><name>Add_YCONVSIZE</name><inputPorts><port><name>voTable</name><depth>0</depth></port><port><name>expression</name><depth>0</depth></port><port><name>nameNewCol</name><depth>0</depth></port></inputPorts><outputPorts><port><name>outputTable</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>org.purl.wf4ever.astrotaverna</group><artifact>stilts-activity</artifact><version>0.9</version></raven><class>org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivity</class><inputMap><map from="expression" to="expression" /><map from="voTable" to="voTable" /><map from="nameNewCol" to="nameNewCol" /></inputMap><outputMap><map from="outputTable" to="outputTable" /></outputMap><configBean encoding="xstream"><org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivityConfigurationBean xmlns="">
+  <typeOfInput>String</typeOfInput>
+</org.purl.wf4ever.astrotaverna.tpipe.AddColumnByExpressionActivityConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy><cross><port name="voTable" depth="0" /><port name="expression" depth="0" /><port name="nameNewCol" depth="0" /></cross></strategy></iteration></iterationStrategyStack></processor><processor><name>expression_value_3</name><inputPorts /><outputPorts><port><name>value</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>stringconstant-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.stringconstant.StringConstantActivity</class><inputMap /><outputMap><map from="value" to="value" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean xmlns="">
+  <value>roundUp(ny/10)</value>
+</net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy /></iteration></iterationStrategyStack></processor><processor><name>nameNewCol_value_1</name><inputPorts /><outputPorts><port><name>value</name><depth>0</depth><granularDepth>0</granularDepth></port></outputPorts><annotations /><activities><activity><raven><group>net.sf.taverna.t2.activities</group><artifact>stringconstant-activity</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.activities.stringconstant.StringConstantActivity</class><inputMap /><outputMap><map from="value" to="value" /></outputMap><configBean encoding="xstream"><net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean xmlns="">
+  <value>yconvsize</value>
+</net.sf.taverna.t2.activities.stringconstant.StringConstantConfigurationBean></configBean><annotations /></activity></activities><dispatchStack><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Parallelize</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig xmlns="">
+  <maxJobs>1</maxJobs>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ParallelizeConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.ErrorBounce</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Failover</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Retry</class><configBean encoding="xstream"><net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig xmlns="">
+  <backoffFactor>1.0</backoffFactor>
+  <initialDelay>1000</initialDelay>
+  <maxDelay>5000</maxDelay>
+  <maxRetries>0</maxRetries>
+</net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.RetryConfig></configBean></dispatchLayer><dispatchLayer><raven><group>net.sf.taverna.t2.core</group><artifact>workflowmodel-impl</artifact><version>1.4</version></raven><class>net.sf.taverna.t2.workflowmodel.processor.dispatch.layers.Invoke</class><configBean encoding="xstream"><null xmlns="" /></configBean></dispatchLayer></dispatchStack><iterationStrategyStack><iteration><strategy /></iteration></iterationStrategyStack></processor></processors><conditions /><datalinks><datalink><sink type="processor"><processor>tjoin_2</processor><port>votable1</port></sink><source type="dataflow"><port>filenames</port></source></datalink><datalink><sink type="processor"><processor>tjoin_2</processor><port>votable2</port></sink><source type="dataflow"><port>band</port></source></datalink><datalink><sink type="processor"><processor>tjoin_3</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_2</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_3</processor><port>votable2</port></sink><source type="dataflow"><port>psf</port></source></datalink><datalink><sink type="processor"><processor>tjoin_4</processor><port>votable2</port></sink><source type="dataflow"><port>ra</port></source></datalink><datalink><sink type="processor"><processor>tjoin_4</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_3</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_5</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_4</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_5</processor><port>votable2</port></sink><source type="dataflow"><port>dec</port></source></datalink><datalink><sink type="processor"><processor>tjoin_6</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_5</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_6</processor><port>votable2</port></sink><source type="dataflow"><port>satur_level</port></source></datalink><datalink><sink type="processor"><processor>tjoin_7</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_6</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_7</processor><port>votable2</port></sink><source type="dataflow"><port>gain</port></source></datalink><datalink><sink type="processor"><processor>tjoin_8</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_7</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_8</processor><port>votable2</port></sink><source type="dataflow"><port>nx</port></source></datalink><datalink><sink type="processor"><processor>tjoin_9</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_8</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_9</processor><port>votable2</port></sink><source type="dataflow"><port>ny</port></source></datalink><datalink><sink type="processor"><processor>tjoin_10</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_9</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_10</processor><port>votable2</port></sink><source type="dataflow"><port>bar</port></source></datalink><datalink><sink type="processor"><processor>tjoin_11</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_10</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_11</processor><port>votable2</port></sink><source type="dataflow"><port>aa</port></source></datalink><datalink><sink type="processor"><processor>tjoin_12</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_11</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_12</processor><port>votable2</port></sink><source type="dataflow"><port>kk</port></source></datalink><datalink><sink type="processor"><processor>tjoin_13</processor><port>votable1</port></sink><source type="processor"><processor>tjoin_12</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>tjoin_13</processor><port>votable2</port></sink><source type="dataflow"><port>air</port></source></datalink><datalink><sink type="processor"><processor>Add_ZP</processor><port>voTable</port></sink><source type="processor"><processor>tjoin_13</processor><port>outputFileOut</port></source></datalink><datalink><sink type="processor"><processor>Add_ZP</processor><port>nameNewCol</port></sink><source type="processor"><processor>zp_value</processor><port>value</port></source></datalink><datalink><sink type="processor"><processor>Add_ZP</processor><port>expression</port></sink><source type="processor"><processor>expression_value</processor><port>value</port></source></datalink><datalink><sink type="processor"><processor>Add_MAGZEROPOINT</processor><port>voTable</port></sink><source type="processor"><processor>Add_ZP</processor><port>outputTable</port></source></datalink><datalink><sink type="processor"><processor>Add_MAGZEROPOINT</processor><port>nameNewCol</port></sink><source type="processor"><processor>magZeropoint_value</processor><port>value</port></source></datalink><datalink><sink type="processor"><processor>Add_MAGZEROPOINT</processor><port>expression</port></sink><source type="processor"><processor>expression_value_1</processor><port>value</port></source></datalink><datalink><sink type="processor"><processor>Add_XCONVSIZE</processor><port>voTable</port></sink><source type="processor"><processor>Add_MAGZEROPOINT</processor><port>outputTable</port></source></datalink><datalink><sink type="processor"><processor>Add_XCONVSIZE</processor><port>expression</port></sink><source type="processor"><processor>expression_value_2</processor><port>value</port></source></datalink><datalink><sink type="processor"><processor>Add_XCONVSIZE</processor><port>nameNewCol</port></sink><source type="processor"><processor>nameNewCol_value</processor><port>value</port></source></datalink><datalink><sink type="processor"><processor>Add_YCONVSIZE</processor><port>voTable</port></sink><source type="processor"><processor>Add_XCONVSIZE</processor><port>outputTable</port></source></datalink><datalink><sink type="processor"><processor>Add_YCONVSIZE</processor><port>expression</port></sink><source type="processor"><processor>expression_value_3</processor><port>value</port></source></datalink><datalink><sink type="processor"><processor>Add_YCONVSIZE</processor><port>nameNewCol</port></sink><source type="processor"><processor>nameNewCol_value_1</processor><port>value</port></source></datalink><datalink><sink type="dataflow"><port>votable</port></sink><source type="processor"><processor>Add_YCONVSIZE</processor><port>outputTable</port></source></datalink></datalinks><annotations><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.Author">
+        <text>Susana Sanchez</text>
+      </annotationBean>
+      <date>2012-08-13 08:22:03.367 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>3ed76c98-e156-4cff-9fc4-fa4624a80780</identification>
+      </annotationBean>
+      <date>2012-09-07 09:31:51.748 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>0d13878a-62d3-4ebc-8e53-05a3c13020b3</identification>
+      </annotationBean>
+      <date>2012-08-14 06:44:17.851 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.DescriptiveTitle">
+        <text>Joining VOtables with information to execute Sextractor, Galfit and Ellipse.</text>
+      </annotationBean>
+      <date>2012-08-13 08:20:35.893 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>4d2b2efa-9afd-4b80-8b0f-4a70df61af76</identification>
+      </annotationBean>
+      <date>2012-08-13 10:51:31.542 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>0601240f-2ebb-488b-a554-3debc5867605</identification>
+      </annotationBean>
+      <date>2012-09-06 16:25:38.547 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>4e6d878f-8413-43bd-9f88-6a791928f33f</identification>
+      </annotationBean>
+      <date>2012-09-06 16:39:30.346 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>83aac9d3-4de6-4c06-a069-7a715f4a824b</identification>
+      </annotationBean>
+      <date>2012-08-03 11:16:37.203 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>71dae0b4-eebb-4418-9995-614a206c619e</identification>
+      </annotationBean>
+      <date>2012-09-07 09:30:17.264 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>15c873f9-c8ff-4353-aba2-7fdd79c61fd4</identification>
+      </annotationBean>
+      <date>2012-08-03 10:32:46.939 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>bda89e36-fc72-4efe-9ef1-1b070f1e4e21</identification>
+      </annotationBean>
+      <date>2012-08-03 11:27:07.451 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>6744fddc-322e-4291-88da-869cf4bc28f8</identification>
+      </annotationBean>
+      <date>2012-08-03 11:21:55.65 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>10679ac8-c15a-41a2-9d20-c064ee168389</identification>
+      </annotationBean>
+      <date>2012-08-13 09:42:56.452 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>00acb087-2eda-4f5a-8a72-37628b38c9bb</identification>
+      </annotationBean>
+      <date>2012-08-03 11:19:33.119 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>1e661c0e-a4db-45f8-a6e8-c8a9fa448f07</identification>
+      </annotationBean>
+      <date>2012-08-13 08:41:31.242 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>95f7a43b-314c-4058-8219-cf3d6e9f6e5a</identification>
+      </annotationBean>
+      <date>2012-08-13 08:25:17.568 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>f5395f39-1353-46dc-ad89-f3baa698e7af</identification>
+      </annotationBean>
+      <date>2012-08-13 08:20:09.113 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>96845115-cd91-4c34-8797-158dd314f53e</identification>
+      </annotationBean>
+      <date>2012-08-14 06:47:26.541 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>adbc214a-2b4c-40f4-8844-b53a75679cff</identification>
+      </annotationBean>
+      <date>2012-08-13 08:40:33.726 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.FreeTextDescription">
+        <text>This workflow join 13 votables, obtained from the workflow "Extract SDSS field information and PSF" in order to get a only one votable with all the information. Also it adds the columns "zp", "magzeropoint", xconvsize, yconvsize that are calculated from values provided in the inputs. The zp is -( aa + kk * airmass ), the magzeropoint is zp + 2.5 * log10(53.907456), the xconvsize is roundUp(nx/10) and the yconvsize is 
+roundUp(ny/10)</text>
+      </annotationBean>
+      <date>2012-09-07 09:28:31.721 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>4f532d5c-bfd9-4bbe-be4a-2d6580bacd81</identification>
+      </annotationBean>
+      <date>2012-09-06 16:53:12.321 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2><annotation_chain_2_2 encoding="xstream"><net.sf.taverna.t2.annotation.AnnotationChainImpl xmlns="">
+  <annotationAssertions>
+    <net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+      <annotationBean class="net.sf.taverna.t2.annotation.annotationbeans.IdentificationAssertion">
+        <identification>ebdb1347-a00a-44fc-866e-036ae16c7478</identification>
+      </annotationBean>
+      <date>2012-09-07 09:28:33.481 UTC</date>
+      <creators />
+      <curationEventList />
+    </net.sf.taverna.t2.annotation.AnnotationAssertionImpl>
+  </annotationAssertions>
+</net.sf.taverna.t2.annotation.AnnotationChainImpl></annotation_chain_2_2></annotations></dataflow></workflow>
