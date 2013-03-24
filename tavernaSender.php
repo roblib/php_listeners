@@ -8,7 +8,7 @@ class TavernaSender extends Sender
 */
   function __construct($hostname=null,$password=null,$username =null)
   {
-    parent::__construct($hostname.":8080/tavernaserver/rest/runs/",$password,$username);
+    parent::__construct("http://".$hostname.":8080/tavernaserver/rest/runs/",$password,$username);
   }
   
   function send_Message($message = null)

@@ -1,4 +1,5 @@
 <?php
+  require_once 'tavernaSender.php';
 
 /**
  * Class to listen for the JMS messages and filter them
@@ -37,6 +38,7 @@ class Connect {
     // Set up stomp settings
     $stomp_url = 'tcp://' . $this->config_xml->stomp->host . ':' . $this->config_xml->stomp->port;
     $channel = $this->config_xml->stomp->channel;
+     
 
     // Make a connection
     try {
@@ -79,6 +81,78 @@ class Connect {
         } catch (Exception $e) {
           $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
         }
+        
+       
+                                                                       
+        foreach ($fedora_object->object->models as $contentMod)
+	      {
+          //$this->log->lwrite("Content Models: ". $contentMod, 'SERVER_INFO');
+		      $modelObj = new ListenerObject($this->user, $this->fedora_url, $pid);
+          $content = $modelObj->object->models;
+         // $DSID = $message->dsID;   
+
+          //$this->log->lwrite("Listener Object: ". $modelObj->object[$DSID]->content, 'SERVER_cINFO');
+                                                 
+	       // $t2flowXml = 'http://192.168.56.195:8080/fedora/objects/'.$pid.'/datastreams/T2flow-ids/content';
+           // $ch = curl_init($t2flowXml);
+           // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            //curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+            //$DataStream =  curl_exec($ch);
+           // curl_close($ch);
+
+            $t2flowList = new SimpleXMLElement($modelObj->object['T2flow-ids']->content);
+            //  $this->log->lwrite("Listener Object: ". $t2flowList, 'SERVER_cINFO');
+
+	         //$this->log->lwrite('Parsed the t2flow list ' . $t2flowXml, "SERVER_INFO");
+         
+  	        foreach ($t2flowList->children() as $t2flow) 
+  	        {
+          
+	 	        //$this->log->lwrite('Looking inside t2flow xml' .$t2flow, "SERVER_INFO");
+  		        $streamName = (string)$t2flow['id'];
+                    $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
+                    $testvariable = 'T2flow-doc1';
+               $stream = $modelObj->object[$streamName]->content;
+              //$this->log->lwrite('obtained t2flow ' . $stream, "SERVER_INFO"); 
+  		        //get t2flow with t2flow doc      
+       		    //$stream = $modelObj->object[$streamName]->content;
+		//echo $stream;
+              
+           /* $stream = 'http://192.168.56.195:8080/fedora/objects/'.$pid.'/datastreams/T2flow-doc1/content';
+            $ch = curl_init($stream);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+            $stream =  curl_exec($ch);
+             curl_close($ch);
+                    */
+         //   $this->log->lwrite("1b layer in: ".$stream, 'SERVER_INFO');
+    		      if($stream!='') //if thl content model contained a t2flow 
+    		      {
+  			        //$TavernaUrl = '137.149.157.8:8080/tavernaserver/runs';
+  			        //uncomment to print t2flow
+  		            	$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
+                $taverna_sender = new TavernaSender('137.149.157.8', 'taverna', 'taverna');
+  		         //Post t2flow
+   		         $result = $taverna_sender->send_Message($stream);
+  
+               $uuid =$taverna_sender->prase_UUID($result);
+               $this->log->lwrite("uuid = ".$uuid,$result);
+  
+              
+  
+               //$uuid = "3b92f70a-72cc-4e92-b4a2-e0f20c008b94";
+               //$result = $taverna_sender->run_t2flow($uuid);
+               //echo $result."\n"; 
+  		       }
+    		     else //stream =''
+    		     {
+  			       $this->log->lwrite('No T2flow found on content model '.$stream, "SERVER_INFO");
+    		     }
+	         }   //foreach t2flow file 
+             
+      } //foreach contentmodel 
+            
+            }
         $properties = get_object_vars($message);
         $object_namespace_array = explode(':', $pid);
         $object_namespace = $object_namespace_array[0];
@@ -169,6 +243,6 @@ class Connect {
     }
   }
 
-}
+
 
 ?>
