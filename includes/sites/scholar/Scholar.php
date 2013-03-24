@@ -1,6 +1,8 @@
 <?php
 
-class Image extends Derivatives {
+require_once 'Derivatives.php';
+
+class Scholar extends Derivative {
   
   function __destruct() {
     parent::__destruct();

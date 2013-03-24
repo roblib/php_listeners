@@ -7,11 +7,12 @@
   	require_once 'SOAP/Server.php';
 	require_once 'FedoraConnect.php';
 	require_once 'tuque/Object.php';
-	//require_once 'includes/sites/scholar/Scholar.php';
+	require_once 'includes/sites/scholar/Scholar.php';
 	require_once 'includes/Image.php';
 	require_once 'includes/Text.php';
 	require_once 'includes/Technical.php';
 	require_once 'includes/Pdf.php';
+	require_once 'includes/Relationships.php';
 	require_once 'Logging.php';
 
   $soap = new SOAP_Server;
