@@ -69,7 +69,10 @@ class Connect {
         if (!$message->dsID) {
           $message->dsID = NULL;
         }
-        $this->log->lwrite("Method: " . $this->msg->headers['methodName'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+        
+        $modMethod = $this->msg->headers['methodName'];
+        
+        $this->log->lwrite("Method: " . $modMethod, 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
         try {
           if (fedora_object_exists($this->fedora_url, $this->user, $pid) === FALSE) {
             $this->log->lwrite("Could not find object", 'DELETED_OBJECT', $pid, NULL, $message->author, 'ERROR');
@@ -82,74 +85,140 @@ class Connect {
           $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
         }
         
-       
-                                                                       
+        
+        $this->log->lwrite("outside foreach", 'SERVER_INFO');
+        
         foreach ($fedora_object->object->models as $contentMod)
 	      {
           //$this->log->lwrite("Content Models: ". $contentMod, 'SERVER_INFO');
-		      $modelObj = new ListenerObject($this->user, $this->fedora_url, $pid);
-          $content = $modelObj->object->models;
-         // $DSID = $message->dsID;   
+		      $modelObj = new ListenerObject($this->user, $this->fedora_url, $contentMod);
+		      
+		        try 
+		        {
+		        	$trigString = $modelObj->object['Trigger-Datastreams'];
+		        	
+		        	if($trigString != "") //if the content model has a 'Trigger-Datastreams' datastream
+		        	{
+		        	
+		        	$methods = new SimpleXMLElement($trigString->content);
+				        
+				   	    foreach ($methods->children() as $method) 
+				 	    {
+				 	    	$this->log->lwrite("Found a child method: ". $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+				 	    	if( (string)$method['type'] ==  (string)$modMethod )
+				 	    	{ 
+				 	    	        $this->log->lwrite("Modifed object in a way set in Trigger-Datastreams ". $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+ 	  					   	   foreach ($method->children() as $trigger) 
+						 	   {
+						 	   	
+						 	   	if($trigger->getName() == "t2flow")
+						 	   	{
+						 	   		//TODO - run the t2flow here
+						 	   		//there is no trigger, just run the t2flow	
+						 	   	}
+						 	   	else //we have trigger
+						 	   	{
+						 	   		if($trigger['id'] == $message->dsID)
+						 	   		{
+							 	   		$this->log->lwrite("Matching Trigger  ". $trigger->getName(), 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+	
+										
+							            //  $this->log->lwrite("Listener Object: ". $t2flowList, 'SERVER_cINFO');
+							
+								         //$this->log->lwrite('Parsed the t2flow list ' . $t2flowXml, "SERVER_INFO");
+							         
+							         	//TODO error check to make sure children are of type T2flow
+							  	        foreach ($trigger->children() as $t2flow) 
+							  	        {
+							                $this->log->lwrite("2 layers in", 'SERVER_INFO');
+								 	        //$this->log->lwrite('Looking inside t2flow xml' .$t2flow, "SERVER_INFO");
+							  		        $streamName = (string)$t2flow['id'];
+							                $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
+							                $testvariable = 'T2flow-doc1';
+							                $stream = $modelObj->object[$streamName]->content;
+							                $this->log->lwrite('obtained t2flow ' . $stream, "SERVER_INFO"); 
+							  		        //get t2flow with t2flow doc      
+	
+							    		      if($stream!='') //if thl content model contained a t2flow 
+							    		      {
+							  			        //$TavernaUrl = '137.149.157.8:8080/tavernaserver/runs';
+							  			        //uncomment to print t2flow
+							  		          //  	$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
+									                $taverna_sender = new TavernaSender('137.149.157.8', 'taverna', 'taverna');
+									  		         //Post t2flow
+									   		       $result = $taverna_sender->send_Message($data);
+									               echo $result."\n";
+									  
+									               $uuid =$taverna_sender->prase_UUID($result);
+									               echo $uuid."\n";
+									  
+									               //$uuid = "3b92f70a-72cc-4e92-b4a2-e0f20c008b94";
+									               $result = $taverna_sender->run_t2flow($uuid);
+									               echo $result."\n"; 
+								  		       }
+							    		     else //stream =''
+							    		     {
+							  			       $this->log->lwrite('No T2flow found on content model '.$stream);
+							    		     }
+									     }   //foreach t2flow file 
+						 	   		} //matching trigger
+						 	   	}//nname wasnt t2flow
+						 	   } //foreach ($method->trigger as $trigger)      
+				 	    	}//	if( (string)$method['type'] ==  (string)$modMethod )
+				 	    }//foreach ($methods->children() as $method) 
+		        	} //if($trigString != "") 
+		        }
+		        catch (Exception $e) {
+		          $this->log->lwrite("An error occurred parsing for trigger datastreams $e", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
+		        }		      
 
-          //$this->log->lwrite("Listener Object: ". $modelObj->object[$DSID]->content, 'SERVER_cINFO');
-                                                 
-	       // $t2flowXml = 'http://192.168.56.195:8080/fedora/objects/'.$pid.'/datastreams/T2flow-ids/content';
-           // $ch = curl_init($t2flowXml);
-           // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            //curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-            //$DataStream =  curl_exec($ch);
-           // curl_close($ch);
-
-            $t2flowList = new SimpleXMLElement($modelObj->object['T2flow-ids']->content);
-            //  $this->log->lwrite("Listener Object: ". $t2flowList, 'SERVER_cINFO');
-
-	         //$this->log->lwrite('Parsed the t2flow list ' . $t2flowXml, "SERVER_INFO");
-         
-  	        foreach ($t2flowList->children() as $t2flow) 
-  	        {
-          
-	 	        //$this->log->lwrite('Looking inside t2flow xml' .$t2flow, "SERVER_INFO");
-  		        $streamName = (string)$t2flow['id'];
-                    $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
-                    $testvariable = 'T2flow-doc1';
-               $stream = $modelObj->object[$streamName]->content;
-              //$this->log->lwrite('obtained t2flow ' . $stream, "SERVER_INFO"); 
-  		        //get t2flow with t2flow doc      
-       		    //$stream = $modelObj->object[$streamName]->content;
-		//echo $stream;
-              
-           /* $stream = 'http://192.168.56.195:8080/fedora/objects/'.$pid.'/datastreams/T2flow-doc1/content';
-            $ch = curl_init($stream);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-            $stream =  curl_exec($ch);
-             curl_close($ch);
-                    */
-         //   $this->log->lwrite("1b layer in: ".$stream, 'SERVER_INFO');
-    		      if($stream!='') //if thl content model contained a t2flow 
-    		      {
-  			        //$TavernaUrl = '137.149.157.8:8080/tavernaserver/runs';
-  			        //uncomment to print t2flow
-  		            	$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
-                $taverna_sender = new TavernaSender('137.149.157.8', 'taverna', 'taverna');
-  		         //Post t2flow
-   		         $result = $taverna_sender->send_Message($stream);
-  
-               $uuid =$taverna_sender->prase_UUID($result);
-               $this->log->lwrite("uuid = ".$uuid,$result);
-  
-              
-  
-               //$uuid = "3b92f70a-72cc-4e92-b4a2-e0f20c008b94";
-               //$result = $taverna_sender->run_t2flow($uuid);
-               //echo $result."\n"; 
-  		       }
-    		     else //stream =''
-    		     {
-  			       $this->log->lwrite('No T2flow found on content model '.$stream, "SERVER_INFO");
-    		     }
-	         }   //foreach t2flow file 
-             
+//refactor this t2flow stuff later 
+/*		try {
+	            $t2flowList = new SimpleXMLElement($modelObj->object['T2flow-ids']->content);
+	            //  $this->log->lwrite("Listener Object: ". $t2flowList, 'SERVER_cINFO');
+	
+		         //$this->log->lwrite('Parsed the t2flow list ' . $t2flowXml, "SERVER_INFO");
+	         
+	  	        foreach ($t2flowList->children() as $t2flow) 
+	  	        {
+	              $this->log->lwrite("2 layers in", 'SERVER_INFO');
+		 	        //$this->log->lwrite('Looking inside t2flow xml' .$t2flow, "SERVER_INFO");
+	  		        $streamName = (string)$t2flow['id'];
+	                    $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
+	                    $testvariable = 'T2flow-doc1';
+	               $stream = $modelObj->object[$streamName]->content;
+	              $this->log->lwrite('obtained t2flow ' . $stream, "SERVER_INFO"); 
+	  		        //get t2flow with t2flow doc      
+	       		    //$stream = $modelObj->object[$streamName]->content;
+	              
+	         //   $this->log->lwrite("1b layer in: ".$stream, 'SERVER_INFO');
+	    		      if($stream!='') //if thl content model contained a t2flow 
+	    		      {
+	  			        //$TavernaUrl = '137.149.157.8:8080/tavernaserver/runs';
+	  			        //uncomment to print t2flow
+	  		          //  	$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
+	                $taverna_sender = new TavernaSender('137.149.157.8', 'taverna', 'taverna');
+	  		         //Post t2flow
+	   		         $result = $taverna_sender->send_Message($data);
+	               echo $result."\n";
+	  
+	               $uuid =$taverna_sender->prase_UUID($result);
+	               echo $uuid."\n";
+	  
+	               //$uuid = "3b92f70a-72cc-4e92-b4a2-e0f20c008b94";
+	               $result = $taverna_sender->run_t2flow($uuid);
+	               echo $result."\n"; 
+	  		       }
+	    		     else //stream =''
+	    		     {
+	  			       $this->log->lwrite('No T2flow found on content model '.$stream);
+	    		     }
+		         }   //foreach t2flow file 
+		}
+        catch (Exception $e) {
+          $this->log->lwrite("An error occurred parsing for t2flows", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
+        }
+*/        
       } //foreach contentmodel 
             
             }

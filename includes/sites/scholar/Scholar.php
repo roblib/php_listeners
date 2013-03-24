@@ -1,6 +1,6 @@
 <?php
 
-class Image extends Derivative {
+class Image extends Derivatives {
   
   function __destruct() {
     parent::__destruct();
