@@ -1,6 +1,6 @@
 <?php
 
-  	error_reporting(E_ALL ^ E_NOTICE);
+	error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE));
 
 	set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/php_listeners');
 
@@ -12,7 +12,7 @@
 	require_once 'includes/Text.php';
 	require_once 'includes/Technical.php';
 	require_once 'includes/Pdf.php';
-	require_once 'includes/Relationships.php';
+        require_once 'includes/Relationships.php';
 	require_once 'Logging.php';
 
   $soap = new SOAP_Server;
@@ -446,7 +446,7 @@ class IslandoraService {
                   $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
                   return -2;
                 }
-                if ($tech = new Technical($fedora_object, $dsid, 'jpg', $this->log, null)) {
+                if ($tech = new Technical($fedora_object, $dsid, 'xml', $this->log, null)) {
                   $this->log->lwrite("Technical metadata derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
                 } else {
                   $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
@@ -480,7 +480,7 @@ class IslandoraService {
                   $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
                   $result = -3;
                 }
-                $funcresult = $pdf->Scholar_PDFA($dsid . '_TN', $label, $height, $width);
+                $funcresult = $pdf->Scholar_PDFA($dsid . '_TN', $label);
                 if ($funcresult == 0) {
                   $this->log->lwrite("Scholar_PDFA function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
                   $result = 0;
@@ -502,7 +502,7 @@ class IslandoraService {
                   $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
                   return -2;
                 }
-                if ($rels = new Relationships($fedora_object, $dsid, 'xml', $this->log, null)) {
+                if ($rels = new Relationship($fedora_object, $dsid, 'xml', $this->log, null)) {
                   $this->log->lwrite("Relationship derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
                 } else {
                   $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
