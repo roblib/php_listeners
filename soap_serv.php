@@ -23,8 +23,8 @@
     $_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (!isset($_SERVER['PHP_AUTH_USER']) ||
 		!isset($_SERVER['PHP_AUTH_PW']) ||
-		$_SERVER['PHP_AUTH_USER'] != $service->config->httpAuth->username ||
-		$_SERVER['PHP_AUTH_PW'] != $service->config->httpAuth->username) {
+		strcmp($_SERVER['PHP_AUTH_USER'], $service->config->httpAuth->username) !== 0 ||
+		strcmp($_SERVER['PHP_AUTH_PW'], $service->config->httpAuth->username) != 0) {
 		$service->log->lwrite("User " . $_SERVER['PHP_AUTH_USER'] . " unauthorized with password " . $_SERVER['PHP_AUTH_PW'], NULL, NULL, NULL, 'ERROR');
 		header('HTTP/1.0 401 Unauthorized');
 		exit;
