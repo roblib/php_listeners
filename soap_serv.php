@@ -12,7 +12,7 @@
 	require_once 'includes/Text.php';
 	require_once 'includes/Technical.php';
 	require_once 'includes/Pdf.php';
-        require_once 'includes/Relationships.php';
+	require_once 'includes/Relationships.php';
 	require_once 'Logging.php';
 
   $soap = new SOAP_Server;
@@ -21,7 +21,16 @@
 
   if (isset($_SERVER['REQUEST_METHOD']) &&
     $_SERVER['REQUEST_METHOD'] == 'POST') {
-    $soap->service($HTTP_RAW_POST_DATA);
+	if (!isset($_SERVER['PHP_AUTH_USER']) ||
+		!isset($_SERVER['PHP_AUTH_PW']) ||
+		$_SERVER['PHP_AUTH_USER'] != $service->config->httpAuth->username ||
+		$_SERVER['PHP_AUTH_PW'] != $service->config->httpAuth->username) {
+		$service->log->lwrite("User " . $_SERVER['PHP_AUTH_USER'] . " unauthorized with password " . $_SERVER['PHP_AUTH_PW'], NULL, NULL, NULL, 'ERROR');
+		header('HTTP/1.0 401 Unauthorized');
+		exit;
+	} else {
+    	$soap->service($HTTP_RAW_POST_DATA);
+	}
   } else {
     require_once 'SOAP/Disco.php';
     $disco = new SOAP_DISCO_Server($soap,
