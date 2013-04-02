@@ -85,7 +85,7 @@ class Connect {
           $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
         }
         
-        foreach ($fedora_object->object->models as $contentMod)
+        foreach ($fedora_object->object->models as $contentMod)   //each content model on the modified object
 	      {
           //$this->log->lwrite("Content Models: ". $contentMod, 'SERVER_INFO');
 		      $modelObj = new ListenerObject($this->user, $this->fedora_url, $contentMod);
@@ -108,50 +108,26 @@ class Connect {
  	  					   	   foreach ($method->children() as $trigger) 
 						 	   {
 						 	   	
-						 	   	if($trigger->getName() == "t2flow")
-						 	   	{
-						 	   		//TODO - run the t2flow here
-						 	   		//there is no trigger, just run the t2flow	
-						 	   	}
-						 	   	else //we have trigger
-						 	   	{
-						 	   		if($trigger['id'] == $message->dsID)
-						 	   		{
-							 	   		$this->log->lwrite("Matching Trigger  ". $trigger->getName(), 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
-							        //  $this->log->lwrite("Listener Object: ". $t2flowList, 'SERVER_cINFO');
-							         
-							         	//TODO error check to make sure children are of type T2flow
-							  	        foreach ($trigger->children() as $t2flow) 
-							  	        {
-								 	          //$this->log->lwrite('Looking inside t2flow xml' .$t2flow, "SERVER_INFO");
-							  		        $streamName = (string)$t2flow['id'];
-							                $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
-							                $stream = $modelObj->object[$streamName]->content;
-							  		        //get t2flow with t2flow doc      
-	
-							    		      if($stream!='') //if thl content model contained a t2flow 
-							    		      {
-							  		          //  	$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
-									                $taverna_sender = new TavernaSender('137.149.157.8', 'taverna', 'taverna');
-									  		         //Post t2flow
-									   		       $result = $taverna_sender->send_Message($stream);
-							                $this->log->lwrite('result = ' . $result, "SERVER_INFO"); 
-									  
-									               $uuid =$taverna_sender->prase_UUID($result);
-									           
-									  
-							                $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO"); 
-									               $result = $taverna_sender->run_t2flow($uuid);
-									           
-							                $this->log->lwrite('next result =  ' . $result, "SERVER_INFO"); 
-								  		       }
-							    		     else //stream =''
-							    		     {
-							  			       $this->log->lwrite('No T2flow found on content model '.$stream);
-							    		     }
-									     }   //foreach t2flow file 
-						 	   		} //matching trigger
-						 	   	}//nname wasnt t2flow
+							 	   	if($trigger->getName() == "t2flow")
+							 	   	{
+							 	   		$streamName = (string)$trigger['id'];
+							 	   		$this->runT2flow($streamName,$modelObj);
+							 	   	}
+							 	   	else //we have trigger
+							 	   	{
+							 	   		if($trigger['id'] == $message->dsID)
+							 	   		{
+								 	   		$this->log->lwrite("Matching Trigger  ". $trigger->getName(), 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+								        //  $this->log->lwrite("Listener Object: ". $t2flowList, 'SERVER_cINFO');
+								         
+								         	//TODO error check to make sure children are of type T2flow
+								  	        foreach ($trigger->children() as $t2flow) 
+								  	        {
+								  	        	$streamName = (string)$t2flow['id'];
+												$this->runT2flow($streamName,$modelObj);
+										    }   //foreach t2flow file 
+							 	   		} //if matching trigger
+							 	   	} //else nname wasnt t2flow
 						 	   } //foreach ($method->trigger as $trigger)      
 				 	    	}//	if( (string)$method['type'] ==  (string)$modMethod )
 				 	    }//foreach ($methods->children() as $method) 
@@ -251,6 +227,35 @@ class Connect {
       // Close log file
       $this->log->lclose();
     }
+    
+    private function runT2flow($streamName,$modelObj)
+    {
+		   $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
+		   $stream = $modelObj->object[$streamName]->content;
+		//get t2flow with t2flow doc      
+		
+		if($stream!='') //if thl content model contained a t2flow 
+		{
+		//  	$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
+		    $taverna_sender = new TavernaSender('137.149.157.8', 'taverna', 'taverna');
+		  //Post t2flow
+			$result = $taverna_sender->send_Message($stream);
+		  		$this->log->lwrite('result = ' . $result, "SERVER_INFO"); 
+		
+		   	$uuid =$taverna_sender->prase_UUID($result);
+		
+		
+		  		$this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO"); 
+		   	$result = $taverna_sender->run_t2flow($uuid);
+		
+		  		$this->log->lwrite('next result =  ' . $result, "SERVER_INFO"); 
+		}
+		else //stream =''
+		{
+			$this->log->lwrite('No T2flow found on content model '.$stream);
+		}
+    }
+    
   }
 
 
