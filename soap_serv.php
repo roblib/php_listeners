@@ -43,7 +43,7 @@
   }
 
 // Command line tests:
-$service->TECHMD('islandora:313', 'EXIF', 'Technical metadata');
+//$service->TECHMD('islandora:313', 'EXIF', 'Technical metadata');
 //$service->Scholar_Policy('islandora:313', 'OBJ', 'Embargo policy - Both');
 //$service->AddImageDimensionsToRels('islandora:313', 'OBJ', 'RELS-INT');
 //$service->AllOCR('islandora:377', 'JPEG', 'HOCR', 'eng');
