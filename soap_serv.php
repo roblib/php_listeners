@@ -43,7 +43,7 @@
   }
 
 // Command line tests:
-//$service->TECHMD('islandora:313', 'EXIF', 'Technical metadata');
+$service->TECHMD('islandora:313', 'EXIF', 'Technical metadata');
 //$service->Scholar_Policy('islandora:313', 'OBJ', 'Embargo policy - Both');
 //$service->AddImageDimensionsToRels('islandora:313', 'OBJ', 'RELS-INT');
 //$service->AllOCR('islandora:377', 'JPEG', 'HOCR', 'eng');
@@ -122,9 +122,7 @@ class IslandoraService {
 
                 $this->__dispatch_map['JP2_L'] = array(
                         'in'  => array(
-                                'pid' => 'string',
-                                'dsid' => 'string',
-                                'label' => 'string'
+                                'pid' => 'string'
                         ),
                         'out' => array('exit_status' => 'int')
                 );
