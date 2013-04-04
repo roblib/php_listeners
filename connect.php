@@ -247,7 +247,7 @@ class Connect {
 		   	$uuid =$taverna_sender->prase_UUID($result);
 
 
-         @taverna_sender->add_input($uuid, "pid", $pid);
+         $taverna_sender->add_input($uuid, "pid", $pid);
 
 		  		$this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO"); 
 		   	$result = $taverna_sender->run_t2flow($uuid);
