@@ -15,7 +15,7 @@ class Technical extends Derivative {
       $log_message = "$dsid derivative created using FITS with command - $command || SUCCESS";
       $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
     } catch (Exception $e) {
-      $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage(), 'FAIL_DATASTREAM', $this->pid, $dsid, NUL$
+      $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage(), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
       return 'ERROR';
     }
