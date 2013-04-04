@@ -44,7 +44,7 @@
 
 // Command line tests:
 //$service->TECHMD('islandora:313', 'EXIF', 'Technical metadata');
-//$service->Scholar_Policy('islandora:313', 'OBJ', 'PDF');
+//$service->Scholar_Policy('islandora:313', 'OBJ', 'Embargo policy - Both');
 //$service->AddImageDimensionsToRels('islandora:313', 'OBJ', 'RELS-INT');
 //$service->AllOCR('islandora:377', 'JPEG', 'HOCR', 'eng');
 //$service->HOCR('islandora:377', 'JPEG', 'HOCR', 'eng');
@@ -738,7 +738,7 @@ class IslandoraService {
                   $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
                   $result = -3;
                 }
-                $funcresult = $policy->Scholar_Policy($dsid . '_POLICY', $label, $height, $width);
+                $funcresult = $policy->Scholar_Policy($dsid . '_POLICY', $label);
                 if ($funcresult == 0) {
                   $this->log->lwrite("Scholar_Policy function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
                   $result = 0;

@@ -17,7 +17,7 @@ class Scholar extends Derivative {
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
     }
-    return TRUE;
+    return 0;
   }
 
 }
