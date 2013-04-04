@@ -10,22 +10,18 @@ class Technical extends Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = $this->temp_file . '_TECHMD.xml';
-      $command = "/var/www/fits/fits.sh -i $this->temp_file -o $output_file";
-$this->log->lwrite("got here 1",'','','','','');	
+      $command = "/opt/fits/fits.sh -i $this->temp_file -o $output_file &> /var/log/phpfunctions.log";
       exec($command, $techmd_output, $return);
-$this->log->lwrite("got here 2",'','','','','');	
       $log_message = "$dsid derivative created using FITS with command - $command || SUCCESS";
       $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
-$this->log->lwrite("got here 3",'','','','','');	
     } catch (Exception $e) {
-      $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage(), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage(), 'FAIL_DATASTREAM', $this->pid, $dsid, NUL$
       unlink($output_file);
       return 'ERROR';
     }
     unlink($output_file);
     return $return;
   }
-
 }
 
 ?>
