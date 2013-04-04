@@ -33,7 +33,10 @@ class Logging {
     }
     // close log file (it's always a good idea to close a file when you're done with it)
     public function lclose() {
-        fclose($this->fp);
+	// Only close if necessary (prevents php warnings)
+	if ($this->fp) {
+          fclose($this->fp);
+        }
     }
     // open log file (private method)
     private function lopen() {
