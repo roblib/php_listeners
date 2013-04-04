@@ -72,6 +72,10 @@ class IslandoraService {
 		
 		$this->connect();
 
+		// Defining, _L are called from listener with pid only, 
+		// others can be called from workflow
+
+		// Image.php calls
     		$this->__dispatch_map['JPG'] = array(
       			'in'  => array(
 				'pid' => 'string',
@@ -82,13 +86,62 @@ class IslandoraService {
 	      		'out' => array('exit_status' => 'int')
 	    	);
 
-		// Start: Text.php
+		$this->__dispatch_map['JPG_L'] = array(
+                        'in'  => array(
+                                'pid' => 'string'
+                        ),
+                        'out' => array('exit_status' => 'int')
+                );
+
+		$this->__dispatch_map['TN'] = array(
+                        'in'  => array(
+                                'pid' => 'string',
+                                'dsid' => 'string',
+                                'label' => 'string',
+                                'height' => 'int',
+                                'width' => 'int'
+                        ),
+                        'out' => array('exit_status' => 'int')
+                );
+
+                $this->__dispatch_map['TN_L'] = array(
+                        'in'  => array(
+                                'pid' => 'string'
+                        ),
+                        'out' => array('exit_status' => 'int')
+                );
+
+		$this->__dispatch_map['JP2'] = array(
+                        'in'  => array(
+                                'pid' => 'string',
+                                'dsid' => 'string',
+                                'label' => 'string'
+                        ),
+                        'out' => array('exit_status' => 'int')
+                );
+
+                $this->__dispatch_map['JP2_L'] = array(
+                        'in'  => array(
+                                'pid' => 'string',
+                                'dsid' => 'string',
+                                'label' => 'string'
+                        ),
+                        'out' => array('exit_status' => 'int')
+                );
+
                 $this->__dispatch_map['AllOCR'] = array(
                        'in'  => array(
                                'pid' => 'string',
                                'dsid' => 'string',
                                'label' => 'string',
                                'language' => 'string'
+                       ),
+                'out' => array('exit_status' => 'int')
+                );
+
+		$this->__dispatch_map['AllOCR_L'] = array(
+                       'in'  => array(
+                               'pid' => 'string'
                        ),
                 'out' => array('exit_status' => 'int')
                 );
@@ -103,12 +156,26 @@ class IslandoraService {
                 'out' => array('exit_status' => 'int')
                 );
 
+		$this->__dispatch_map['OCR_L'] = array(
+                       'in'  => array(
+                               'pid' => 'string'
+                       ),
+                'out' => array('exit_status' => 'int')
+                );
+
 		$this->__dispatch_map['HOCR'] = array(
                        'in'  => array(
                                'pid' => 'string',
                                'dsid' => 'string',
                                'label' => 'string',
                                'language' => 'string'
+                       ),
+                'out' => array('exit_status' => 'int')
+                );
+
+		$this->__dispatch_map['HOCR_L'] = array(
+                       'in'  => array(
+                               'pid' => 'string'
                        ),
                 'out' => array('exit_status' => 'int')
                 );
@@ -122,34 +189,14 @@ class IslandoraService {
                        ),
                 'out' => array('exit_status' => 'int')
                 );
+
+		$this->__dispatch_map['ENCODED_OCR_L'] = array(
+                       'in'  => array(
+                               'pid' => 'string'
+                       ),
+                'out' => array('exit_status' => 'int')
+                );
 	
-		$this->__dispatch_map['TN'] = array(
-                        'in'  => array(
-                                'pid' => 'string',
-                                'dsid' => 'string',
-                                'label' => 'string',
-                                'height' => 'int',
-                                'width' => 'int'
-                        ),
-                        'out' => array('exit_status' => 'int')
-                );
-
-		$this->__dispatch_map['TN_L'] = array(
-                        'in'  => array(
-                                'pid' => 'string'
-                        ),
-                        'out' => array('exit_status' => 'int')
-                );
-
-                $this->__dispatch_map['JP2'] = array(
-                        'in'  => array(
-                                'pid' => 'string',
-                                'dsid' => 'string',
-                                'label' => 'string'
-                        ),
-                        'out' => array('exit_status' => 'int')
-                );
-
 		// Start TECHMD
                 $this->__dispatch_map['TECHMD'] = array(
                         'in' => array(
@@ -208,6 +255,7 @@ class IslandoraService {
 			),
 			'out' => array('message' => 'string')
 		);
+
   	}
 
 	function connect() {
@@ -273,9 +321,65 @@ class IslandoraService {
                 return $result;
         }
 
+	function AllOCR_L($pid, $dsid = 'JPEG', $label = 'HOCR', $language = 'eng')
+        {
+                $result = -1;
+                $this->log->lwrite("Function AllOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                try {
+                  $fedora_object = $this->fedora_connect->repository->getObject($pid);
+                  $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } catch (Exception $ex) {
+                  $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  return -2;
+                }
+                if ($text = new Text($fedora_object, $dsid, 'jpeg', $this->log, null)) {
+                  $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } else {
+                  $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = -3;
+                }
+                $funcresult = $text->AllOCR($dsid . '_HOCR', $label, $language);
+                if ($funcresult == 0) {
+                  $this->log->lwrite("AllOCR function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                  $result = 0;
+                } else {
+                  $this->log->lwrite("AllOCR function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = $funcresult;
+                }
+                return $result;
+        }
+
         function OCR($pid, $dsid = 'OCR', $label = 'Scanned text', $language = 'eng')
         {
 		$result = -1;
+                $this->log->lwrite("Function OCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                try {
+                  $fedora_object = $this->fedora_connect->repository->getObject($pid);
+                  $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } catch (Exception $ex) {
+                  $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  return -2;
+                }
+                if ($text = new Text($fedora_object, $dsid, 'txt', $this->log, null)) {
+                  $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } else {
+                  $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = -3;
+                }
+                $funcresult = $text->OCR($dsid . '_OCR', $label, $language);
+                if ($funcresult == 0) {
+                  $this->log->lwrite("OCR function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                  $result = 0;
+                } else {
+                  $this->log->lwrite("OCR function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = $funcresult;
+                }
+                return $result;
+        }
+
+	function OCR_L($pid, $dsid = 'OCR', $label = 'Scanned text', $language = 'eng')
+        {
+                $result = -1;
                 $this->log->lwrite("Function OCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
                 try {
                   $fedora_object = $this->fedora_connect->repository->getObject($pid);
@@ -329,9 +433,65 @@ class IslandoraService {
                 return $result;
         }
 
+	function HOCR_L($pid, $dsid = 'HOCR', $label = 'HOCR', $language = 'eng')
+        {
+                $result = -1;
+                $this->log->lwrite("Function HOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                try {
+                  $fedora_object = $this->fedora_connect->repository->getObject($pid);
+                  $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } catch (Exception $ex) {
+                  $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  return -2;
+                }
+                if ($text = new Text($fedora_object, $dsid, 'jpg', $this->log, null)) {
+                  $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } else {
+                  $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = -3;
+                }
+                $funcresult = $text->HOCR($dsid . '_HOCR', $label, $language);
+                if ($funcresult == 0) {
+                  $this->log->lwrite("HOCR function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                  $result = 0;
+                } else {
+                  $this->log->lwrite("HOCR function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = $funcresult;
+                }
+                return $result;
+        }
+
         function ENCODED_OCR($pid, $dsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng')
         {
 		$result = -1;
+                $this->log->lwrite("Function ENCODED_OCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                try {
+                  $fedora_object = $this->fedora_connect->repository->getObject($pid);
+                  $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } catch (Exception $ex) {
+                  $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  return -2;
+                }
+                if ($text = new Text($fedora_object, $dsid, 'txt', $this->log, null)) {
+                  $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } else {
+                  $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = -3;
+                }
+                $funcresult = $text->ENCODED_OCR($dsid . '_EncodedOCR', $label, $language);
+                if ($funcresult == 0) {
+                  $this->log->lwrite("ENCODED_OCR function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                  $result = 0;
+                } else {
+                  $this->log->lwrite("ENCODED_OCR function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = $funcresult;
+                }
+                return $result;
+        }
+
+	function ENCODED_OCR_L($pid, $dsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng')
+        {
+                $result = -1;
                 $this->log->lwrite("Function ENCODED_OCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
                 try {
                   $fedora_object = $this->fedora_connect->repository->getObject($pid);
@@ -363,6 +523,12 @@ class IslandoraService {
 		return $image->JPG($dsid . '_JPG', $label, $resize);
 	}
 
+	function JPG_L($pid, $dsid = "JPEG", $label = "JPEG image", $resize = "800") {
+                $fedora_object = $this->fedora_connect->repository->getObject($pid);
+                $image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
+                return $image->JPG($dsid . '_JPG', $label, $resize);
+        }
+
 	function JP2($pid, $dsid = "OBJ", $label = "Compressed jp2") {
                 $result = -1;
                 $this->log->lwrite("Function JP2 starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -386,6 +552,33 @@ class IslandoraService {
                 } else {
                   $this->log->lwrite("JP2 function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
 		  $result = $funcresult;
+                }
+                return $result;
+        }
+
+	function JP2_L($pid, $dsid = "OBJ", $label = "Compressed jp2") {
+                $result = -1;
+                $this->log->lwrite("Function JP2 starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                try {
+                  $fedora_object = $this->fedora_connect->repository->getObject($pid);
+                  $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } catch (Exception $ex) {
+                  $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  return -2;
+                }
+                if ($image = new Image($fedora_object, $dsid, 'jp2', $this->log, null)) {
+                  $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                } else {
+                  $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = -3;
+                }
+                $funcresult = $image->JP2($dsid . '_JP2', $label);
+                if ($funcresult == 0) {
+                  $this->log->lwrite("JP2 function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+                  $result = 0;
+                } else {
+                  $this->log->lwrite("JP2 function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+                  $result = $funcresult;
                 }
                 return $result;
         }
@@ -555,6 +748,7 @@ class IslandoraService {
                 }
                 return $result;
 	}
+
 }
   
 ?>
