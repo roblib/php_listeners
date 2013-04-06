@@ -145,6 +145,8 @@ class Connect {
         $object_namespace = $object_namespace_array[0];
         $objects = $this->config_xml->xpath('//object');
          
+         
+         
         foreach ($objects as $object) {
           $namespaces = $object->nameSpace;
           $content_models = $object->contentModel;
@@ -219,7 +221,7 @@ class Connect {
           unset($new_datastream);
           unset($derivative);
         }
-           
+              
         // Mark the message as received in the queue
         $this->con->ack($this->msg);
         unset($this->msg);
@@ -239,13 +241,13 @@ class Connect {
 		    {
             try
             {
-		            $this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
+		            //$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
 		            $taverna_sender = new TavernaSender($this->config_xml->taverna->host, $this->config_xml->taverna->port, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
       
                 //Post t2flow
                 
 			         $result = $taverna_sender->send_Message($stream);
-		  	       $this->log->lwrite('result = ' . $result, "SERVER_INFO"); 
+		  	       //$this->log->lwrite('result = ' . $result, "SERVER_INFO"); 
 
 		   	        $uuid =$taverna_sender->parse_UUID($result);
                 if (empty($uuid))
@@ -261,7 +263,7 @@ class Connect {
 		   	            $result = $taverna_sender->run_t2flow($uuid);
                     $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
                     $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
-    		            $this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
+    		            //$this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
                 }
             }
             catch (TavernaException $e) 
