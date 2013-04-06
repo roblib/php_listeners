@@ -31,7 +31,7 @@
         <host>localhost</host>
         <port>8080</port>
         <username>fedoraAdmin</username>
-        <password>islandora</password>
+        <password>cs482isl@nd0r@</password>
     </fedora>
     
     <stomp>
