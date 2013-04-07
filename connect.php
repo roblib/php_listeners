@@ -58,7 +58,7 @@ class Connect {
   }
 
   function listen() {
-    $this->log->lwrite("When does this run?","MODIFY_OBJECT");
+ //   $this->log->lwrite("When does this run?","MODIFY_OBJECT");
   
     // Receive a message from the queue
     if ($this->msg = $this->con->readFrame()) {
@@ -113,7 +113,7 @@ class Connect {
 							 	   	if($trigger->getName() == "t2flow")
 							 	   	{
 							 	   		$streamName = (string)$trigger['id'];
-							 	   		$this->runT2flow($streamName,$modelObj);
+							 	   		$this->runT2flow($streamName,$modelObj, $pid);
 							 	   	}
 							 	   	else //we have trigger
 							 	   	{
@@ -230,7 +230,7 @@ class Connect {
       $this->log->lclose();
     }
     
-    private function runT2flow($streamName,$modelObj)
+    private function runT2flow($streamName,$modelObj, $pid)
     {
 		   $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
 		   $stream = $modelObj->object[$streamName]->content;
@@ -246,13 +246,34 @@ class Connect {
 
 		   	$uuid =$taverna_sender->prase_UUID($result);
 
+         $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
 
-         $taverna_sender->add_input($uuid, "pid", $pid);
+         //Wait until uuid is set
+         $test = 0;
+         sleep(2);
+         
+         $this->log->lwrite('status = ' . $taverna_sender->get_status($uuid), "SERVER_INFO");
+         /*while ($taverna_sender->get_status($uuid) != "Initialized" && $test < 10)
+         {
+           sleep(1);
+           $test = $test + 1;
+           $this->log->lwrite('test =  ' . $test, "SERVER_INFO");
+         } */
+         
+         /*if ($test >= 60)
+         {
+            //$taverna_sender->delete_t2flow($uuid);         
+         }
+         else
+         { */
+                     $taverna_sender->add_input($uuid, "pid", $pid);
 
-		  		$this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO"); 
+		  		$this->log->lwrite('pid = ' . $pid, "SERVER_INFO"); 
 		   	$result = $taverna_sender->run_t2flow($uuid);
 
-		  		$this->log->lwrite('next result =  ' . $result, "SERVER_INFO"); 
+		  		$this->log->lwrite('next result =  ' . $result, "SERVER_INFO");
+         //}
+ 
 		}
 		else //stream =''
 		{

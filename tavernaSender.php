@@ -129,14 +129,16 @@ class TavernaSender extends Sender
   {
       if (!empty($uuid) && !empty($key) && !empty($value))
       {
-          $input = '<t2sr:runInput xmlns:t2sr="http://ns.taverna.org.uk/2010/xml/server/rest/"><t2sr:value>'.$value.'</t2sr:value></t2sr:runInput>';
+          $input = '<t2sr:runInput xmlns:t2sr="http://ns.taverna.org.uk/2010/xml/server/rest/">
+                      <t2sr:value>'.$value.'</t2sr:value>             
+                    </t2sr:runInput>';
           $ch = curl_init();
-          curl_setopt($ch, CURLOPT_URL, $this->hostname.$uuid."/input/input".$key);
+          curl_setopt($ch, CURLOPT_URL, $this->hostname.$uuid."/input/input/".$key);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);                   
           curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
           curl_setopt($ch, CURLOPT_HEADER, true);
           curl_setopt($ch, CURLOPT_USERPWD, "$this->username:$this->password");
-          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/plain'));
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/xml'));
           curl_setopt($ch, CURLOPT_POSTFIELDS, $input);
           curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
           $result = curl_exec($ch);

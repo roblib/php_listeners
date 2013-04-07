@@ -28,7 +28,7 @@
              make sure that the firewall rules allow the listeners to
              contact the Fedora server and set up any XACML policies 
              to allow write access from the listener IP address -->
-        <host>localhost</host>
+        <host>137.149.157.10</host>
         <port>8080</port>
         <username>fedoraAdmin</username>
         <password>cs482isl@nd0r@</password>

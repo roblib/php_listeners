@@ -1,5 +1,4 @@
 <?php
-
 	error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE));
 
 	set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/php_listeners');
