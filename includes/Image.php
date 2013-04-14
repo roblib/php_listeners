@@ -11,7 +11,7 @@ class Image extends Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = $this->temp_file . '_JP2.jp2';
-      $command = 'kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes';
+      $command = 'kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes &> /var/log/phpfunctions/cmd1.log';
       exec($command, $jp2_output, $return);
       $log_message = "$dsid derivative created using kdu_compress with command - $command || SUCCESS";
       $this->add_derivative($dsid, $label, $output_file, 'image/jp2', $log_message);
@@ -26,7 +26,7 @@ class Image extends Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = $this->temp_file . '_TN.jpg';
-      $command = "convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file";
+      $command = "convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file &> /var/log/phpfunctions/cmd1.log";
       exec($command, $tn_output, $return);
       $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
       $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
@@ -74,7 +74,7 @@ class Image extends Derivative {
     try {
 		$pathinfo = pathinfo($this->temp_file);
       $output_file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'] . '_JPG.jpg';
-      $command = "convert $this->temp_file -resize $resize $output_file";
+      $command = "convert $this->temp_file -resize $resize $output_file &> /var/log/phpfunctions/cmd1.log";
       exec($command, $jpg_output, $return);
       $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
       $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
