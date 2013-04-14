@@ -244,7 +244,7 @@ class Connect {
 			$result = $taverna_sender->send_Message($stream);
 		  		$this->log->lwrite('result = ' . $result, "SERVER_INFO"); 
 
-		   	$uuid =$taverna_sender->prase_UUID($result);
+		   	$uuid =$taverna_sender->parse_UUID($result);
 
          $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
 

@@ -596,8 +596,13 @@ class IslandoraService {
 		return $image->JPG($dsid . '_JPG', $label, $resize);
 	}
 
+	// Some objects have JPEG, some JPG. Added check
 	function JPG_L($pid, $dsid = "JPEG", $label = "JPEG image", $resize = "800") {
                 $fedora_object = $this->fedora_connect->repository->getObject($pid);
+		if ($fedora_object->getDatastream($dsid) == FALSE) {
+			$this->log->lwrite("No JPEG, checking for JPG", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+			$dsid = "JPG";
+		}
                 $image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
                 return $image->JPG($dsid . '_JPG', $label, $resize);
         }

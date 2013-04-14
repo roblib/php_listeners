@@ -45,7 +45,7 @@ public $sender=null;
   {
     $message = $this->send_to_taverna();
     //echo "message: ".$message."\n";
-    $uuid = $this->sender->prase_UUID($message);
+    $uuid = $this->sender->parse_UUID($message);
     echo 'uuid'.$uuid."\n";
     $result = $this->sender->run_t2flow($uuid);
     //echo "run:".$result;

@@ -162,11 +162,11 @@ class Text extends Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = $this->temp_file . '_HOCR';
-      $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 hocr &> /var/log/phpfunctions.log";
+      $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 hocr &> /var/log/phpfunctions/cmd1.log";
       exec($command, $hocr_output, $return);
       if (!file_exists($output_file . '.html')) {
-        exec("/usr/bin/convert -quality 99 " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg &> /var/log/phpfunctions.log");
-        $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 hocr &> /var/log/phpfunctions.log";
+        exec("/usr/bin/convert -quality 99 " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg &> /var/log/phpfunctions/cmd2.log");
+        $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 hocr &> /var/log/phpfunctions/cmd3.log";
         exec($command, $hocr2_output, $return);
         if (!file_exists($output_file . '.html')) {
           $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');

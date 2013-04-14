@@ -44,7 +44,7 @@ public $datastream_url;    //url of t2flow in fedora
   * 
   */  
 
-  public function prase_url($hostname = null)
+  public function parse_url($hostname = null)
   {
  //   echo $this->dsid.'
  //   ';

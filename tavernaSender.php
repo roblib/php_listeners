@@ -40,7 +40,7 @@ class TavernaSender extends Sender
     }
   
 
-  function prase_UUID($message)
+  function parse_UUID($message)
   {
     if (!empty($message))
     {
