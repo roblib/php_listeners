@@ -1,15 +1,15 @@
 <?php
       require_once 'sender.php';
-            require_once 'ForbiddenException.php';
+      require_once 'TavernaException.php';
                                   
 class TavernaSender extends Sender
 {
 /*
 * intitiallize the
 */
-  function __construct($hostname=null,$password=null,$username =null)
+  function __construct($hostname=null,$port=null,$password=null,$username =null)
   {
-    parent::__construct("http://".$hostname.":8080/tavernaserver/rest/runs/",$password,$username);
+    parent::__construct("http://".$hostname.":".$port."/tavernaserver/rest/runs/",$password,$username);
   }
   
   function send_Message($message)
@@ -27,9 +27,10 @@ class TavernaSender extends Sender
           curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
           $content = curl_exec($ch);
     
-          if (curl_getinfo($ch,CURLINFO_HTTP_CODE) == 403)
+          if (curl_getinfo($ch,CURLINFO_HTTP_CODE) != 201)
           {
-              throw new ForbiddenException();
+              curl_close($ch);
+              throw new TavernaException($content);
           }
           
           curl_close($ch);
@@ -44,30 +45,33 @@ class TavernaSender extends Sender
   {
     if (!empty($message))
     {
-    $uuid = substr($message, strrpos($message, $this->hostname)+strlen($this->hostname), 36);
-    return $uuid;
+        $uuid = substr($message, strrpos($message, $this->hostname)+strlen($this->hostname), 36);
+        return $uuid;
     }
+    
+    return null;
   }
   
   function run_t2flow($uuid)
   {
       if (!empty($uuid))
       {
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $this->hostname.$uuid."/status/");
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);                   
-      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-      curl_setopt($ch, CURLOPT_HEADER, true);
-      curl_setopt($ch, CURLOPT_USERPWD, "$this->username:$this->password");
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/plain'));
-      curl_setopt($ch, CURLOPT_POSTFIELDS, "Operating");
-      curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      $result = curl_exec($ch);
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $this->hostname.$uuid."/status/");
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);                   
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+          curl_setopt($ch, CURLOPT_HEADER, true);
+          curl_setopt($ch, CURLOPT_USERPWD, "$this->username:$this->password");
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/plain'));
+          curl_setopt($ch, CURLOPT_POSTFIELDS, "Operating");
+          curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+          $result = curl_exec($ch);
       
-      if (curl_getinfo($ch,CURLINFO_HTTP_CODE) == 403)
-      {
-          throw new ForbiddenException();
-      }
+          if (curl_getinfo($ch,CURLINFO_HTTP_CODE) != 200)
+          {
+              curl_close($ch);
+              throw new TavernaException($result);
+          }
       
       curl_close($ch);
       return $result;
@@ -79,23 +83,23 @@ class TavernaSender extends Sender
   {
       if (!empty($uuid))
       {
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $this->hostname.$uuid."/status/");
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);                   
-      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-      curl_setopt($ch, CURLOPT_HEADER, true);
-      curl_setopt($ch, CURLOPT_USERPWD, "$this->username:$this->password");
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/plain'));
-      curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      $result = curl_exec($ch);
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $this->hostname.$uuid."/status/");
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);                   
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+          curl_setopt($ch, CURLOPT_HEADER, true);
+          curl_setopt($ch, CURLOPT_USERPWD, "$this->username:$this->password");
+          curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/plain'));
+          curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+          $result = curl_exec($ch);
       
-      if (curl_getinfo($ch,CURLINFO_HTTP_CODE) == 403)
-      {
-          throw new ForbiddenException();
-      }
+          if (curl_getinfo($ch,CURLINFO_HTTP_CODE) != 200)
+          {
+              curl_close($ch);
+              throw new TavernaException($result);
+          }
       
-      curl_close($ch);
-      return $result;
+          curl_close($ch);
       }
       return null;
   }
@@ -104,22 +108,23 @@ class TavernaSender extends Sender
   {
     if (!empty($uuid))
     {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $this->hostname.'/'.$uuid.'/');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);                   
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-    curl_setopt($ch, CURLOPT_HEADER, true);
-    curl_setopt($ch, CURLOPT_USERPWD, $this->username.':'.$this->password);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('text/plain'));
-    $result = curl_exec($ch);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->hostname.'/'.$uuid.'/');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);                   
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, $this->username.':'.$this->password);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('text/plain'));
+        $result = curl_exec($ch);
     
-    if (curl_getinfo($ch,CURLINFO_HTTP_CODE) == 403)
-      {
-          throw new ForbiddenException();
-      }
+        if (curl_getinfo($ch,CURLINFO_HTTP_CODE) != 202)
+        {
+            curl_close($ch);
+            throw new TavernaException($result);
+        }
     
-    curl_close($ch);
-    return $result;
+        curl_close($ch);
+        return $result;
     }
     
     return null;
@@ -143,9 +148,10 @@ class TavernaSender extends Sender
           curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
           $result = curl_exec($ch);
           
-          if (curl_getinfo($ch,CURLINFO_HTTP_CODE) == 403)
+          if (curl_getinfo($ch,CURLINFO_HTTP_CODE) != 200)
           {
-              throw new ForbiddenException();
+              curl_close($ch);
+              throw new TavernaException($result);
           }
           
           curl_close($ch);

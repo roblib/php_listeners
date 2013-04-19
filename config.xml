@@ -34,6 +34,13 @@
         <password>cs482isl@nd0r@</password>
     </fedora>
     
+    <taverna>
+        <host>137.149.157.8</host>
+        <port>8080</port>
+        <username>taverna</username>
+        <password>taverna</password>
+    </taverna>
+    
     <stomp>
         <!-- These are the details for the JMS broker. Usually the host
              will be the same as the Fedora server. If the Stomp port on

@@ -1,6 +1,6 @@
 <?php
   require_once 'tavernaSender.php';
-
+  require_once 'TavernaException.php';
 /**
  * Class to listen for the JMS messages and filter them
  * based on the rules defined in config.xml
@@ -19,6 +19,7 @@ class Connect {
     include_once 'connect.php';
     //include_once 'Derivatives.php';
     include_once 'Logging.php';
+    
 
     // Load config file
     $config_file = file_get_contents('config.xml');
@@ -57,9 +58,7 @@ class Connect {
     }
   }
 
-  function listen() {
- //   $this->log->lwrite("When does this run?","MODIFY_OBJECT");
-  
+  function listen() {  
     // Receive a message from the queue
     if ($this->msg = $this->con->readFrame()) {
       // do what you want with the message
@@ -68,7 +67,7 @@ class Connect {
 //        $this->log->lwrite('Message: ' . $this->msg->body, 'SERVER_INFO');
         $message = new Message($this->msg->body);
         $pid = $this->msg->headers['pid'];
-        if (!$message->dsID) {
+        if (!isset($message->dsID)) {
           $message->dsID = NULL;
         }
         
@@ -113,7 +112,7 @@ class Connect {
 							 	   	if($trigger->getName() == "t2flow")
 							 	   	{
 							 	   		$streamName = (string)$trigger['id'];
-							 	   		$this->runT2flow($streamName,$modelObj, $pid);
+							 	   		$this->runT2flow($streamName,$modelObj, $pid, $message->dsID);
 							 	   	}
 							 	   	else //we have trigger
 							 	   	{
@@ -126,7 +125,7 @@ class Connect {
 								  	        foreach ($trigger->children() as $t2flow) 
 								  	        {
 								  	        	$streamName = (string)$t2flow['id'];
-												$this->runT2flow($streamName,$modelObj);
+												$this->runT2flow($streamName,$modelObj, $pid, $message->dsID);
 										    }   //foreach t2flow file 
 							 	   		} //if matching trigger
 							 	   	} //else nname wasnt t2flow
@@ -145,7 +144,7 @@ class Connect {
         $object_namespace_array = explode(':', $pid);
         $object_namespace = $object_namespace_array[0];
         $objects = $this->config_xml->xpath('//object');
-
+         
         foreach ($objects as $object) {
           $namespaces = $object->nameSpace;
           $content_models = $object->contentModel;
@@ -220,7 +219,7 @@ class Connect {
           unset($new_datastream);
           unset($derivative);
         }
-
+           
         // Mark the message as received in the queue
         $this->con->ack($this->msg);
         unset($this->msg);
@@ -230,59 +229,50 @@ class Connect {
       $this->log->lclose();
     }
     
-    private function runT2flow($streamName,$modelObj, $pid)
+    private function runT2flow($streamName,$modelObj, $pid, $dsID)
     {
-		   $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
-		   $stream = $modelObj->object[$streamName]->content;
-		//get t2flow with t2flow doc      
+		    $this->log->lwrite('Names of t2flows ' . $streamName, "SERVER_INFO");               
+		    $stream = $modelObj->object[$streamName]->content;
+		    //get t2flow with t2flow doc      
 
-		if($stream!='') //if thl content model contained a t2flow 
-		{
-		//  	$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
-		    $taverna_sender = new TavernaSender('137.149.157.8', 'taverna', 'taverna');
-		  //Post t2flow
-			$result = $taverna_sender->send_Message($stream);
-		  		$this->log->lwrite('result = ' . $result, "SERVER_INFO"); 
+		    if($stream!='') //if thl content model contained a t2flow 
+		    {
+            try
+            {
+		            $this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
+		            $taverna_sender = new TavernaSender($this->config_xml->taverna->host, $this->config_xml->taverna->port, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
+      
+                //Post t2flow
+                
+			         $result = $taverna_sender->send_Message($stream);
+		  	       $this->log->lwrite('result = ' . $result, "SERVER_INFO"); 
 
-		   	$uuid =$taverna_sender->parse_UUID($result);
-
-         $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
-
-         //Wait until uuid is set
-         $test = 0;
-         sleep(2);
-         
-         $this->log->lwrite('status = ' . $taverna_sender->get_status($uuid), "SERVER_INFO");
-         /*while ($taverna_sender->get_status($uuid) != "Initialized" && $test < 10)
-         {
-           sleep(1);
-           $test = $test + 1;
-           $this->log->lwrite('test =  ' . $test, "SERVER_INFO");
-         } */
-         
-         /*if ($test >= 60)
-         {
-            //$taverna_sender->delete_t2flow($uuid);         
-         }
-         else
-         { */
-                     $taverna_sender->add_input($uuid, "pid", $pid);
-
-		  		$this->log->lwrite('pid = ' . $pid, "SERVER_INFO"); 
-		   	$result = $taverna_sender->run_t2flow($uuid);
-
-		  		$this->log->lwrite('next result =  ' . $result, "SERVER_INFO");
-         //}
- 
-		}
-		else //stream =''
-		{
-			$this->log->lwrite('No T2flow found on content model '.$stream);
-		}
-    }
-    
+		   	        $uuid =$taverna_sender->parse_UUID($result);
+                if (empty($uuid))
+                {
+                    //This message should never be seen, as it should break in send message first
+                    $this->log->lwrite('No UUID was found', "TAVERNA_ERROR");
+                }
+                else //uuid has a value
+                {
+                    $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
+                    $taverna_sender->add_input($uuid, "pid", $pid);
+                    $taverna_sender->add_input($uuid, "dsid", $dsID); 
+		   	            $result = $taverna_sender->run_t2flow($uuid);
+                    $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
+                    $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
+    		            $this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
+                }
+            }
+            catch (TavernaException $e) 
+            {
+                $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR');
+            }
+		    }
+		    else //stream =''
+		    {
+			     $this->log->lwrite('No T2flow found on content model '.$stream, 'FEDORA_ERROR');
+		    }
+    } 
   }
-
-
-
 ?>
