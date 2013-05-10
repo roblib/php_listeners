@@ -343,7 +343,7 @@ class IslandoraService {
   // Used by SOAP server - Exposes WSDLs
   function __dispatch($method) {
     if (isset($this->__dispatch_map[$method])) {
-        return $this->__dispatch_map[$method];
+      return $this->__dispatch_map[$method];
     }
     else {
       return null;
@@ -590,10 +590,10 @@ class IslandoraService {
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-                } catch (Exception $ex) {
+      } catch (Exception $ex) {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       return -2;
-                }
+    }
     if ($text = new Text($fedora_object, $dsid, 'txt', $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
