@@ -30,8 +30,8 @@ class Connect {
 
     $this->log = new Logging();
     $this->log->lfile($log_file);
-
-    $this->fedora_url = 'http://' . $this->config_xml->fedora->host . ':' . $this->config_xml->fedora->port . '/fedora';
+    $prot = empty($this->config_xml->fedora->protocol) ? 'http' : $this->config_xml->fedora->protocol; 
+    $this->fedora_url = $prot .'://'. $this->config_xml->fedora->host . ':' . $this->config_xml->fedora->port . '/fedora';
     $this->user = new stdClass();
     $this->user->name = $this->config_xml->fedora->username;
     $this->user->pass = $this->config_xml->fedora->password;
@@ -242,7 +242,9 @@ class Connect {
             try
             {
 		            //$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
-		            $taverna_sender = new TavernaSender($this->config_xml->taverna->host, $this->config_xml->taverna->port, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
+                $prot = empty($this->config_xml->taverna->protocol) ? 'http' : $this->config_xml->taverna->protocol; 
+                $context = empty($this->config_xml->taverna->context) ? 'http' : $this->config_xml->taverna->context; 
+		            $taverna_sender = new TavernaSender($prot, $this->config_xml->taverna->host, $this->config_xml->taverna->port,$context, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
       
                 //Post t2flow
                 

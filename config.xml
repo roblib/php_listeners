@@ -28,14 +28,17 @@
              make sure that the firewall rules allow the listeners to
              contact the Fedora server and set up any XACML policies 
              to allow write access from the listener IP address -->
-        <host>137.149.157.10</host>
+        <protocol>http</protocol>
+        <host>ip/ordomain</host>
         <port>8080</port>
         <username>fedoraAdmin</username>
-        <password>cs482isl@nd0r@</password>
+        <password>password</password>
     </fedora>
     
     <taverna>
-        <host>137.149.157.8</host>
+        <protocol>https</protocol>
+        <context>taverna-server</context>
+        <host>ip/ordomain</host>
         <port>8080</port>
         <username>taverna</username>
         <password>taverna</password>

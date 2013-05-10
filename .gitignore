@@ -1,8 +1,10 @@
 *.tif
 *.png
 *.log
+*.bak
 config.xml
 *.xslt
 tuque
 *.inc
 listener_test*
+/nbproject/private/
