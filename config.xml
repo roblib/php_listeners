@@ -22,7 +22,6 @@
 		<username>islandora</username>
 		<password>islandora</password>
 	</httpAuth>
-
     <fedora>
         <!-- These are the details for your Fedora server. You should
              make sure that the firewall rules allow the listeners to
