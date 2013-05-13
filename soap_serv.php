@@ -3,9 +3,13 @@
 // PHP error reporting
 error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE));
 
+//read a config file of soap to determin the location of microservices.
+
+$location_evn_veriable = 'PHP_LISTENERS_PATH';
+$location = $_SERVER[$location_evn_veriable];
 // Working php_listeners dir
 //TODO MAKE the path to this more generic in case the listeners are not configured in this directory
-set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/php_listeners');
+set_include_path(get_include_path() . PATH_SEPARATOR . $location);
 
 // requires
 require_once 'SOAP/Server.php';
@@ -73,14 +77,14 @@ else {
 // #%#%#%#%#%#%#%#%#%#%#%#%#%#%#%#%#%
 class IslandoraService {
 
-  var $config;
+ var $config;
   var $log;
   var $fedora_connect;
   var $__dispatch_map = array();
 
   function IslandoraService() {
     //TODO MAKE the path to this more generic in case the listeners are not configured in this directory
-    $config_file = file_get_contents('/opt/cs482_listeners/php_listeners/config.xml');
+    $config_file = file_get_contents($location.'/config.xml');
     $this->config = new SimpleXMLElement($config_file);
 
     $this->log = new Logging();
