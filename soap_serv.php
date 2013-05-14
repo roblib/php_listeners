@@ -5,8 +5,9 @@ error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE));
 
 //read a config file of soap to determin the location of microservices.
 
-$location_evn_veriable = 'PHP_LISTENERS_PATH';
-$location = $_SERVER[$location_evn_veriable];
+$location_env_veriable = 'PHP_LISTENERS_PATH';
+$location = getenv($location_env_veriable);
+//echo $location;
 // Working php_listeners dir
 //TODO MAKE the path to this more generic in case the listeners are not configured in this directory
 set_include_path(get_include_path() . PATH_SEPARATOR . $location);
@@ -84,6 +85,8 @@ class IslandoraService {
 
   function IslandoraService() {
     //TODO MAKE the path to this more generic in case the listeners are not configured in this directory
+    $location_env_veriable = 'PHP_LISTENERS_PATH';
+    $location = getenv($location_env_veriable);
     $config_file = file_get_contents($location.'/config.xml');
     $this->config = new SimpleXMLElement($config_file);
 
