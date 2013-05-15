@@ -12,17 +12,16 @@
     
     <listeners>
         <!-- Choose the number of child processes you want to spawn. 
-             A rough estimate is you'll get a load average which is 
+         i    A rough estimate is you'll get a load average which is 
              1.5 times the number of child processes (eg. load average 
              of 12 for 8 child processes -->
         <child_processes>2</child_processes>    
     </listeners>
-    
+
 	<httpAuth>
 		<username>islandora</username>
 		<password>islandora</password>
 	</httpAuth>
-
     <fedora>
         <!-- These are the details for your Fedora server. You should
              make sure that the firewall rules allow the listeners to
@@ -54,73 +53,6 @@
         <port>61613</port>
         <channel>/queue/listener.update</channel>
     </stomp>
-    
-    <derivatives>
-        <!-- In this section you can specify as many object elements as you
-             want. Each of these defines a set of rules that are used to filter
-             each message from the JMS broker and decide what actions, if any, 
-             should be triggered. If you don't specify a value for a particular
-             filter then all of the messages will pass through that filter. -->
-        <object>
-            <!-- Filter by namespace -->
-            <nameSpace>islandora</nameSpace>
-            <!-- Filter by the content model of the object -->
-            <contentModel>fedora-system:FedoraObject-3.0</contentModel>
-            <!-- Filter on method (http://www.fedora-commons.org/documentation/3.0/userdocs/server/webservices/apim/index.html) -->
-            <method>addDatastream</method>
-            <method>modifyDatastreamByReference</method>
-                        <method>modifyDatastreamByValue</method>
-                        <method>ingest</method>
-            <!-- Filter on the mimetype of the added/updated datastream -->
-            <!-- Filter on the datastream that has been added/updated -->
-            <trigger_datastream>DC</trigger_datastream>
-            <!-- Define which datastream to grab to create the derivatives. If 
-                 you want to create derivatives from more than one datastream 
-                 then create a second rule. -->
-            <datastream>TIFF</datastream>
-            <!-- This is a list of operations to perform on the datastream. 
-                 Currently these consist of a datastream ID (dsid), the label
-                 of the newly created datastream and the function that is used.
-                 The functions are defined in the Derivatives.php file. You can
-                 specify as many derivatives as you want. -->
-        <derivative>
-				<dsid>TN</dsid>
-				<label>Thumbnail</label>
-				<function>TN</function>
-				<file>/includes/Image.php</file>
-				<class>Image</class>
-			</derivative>
-			<!--<derivative>
-				<dsid>JP2</dsid>
-				<label>Compressed jp2</label>
-				<function>JP2</function>
-				<file>/includes/Image.php</file>
-				<class>Image</class>
-			</derivative>
-			<derivative>
-				<dsid>OCR</dsid>
-				<label>Scanned text</label>
-				<function>ALLOCR</function>
-				<file>/includes/Text.php</file>
-				<class>Text</class>
-			</derivative>
-			<derivative>
-				<dsid>TECHMD</dsid>
-				<label>Technical metadata</label>
-				<function>TECHMD</function>
-				<file>/includes/Technical.php</file>
-				<class>Technical</class>
-			</derivative>
-			<derivative>
-				<dsid>RELS-INT</dsid>
-				<label>RELS-INT</label>
-				<function>AddImageDimensionsToRels</function>
-				<file>/includes/Relationships.php</file>
-				<class>Relationship</class>
-			</derivative>-->
-        </object>
-        
-    </derivatives>
     
     <log>
         <!-- Specify the file name of the log file. -->
