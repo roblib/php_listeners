@@ -1,7 +1,7 @@
 <?php
       require_once 'sender.php';
       require_once 'TavernaException.php';
-      require_once 'tuque/HttpConnection.php';
+      require_once 'TavernaCurlConnection.php';
                                   
 class TavernaSender extends Sender
 { 
@@ -11,7 +11,7 @@ class TavernaSender extends Sender
   function __construct($protocol,$hostname=null,$port=null,$context, $username=null,$password =null)
   {
     parent::__construct($protocol.'://'.$hostname.":".$port .'/'. $context."/rest/runs/",$password,$username);
-    $this->curl_connect =new CurlConnection();
+    $this->curl_connect =new TavernaCurlConnection();
     $this->curl_connect->username = $this->username;
     $this->curl_connect->password = $this->password;
   }
@@ -32,7 +32,7 @@ class TavernaSender extends Sender
       {
 
 	 $this->set_ssl();
-	 $response = $this->curl_connect->postRequest($this->hostname,'string',$message,'Content-Type: application/vnd.taverna.t2flow+xml');
+	 $response = $this->curl_connect->postRequest($this->hostname,'string',$message,'application/vnd.taverna.t2flow+xml');
         
 	 echo $response['content'];
 	 if($response['status'] !=201)
@@ -67,7 +67,7 @@ class TavernaSender extends Sender
 
 	$this->set_ssl(); 
 
-	$response = $curl_connect->putRequest($this->hostname,'string','Operating');
+	$response = $this->curl_connect->tavernaPutRequest($url,'string','Operating','text/plain');
 
 	if($response['status'] != 200)
         { 
@@ -135,7 +135,7 @@ class TavernaSender extends Sender
 	 
 	 $url=$this->hostname.$uuid."/input/input/".$key;
 
-	 $response = $this->curl_connect->putRequest($url,'string',$input);
+	 $response = $this->curl_connect->tavernaPutRequest($url,'string',$input,'application/xml');
         
 	 if($response['status'] !=200)
          { 
