@@ -87,9 +87,14 @@ class IslandoraService {
     //TODO MAKE the path to this more generic in case the listeners are not configured in this directory
     $location_env_veriable = 'PHP_LISTENERS_PATH';
     $location = getenv($location_env_veriable);
+    try{
     $config_file = file_get_contents($location.'/config.xml');
-    $this->config = new SimpleXMLElement($config_file);
-
+      $this->config = new SimpleXMLElement($config_file);
+    }
+    catch (Exception $e)
+    {
+	print("get error when open config file :".$loaction);
+    }
     $this->log = new Logging();
     $this->log->lfile($this->config->log->file);
 
