@@ -4,12 +4,8 @@
 error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE));
 
 //read a config file of soap to determin the location of microservices.
+$location = get_listener_config_path();
 
-$location_env_veriable = 'PHP_LISTENERS_PATH';
-$location = getenv($location_env_veriable);
-//echo $location;
-// Working php_listeners dir
-//TODO MAKE the path to this more generic in case the listeners are not configured in this directory
 set_include_path(get_include_path() . PATH_SEPARATOR . $location);
 
 // requires
@@ -55,6 +51,22 @@ else {
   }
 }
 
+/**
+ * reads the php listener from an environment varible.  if the variable is not
+ * set it returns a default location
+ * @return string
+ *   the path to the php_listeners
+ */
+function get_listener_config_path() {
+  $location_env_veriable = 'PHP_LISTENERS_PATH';
+  $location = getenv($location_env_veriable);
+  if (empty($location)) {
+    //try using a default
+    $location = '/opt/php_listeners';
+  }
+  return $location;
+}
+
 // Command line tests:
 //$service->TECHMD('islandora:313', 'EXIF', 'Technical metadata');
 //$service->Scholar_Policy('islandora:313', 'OBJ', 'PDF');
@@ -85,12 +97,7 @@ class IslandoraService {
 
   function IslandoraService() {
     //documentation must mention the need to set the php listener path
-    $location_env_veriable = 'PHP_LISTENERS_PATH';
-    $location = getenv($location_env_veriable);
-    if(empty($location)){
-      //try using a default
-      $location ='/opt/php_listeners';
-    }
+   $location = get_listener_config_path();
     $config_file = file_get_contents($location . '/config.xml');
     try{
       $this->config = new SimpleXMLElement($config_file);
