@@ -3,9 +3,14 @@
 // PHP error reporting
 error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE));
 
+//read a config file of soap to determin the location of microservices.
+
+$location_env_veriable = 'PHP_LISTENERS_PATH';
+$location = getenv($location_env_veriable);
+//echo $location;
 // Working php_listeners dir
 //TODO MAKE the path to this more generic in case the listeners are not configured in this directory
-set_include_path(get_include_path() . PATH_SEPARATOR . '/opt/php_listeners');
+set_include_path(get_include_path() . PATH_SEPARATOR . $location);
 
 // requires
 require_once 'SOAP/Server.php';
@@ -79,9 +84,20 @@ class IslandoraService {
   var $__dispatch_map = array();
 
   function IslandoraService() {
-    //TODO MAKE the path to this more generic in case the listeners are not configured in this directory
-    $config_file = file_get_contents('/var/www/html/drupal/php_listeners/config.xml');
-    $this->config = new SimpleXMLElement($config_file);
+    //documentation must mention the need to set the php listener path
+    $location_env_veriable = 'PHP_LISTENERS_PATH';
+    $location = getenv($location_env_veriable);
+    if(empty($location)){
+      //try using a default
+      $location ='/opt/php_listeners';
+    }
+    $config_file = file_get_contents($location . '/config.xml');
+    try{
+      $this->config = new SimpleXMLElement($config_file);
+    } catch (Exception $e)
+    {
+      print("fail to open the config file");
+    }
 
     $this->log = new Logging();
     $this->log->lfile($this->config->log->file);
@@ -617,10 +633,10 @@ class IslandoraService {
     $result = -1;
     try{
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
-       $this->log->lwrite("Fedora object successfully fetched for JPG funciton", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Fedora object successfully fetched for JPG funciton", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     } catch (Exception $e){
-       $this->log->lwrite("Fedora object could not be fetched for JPG function", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-       return -2;
+      $this->log->lwrite("Fedora object could not be fetched for JPG function", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      return -2;
     }
     $image = new Image($fedora_object, $dsid, NULL, $this->log, null);
     return $image->JPG($outputdsid, $label, $resize);
