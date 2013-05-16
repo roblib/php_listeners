@@ -13,9 +13,14 @@ class Relationship extends Derivative {
    * @param string $label
    */
   function AddImageDimensionsToRels($dsid, $label = 'RELS-INT') {
-    $item = $this->fedora_object->object;
+    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+    $item = $this->fedora_object;
     $source_dsid = $this->incoming_dsid;
     $height_width_arr = getimagesize($this->temp_file);
+    if ($height_width_arr === FALSE) {
+      $this->log->lwrite('Error reading image height and width', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+      return 'Error reading image height and width for datastream';
+    }
     $log_message = "$dsid derivative created using PHP  with command - getImageSize || SUCCESS";
     $rels_int_str = <<<XML
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">

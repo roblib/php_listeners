@@ -97,7 +97,7 @@ class IslandoraService {
 
   function IslandoraService() {
     //documentation must mention the need to set the php listener path
-   $location = get_listener_config_path();
+    $location = get_listener_config_path();
     $config_file = file_get_contents($location . '/config.xml');
     try{
       $this->config = new SimpleXMLElement($config_file);
@@ -865,30 +865,29 @@ class IslandoraService {
     return $result;
   }
 
-  function AddImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = 'RELS-INT') {
+  function AddImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "RELS-INT", $label = 'RELS-INT') {
     $result = -1;
-    $this->log->lwrite("Function AddImageDimensionsToRels starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $this->log->lwrite("Function ADDIMAGEDIMENSIONTORELS starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-                } catch (Exception $ex) {
+    } catch (Exception $ex) {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       return -2;
-                }
-    if ($rels = new Relationship($fedora_object, $dsid, 'xml', $this->log, null)) {
-      $this->log->lwrite("Relationship derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    }
+    if ($rels = new Relationship($fedora_object, $dsid, NULL, $this->log, null)) {
+      $this->log->lwrite("Relationship class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Relationship class not loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
-    $funcresult = $rels->AddImageDimensionsToRels($outputdsid, $label, $height, $width);
+    $funcresult = $rels->AddImageDimensionsToRels($outputdsid, $label);
     if ($funcresult == 0) {
-      $this->log->lwrite("AddImageDimensionsToRels function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("ADDIMAGEDIMENSIONTORELS function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
       $result = 0;
     }
     else {
-      $this->log->lwrite("AddImageDimensionsToRels function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("ADDIMAGEDIMENSIONTORELS function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = $funcresult;
     }
     return $result;
