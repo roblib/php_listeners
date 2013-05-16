@@ -80,7 +80,7 @@ class IslandoraService {
 
   function IslandoraService() {
     //TODO MAKE the path to this more generic in case the listeners are not configured in this directory
-    $config_file = file_get_contents('/opt/cs482_listeners/php_listeners/config.xml');
+    $config_file = file_get_contents('/var/www/html/drupal/php_listeners/config.xml');
     $this->config = new SimpleXMLElement($config_file);
 
     $this->log = new Logging();
@@ -614,8 +614,15 @@ class IslandoraService {
   }
 
   function JPG($pid, $dsid = "JPEG", $outputdsid = "JPG", $label = "JPEG image", $resize = "800") {
-    $fedora_object = $this->fedora_connect->repository->getObject($pid);
-    $image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
+    $result = -1;
+    try{
+      $fedora_object = $this->fedora_connect->repository->getObject($pid);
+       $this->log->lwrite("Fedora object successfully fetched for JPG funciton", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    } catch (Exception $e){
+       $this->log->lwrite("Fedora object could not be fetched for JPG function", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+       return -2;
+    }
+    $image = new Image($fedora_object, $dsid, NULL, $this->log, null);
     return $image->JPG($outputdsid, $label, $resize);
   }
 
@@ -640,8 +647,8 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       return -2;
                 }
-    if ($image = new Image($fedora_object, $dsid, 'jp2', $this->log, null)) {
-      $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, NULL)) {
+      //$this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
       $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
@@ -698,7 +705,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       return -2;
                 }
-    if ($image = new Image($fedora_object, $dsid, 'jpg', $this->log, null)) {
+    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -837,7 +844,7 @@ class IslandoraService {
 
   function AddImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = 'RELS-INT') {
     $result = -1;
-    $this->log->lwrite("Function Scholar_Policy starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $this->log->lwrite("Function AddImageDimensionsToRels starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');

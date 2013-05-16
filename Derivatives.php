@@ -66,9 +66,8 @@ class Derivative {
       		fwrite($file_handle, $datastream->content);
       		fclose($file_handle);
     	} catch (Exception $e) {
-      		print "Could not save datastream - $e";
+        $this->log->lwrite('Could not create temp file from datastream '.$e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $dsid);
     	}
-
     	return $tempfile;
 	}
 
