@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * This file defines the class to sent messages to taverna server
@@ -10,214 +11,214 @@ require_once 'TavernaCurlConnection.php';
 /**
  * This class defines a sender to sent message to taverna
  */
-class TavernaSender extends Sender
-{ 
-    /**
-     * the curl connection which is to sent messages using curl.
-     * @var type TavernaCurlConnection
-     */
-    public $curl_connect;
-    
-    /**
-     * Constructor for the sender.
-     * 
-     * @param string $protocal
-     *  The protocal for the taverna server. 
-     *  For example: https
-     * 
-     * @param string $hostname
-     *  The domain name or ip address of taverna sender.
-     *  For example: 255.255.255.255
-     * 
-     * @param string $port
-     *  The port that taverna send used.
-     *  For example: 8443
-     * 
-     * @param type $context
-     *  The context of taverna server
-     *  For example : taverna-server
-     * 
-     * @param type $username
-     *  The username for taverna server
-     * 
-     * @param type $password 
-     *  The password for tavernaserver
-     */
+class TavernaSender extends Sender {
 
-    function __construct($protocol,$hostname=null,$port=null,$context, $username=null,$password =null) {
-        parent::__construct($protocol.'://'.$hostname.":".$port .'/'. $context."/rest/runs/",$password,$username);
-        $this->curl_connect =new TavernaCurlConnection();
-        $this->curl_connect->username = $this->username;
-        $this->curl_connect->password = $this->password;
+  /**
+   * the curl connection which is to sent messages using curl.
+   * @var type TavernaCurlConnection
+   */
+  public $curl_connect;
+
+  /**
+   * Constructor for the sender.
+   * 
+   * @param string $protocal
+   *  The protocal for the taverna server. 
+   *  For example: https
+   * 
+   * @param string $hostname
+   *  The domain name or ip address of taverna sender.
+   *  For example: 255.255.255.255
+   * 
+   * @param string $port
+   *  The port that taverna send used.
+   *  For example: 8443
+   * 
+   * @param type $context
+   *  The context of taverna server
+   *  For example : taverna-server
+   * 
+   * @param type $username
+   *  The username for taverna server
+   * 
+   * @param type $password 
+   *  The password for tavernaserver
+   */
+  function __construct($protocol, $hostname = null, $port = null, $context, $username = null, $password = null) {
+    parent::__construct($protocol . '://' . $hostname . ":" . $port . '/' . $context . "/rest/runs/", $password, $username);
+    $this->curl_connect = new TavernaCurlConnection();
+    $this->curl_connect->username = $this->username;
+    $this->curl_connect->password = $this->password;
+  }
+
+  /**
+   * This function is to set ssl verify to false
+   */
+  function set_ssl() {
+    $this->curl_connect->sslVersion = 3;
+    $this->curl_connect->verifyHost = FALSE;
+    $this->curl_connect->verifyPeer = FALSE;
+  }
+
+  /**
+   * This function is to sent t2flow file to taverna server
+   * 
+   * @param string $message
+   *  T2flow file content
+   * 
+   * @return string 
+   *  information that taverna sender sent back. include headers and content.
+   *  Default: null 
+   * 
+   * @throws TavernaException
+   */
+  function send_Message($message) {
+    if (!empty($message)) {
+      $this->set_ssl();
+      $response = $this->curl_connect->postRequest($this->hostname, 'string', $message, 'application/vnd.taverna.t2flow+xml');
+
+      if ($response['status'] != 201) {
+        throw new TavernaException($response['headers'] . $response['content']);
+      }
+
+      return $response['headers'] . $response['content'];
     }
-    
-    /**
-     * This function is to set ssl verify to false
-     */
-    function set_ssl() {
-        $this->curl_connect->sslVersion = 3;
-        $this->curl_connect->verifyHost = FALSE;
-        $this->curl_connect->verifyPeer = FALSE; 
+    return null;
+  }
+
+  /**
+   * This function is to parse uuid from the feedback message.
+   * There must have full url of the t2flow on taverna server.
+   * For exampe: 
+   * https://p1.vre.upei.ca:8443/taverna-server/rest/runs/8fc60906-d2f9-41f8-8
+   * ffe-f9824fa7068a/
+   * 
+   * @param string $message
+   *  Message that taverna sender feedback
+   * 
+   * @return string 
+   *  The uuid of t2flow on taverna sender.
+   *  Default: null
+   */
+  function parse_UUID($message) {
+    if (!empty($message)) {
+      $uuid = substr($message, strrpos($message, $this->hostname) + strlen($this->hostname), 36);
+      return $uuid;
     }
-    
-    /**
-     * This function is to sent t2flow file to taverna server
-     * 
-     * @param string $message
-     *  T2flow file content
-     * 
-     * @return string $response
-     *  information that taverna sender sent back. include headers and content.
-     *  Default: null 
-     * 
-     * @throws TavernaException
-     */
-    function send_Message($message) {
-        if (!empty($message)) {
-            $this->set_ssl();
-            $response = $this->curl_connect->postRequest($this->hostname,'string',$message,'application/vnd.taverna.t2flow+xml');
-            
-            if($response['status'] !=201) { 
-                throw new TavernaException($response['headers'].$response['content']);
-            }
-            
-            return $response['headers'].$response['content'];
-            
-        }
-        return null;          
+    return null;
+  }
+
+  /**
+   * This function is to run t2flow on taverna server
+   * 
+   * @param sting $uuid
+   *  The uuid of t2flow which should run on taverna server
+   * 
+   * @return string $response
+   *  The message that taverna server feed back. It includes headers and 
+   *  content
+   *  
+   * @throws TavernaException
+   */
+  function run_t2flow($uuid) {
+    if (!empty($uuid)) {
+      $url = $this->hostname . $uuid . '/status/';
+      $this->set_ssl();
+      $response = $this->curl_connect->tavernaPutRequest($url, 'string', 'Operating', 'text/plain');
+
+      if ($response['status'] != 200) {
+        throw new TavernaException($response['headers'] . $response['content']);
+      }
+      return $response['headers'] . $response['content'];
     }
-    
-    /**
-     * This function is to parse uuid from the feedback message.
-     * There must have full url of the t2flow on taverna server.
-     * For exampe: 
-     * https://p1.vre.upei.ca:8443/taverna-server/rest/runs/8fc60906-d2f9-41f8-8
-     * ffe-f9824fa7068a/
-     * 
-     * @param string $message
-     *  Message that taverna sender feedback
-     * 
-     * @return string $uuid
-     *  The uuid of t2flow on taverna sender.
-     *  Default: null
-     */
-    function parse_UUID($message) {
-        if (!empty($message)) {
-            $uuid = substr($message, strrpos($message, $this->hostname)+strlen($this->hostname), 36);
-            return $uuid;
-        }
-        return null;
+    return null;
+  }
+
+  /**
+   * Get status of t2flow from taverna server
+   * 
+   * @param string $uuid 
+   *  The $uuid of t2flow on taverna server
+   * 
+   * @return string 
+   *  Message that taverna server feedback inculdes headers and content.
+   *  Status will be shown on the content part.
+   *  Status: Initialized, Operating, Stopped, Finished
+   * 
+   * @throws TavernaException
+   */
+  function get_status($uuid) {
+    if (!empty($uuid)) {
+      $url = $this->hostname . $uuid . "/status/";
+      $this->set_ssl();
+      $response = $this->curl_connect->getRequest($url, FALSE, NULL);
+      if ($response['status'] != 200) {
+        throw new TavernaException($response['headers'] . $response['content']);
+      }
+      return $response['headers'] . $response['content'];
     }
-    
-    /**
-     * This function is to run t2flow on taverna server
-     * 
-     * @param sting $uuid
-     *  The uuid of t2flow which should run on taverna server
-     * 
-     * @return string $response
-     *  The message that taverna server feed back. It includes headers and 
-     *  content
-     *  
-     * @throws TavernaException
-     */
-    function run_t2flow($uuid) {
-        if (!empty($uuid)) {
-            $url= $this->hostname.$uuid.'/status/';
-            $this->set_ssl(); 
-            $response = $this->curl_connect->tavernaPutRequest($url,'string','Operating','text/plain');
-            
-            if($response['status'] != 200) { 
-                throw new TavernaException($response['headers'].$response['content']);
-            }
-            return $response['headers'].$response['content'];
-        }
-        return null;
+    return null;
+  }
+
+  /**
+   * Delete t2flow file from taverna server
+   * 
+   * @param string $uuid 
+   *  The $uuid of t2flow on taverna server
+   * 
+   * @return string 
+   *  Message that taverna server feedback inculdes headers and content.
+   * 
+   * @throws TavernaException
+   */
+  function delete_t2flow($uuid) {
+    if (!empty($uuid)) {
+      $url = $this->hostname . $uuid . '/';
+      $this->set_ssl();
+      $response = $this->curl_connect->deleteRequest($url);
+
+      if ($response['status'] != 202) {
+        throw new TavernaException($response['headers'] . $response['content']);
+      }
+      return $response['headers'] . $response['content'];
     }
-    
-    /**
-     * Get status of t2flow from taverna server
-     * 
-     * @param string $uuid 
-     *  The $uuid of t2flow on taverna server
-     * 
-     * @return string $response
-     *  Message that taverna server feedback inculdes headers and content.
-     *  Status will be shown on the content part.
-     *  Status: Initialized, Operating, Stopped, Finished
-     * 
-     * @throws TavernaException
-     */
-    function get_status($uuid) {
-        if (!empty($uuid)) {
-            $url=$this->hostname.$uuid."/status/";
-            $this->set_ssl();
-            $response = $this->curl_connect->getRequest($url,FALSE,NULL);
-            if($response['status'] !=200) { 
-                throw new TavernaException($response['headers'].$response['content']);
-            }
-            return $response['headers'].$response['content'];
-        }
-        return null;
-    }
-    
-    /**
-     * Delete t2flow file from taverna server
-     * 
-     * @param string $uuid 
-     *  The $uuid of t2flow on taverna server
-     * 
-     * @return string $response
-     *  Message that taverna server feedback inculdes headers and content.
-     * 
-     * @throws TavernaException
-     */
-    function delete_t2flow($uuid) {
-        if (!empty($uuid)) {
-            $url= $this->hostname.$uuid.'/';
-            $this->set_ssl();
-            $response = $this->curl_connect->deleteRequest($url);
-            
-            if($response['status'] !=202) { 
-                throw new TavernaException($response['headers'].$response['content']);
-            }
-            return $response['headers'].$response['content'];
-        }
-        return null;
-    }
-    
-    /**
-     * This function is to add inputs in t2flow on taverna server.
-     * 
-     * @param string $uuid
-     *  The uuid of t2flow on taverna server.
-     * 
-     * @param string $key
-     *  The name of input.
-     * 
-     * @param string $value
-     *  The value of input
-     * 
-     * @return string $response
-     *  Message that taverna server feedback inculdes headers and content.
-     * 
-     * @throws TavernaException
-     */
-    function add_input($uuid, $key, $value) {
-        if (!empty($uuid) && !empty($key) && !empty($value)) {
-            $input = '<t2sr:runInput xmlns:t2sr="http://ns.taverna.org.uk/2010/xml/server/rest/">
-                        <t2sr:value>'.$value.'</t2sr:value>             
+    return null;
+  }
+
+  /**
+   * This function is to add inputs in t2flow on taverna server.
+   * 
+   * @param string $uuid
+   *  The uuid of t2flow on taverna server.
+   * 
+   * @param string $key
+   *  The name of input.
+   * 
+   * @param string $value
+   *  The value of input
+   * 
+   * @return string 
+   *  Message that taverna server feedback inculdes headers and content.
+   * 
+   * @throws TavernaException
+   */
+  function add_input($uuid, $key, $value) {
+    if (!empty($uuid) && !empty($key) && !empty($value)) {
+      $input = '<t2sr:runInput xmlns:t2sr="http://ns.taverna.org.uk/2010/xml/server/rest/">
+                        <t2sr:value>' . $value . '</t2sr:value>             
                       </t2sr:runInput>';
-            $url=$this->hostname.$uuid."/input/input/".$key;
-            $response = $this->curl_connect->tavernaPutRequest($url,'string',$input,'application/xml');
-            
-            if($response['status'] !=200) { 
-                throw new TavernaException($response['headers'].$response['content']);
-            }
-            
-            return $response['headers'].$response['content'];
-        }
-        return null;
+      $url = $this->hostname . $uuid . "/input/input/" . $key;
+      $response = $this->curl_connect->tavernaPutRequest($url, 'string', $input, 'application/xml');
+
+      if ($response['status'] != 200) {
+        throw new TavernaException($response['headers'] . $response['content']);
+      }
+
+      return $response['headers'] . $response['content'];
     }
+    return null;
+  }
+
 }
+
 ?>

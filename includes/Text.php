@@ -1,7 +1,7 @@
 <?php
 
 class Text extends Derivative {
-  
+
   function __destruct() {
     parent::__destruct();
   }
@@ -9,17 +9,20 @@ class Text extends Derivative {
   /**
    * Creates all ocr datastreams in one call
    */
-  function AllOCR($dsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
+  function allOcr($dsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, 'HOCR');
+
     if (isset($this->object['ENCODED_OCR'])) {
       $this->log->lwrite('ENCODED_OCR exists skipping all OCR tasks', 'PROCESS_DATASTREAM', $this->pid, 'HOCR');
       return 0;
     }
+
     try {
       if (file_exists($this->temp_file)) {
         $output_file = $this->temp_file . '_HOCR';
         $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 hocr &> /var/log/phpfunctions/cmd1.log";
         exec($command, $hocr_output, $return);
+
         if (file_exists($output_file . '.html')) {
           $log_message = "HOCR derivative created by tesseract v3.02.02 using command - $command || SUCCESS";
           $ingest = $this->add_derivative('HOCR', 'HOCR', $output_file . '.html', 'text/html', $log_message, FALSE);
@@ -30,25 +33,31 @@ class Text extends Derivative {
           exec($convert_command);
           $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language -psm 1 hocr &> /var/log/phpfunctions/cmd3.log";
           exec($command, $hocr_output, $return);
+
           if (file_exists($output_file . '.html')) {
             $log_message = "HOCR derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.02.02 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a PNG and reprocessed.";
-            $ingest = $this->add_derivative('HOCR', 'HOCR', $output_file . '.html', 'text/html',$log_message, FALSE);
+            $ingest = $this->add_derivative('HOCR', 'HOCR', $output_file . '.html', 'text/html', $log_message, FALSE);
           }
           else {
             $this->log->lwrite("Could not find the file '$output_file.html' for the HOCR derivative!\nTesseract output: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');
           }
         }
+
         $this->createEncodedOcrStream($output_file . '.html');
       }
       else {
         $this->log->lwrite("Could not find the input file '$this->temp_file' for the HOCR derivative!", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');
       }
+
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the HOCR or one of its derivatives", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');
+
       if ($ingest) {
         unlink($output_file . '.html');
       }
+
     }
+
     unlink($output_file . '.html');
     return $return;
   }
@@ -83,7 +92,7 @@ class Text extends Derivative {
     $this->add_derivative('ENCODED_OCR', 'ENCODED_OCR', $encoded_xml, 'text/xml', $log_message, FALSE, FALSE);
   }
 
-  function OCR($dsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
+  function ocr($dsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       if (file_exists($this->temp_file)) {
@@ -120,7 +129,7 @@ class Text extends Derivative {
     return $return;
   }
 
-  function HOCR($dsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
+  function hOcr($dsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       if (file_exists($this->temp_file)) {
@@ -158,7 +167,7 @@ class Text extends Derivative {
     return $return;
   }
 
-  function ENCODED_OCR($dsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
+  function encodedOcr($dsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = $this->temp_file . '_HOCR';
@@ -171,11 +180,13 @@ class Text extends Derivative {
         if (!file_exists($output_file . '.html')) {
           $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
           return $return;
-        } else {
-	  $this->log->lwrite("Created the $dsid derivative!", 'PASS_DATASTREAM', $this->pid, $dsid, NULL, 'INFO');
-	}	
-      } else {
-	$this->log->lwrite("Created the $dsid derivative!", 'PASS_DATASTREAM', $this->pid, $dsid, NULL, 'INFO');
+        }
+        else {
+          $this->log->lwrite("Created the $dsid derivative!", 'PASS_DATASTREAM', $this->pid, $dsid, NULL, 'INFO');
+        }
+      }
+      else {
+        $this->log->lwrite("Created the $dsid derivative!", 'PASS_DATASTREAM', $this->pid, $dsid, NULL, 'INFO');
       }
       $hocr_datastream = new NewFedoraDatastream("HOCR", 'M', $this->object, $this->fedora_object->repository);
       $hocr_datastream->setContentFromFile($output_file . '.html');
