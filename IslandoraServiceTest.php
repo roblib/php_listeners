@@ -5,8 +5,8 @@
  * and open the template in the editor.
  */
 
-require_once '../soap_serv.php';
-class IslandoraServiceTest extends PHPUnit_Frame_TestCase {
+require_once 'soap_serv.php';
+class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
   
   protected $islandoraServ;
   public function setUp()

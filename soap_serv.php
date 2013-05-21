@@ -81,8 +81,8 @@ function get_listener_config_path() {
 //$service->OCR('islandora:377', 'JPEG', 'Scanned text', 'eng');
 //$service->ENCODED_OCR('islandora:377', 'JPEG', 'Encoded OCR', 'eng');
 //$service->Scholar_PDFA('islandora:313', 'JPG', 'PDF');
-//$service->TN('islandora:313', 'JPG', 'TN', 'thumbnail', 400, 400);
-//$service->read('islandora:313', 'JPG');
+$service->tn('islandora:313', 'JPG', 'TN', 'thumbnail', 40, 40);
+//print($service->read('islandora:313', 'JPG',"sss"));
 //$service->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("tiny_stanley.jpg")), "image/jpeg");
 
 /**
