@@ -73,16 +73,16 @@ function get_listener_config_path() {
 }
 
 //Command line tests:
-//$service->TECHMD('islandora:313', 'EXIF', 'Technical metadata');
-//$service->Scholar_Policy('islandora:313', 'OBJ', 'PDF');
-//$service->AddImageDimensionsToRels('islandora:313', 'OBJ', 'RELS-INT');
-//$service->AllOCR('islandora:377', 'JPEG', 'HOCR', 'eng');
-//$service->HOCR('islandora:377', 'JPEG', 'HOCR', 'eng');
-//$service->OCR('islandora:377', 'JPEG', 'Scanned text', 'eng');
-//$service->ENCODED_OCR('islandora:377', 'JPEG', 'Encoded OCR', 'eng');
-//$service->Scholar_PDFA('islandora:313', 'JPG', 'PDF');
-$service->tn('islandora:313', 'JPG', 'TN', 'thumbnail', 40, 40);
-//print($service->read('islandora:313', 'JPG',"sss"));
+//$service->techmd('islandora:313', 'EXIF', 'Technical_metadata');
+//$service->scholarPolicy('islandora:313', 'OBJ', 'SCHOLAR_POLICY_TEST','scholar policy function test');
+//$service->addImageDimensionsToRels('islandora:313', 'OBJ', 'RELS_INT_TEST', 'addImageDimensionsToRels function test');
+//$service->allOcr('islandora:377', 'JPEG', 'ALL_OCR_TEST', 'allOcr function test', 'eng');
+//$service->hOcr('islandora:377', 'JPEG', 'HOCR_TEST', 'hOcr function test', 'eng');
+//$service->ocr('islandora:377', 'JPEG', 'OCR_TEST', 'ocr function test', 'eng');
+//$service->encodedOcr('islandora:377', 'JPEG', 'ENCODED_OCR_TEST','eng');
+//$service->scholarPdfa('islandora:313', 'JPG', 'SCHOLAR_PDFA_TEST', 'scholar pdfa test');
+$service->tn('islandora:313', 'JPG', 'TN_TEST', 'tn function test', 400, 400);
+//$service->read('islandora:313', 'JPG');
 //$service->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("tiny_stanley.jpg")), "image/jpeg");
 
 /**
@@ -367,7 +367,6 @@ class IslandoraService {
     return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($base64_content), $mimetype, null, true, false);
   }
 
-
   /**
    * This fonciton is to write the function excute status to the log file
    * 
@@ -417,7 +416,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
         }
-    
+
 
     if ($text = new Text($fedora_object, $dsid, 'jpeg', $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -452,8 +451,8 @@ class IslandoraService {
    * @return int
    */
   function ocr($pid, $dsid = 'OCR', $outputdsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
-     $result = -1;
-     $this->log->lwrite("Function ocr starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $result = -1;
+    $this->log->lwrite("Function ocr starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -461,8 +460,8 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
         }
-    
-   
+
+
 
     if ($text = new Text($fedora_object, $dsid, 'txt', $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -507,7 +506,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
         }
-    
+
 
     if ($text = new Text($fedora_object, $dsid, 'jpg', $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -543,8 +542,8 @@ class IslandoraService {
    * @return int
    */
   function encodedOcr($pid, $dsid = 'JPEG', $outputdsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
-        $result = -1;
-        $this->log->lwrite("Function encodedOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $result = -1;
+    $this->log->lwrite("Function encodedOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -608,8 +607,8 @@ class IslandoraService {
    * @return type
    */
   function jp2($pid, $dsid = "OBJ", $outputdsid = "JP2", $label = "Compressed jp2") {
-        $result = -1;
-        $this->log->lwrite("Function TN starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $result = -1;
+    $this->log->lwrite("Function TN starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -654,8 +653,8 @@ class IslandoraService {
    * @return int
    */
   function tn($pid, $dsid = "JPG", $outputdsid = "TN", $label = "Thumbnail", $height = 200, $width = 200) {
-        $result = -1;
-        $this->log->lwrite("Function TN starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $result = -1;
+    $this->log->lwrite("Function TN starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -663,7 +662,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
         }
-    
+
     if ($image = new Image($fedora_object, $dsid, 'jpg', $this->log, null)) {
       $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
@@ -694,8 +693,8 @@ class IslandoraService {
    *  @return int
    */
   function techmd($pid, $dsid = 'OBJ', $outputdsid = "TECHMD", $label = 'Technical metadata') {
-     $result = -1;
-        $this->log->lwrite("Function techmd starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $result = -1;
+    $this->log->lwrite("Function techmd starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -733,8 +732,8 @@ class IslandoraService {
    * @return int
    */
   function scholarPdfa($pid, $dsid = 'OBJ', $outputdsid = "PDF", $label = 'PDF') {
-     $result = -1;
-        $this->log->lwrite("Function scholar starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $result = -1;
+    $this->log->lwrite("Function scholar starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -773,7 +772,7 @@ class IslandoraService {
    */
   function addImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = 'RELS-INT') {
     $ $result = -1;
-        $this->log->lwrite("Function addImagedimensionsToRels starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $this->log->lwrite("Function addImagedimensionsToRels starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -811,8 +810,8 @@ class IslandoraService {
    * @return type
    */
   function scholarPolicy($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = "Embargo policy - Both") {
-     $result = -1;
-        $this->log->lwrite("Function scholarPolicy starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $result = -1;
+    $this->log->lwrite("Function scholarPolicy starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');

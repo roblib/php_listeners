@@ -24,12 +24,36 @@ class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
     $result = $this->islandoraServ->allOcr('islandora:377', 'JPG', 'ALL_OCR_TEST', 'allOcr function test', 'eng');
     $this->assertEquals(0,$result);
   }
+  
+  /**
+   * @depends techmd
+   */
+  public function testTechmd() {
+    $result = $this->islandoraServ->techmd('islandora:313', 'EXIF', 'Technical metadata test');
+    $this->assertEquals(0,$result);
+  }
+  
+  /**
+   * @depends scholarPolicy
+   */
+  public function testScholarPolicy() { 
+    $result = $this->islandoraServ->scholarPolicy('islandora:313', 'OBJ', 'SCHOLAR_POLICY_TEST','scholar policy function test');
+    $this->assertEquals(0,$result);
+  }
+  
+  /**
+   * @depends addImageDimensionsToRels
+   */
+  public function testAddImageDimensionsToRels() {
+    $result =  $this->islandoraServ->addImageDimensionsToRels('islandora:313', 'OBJ', 'RELS_INT_TEST', 'addImageDimensionsToRels function test');
+    $this->assertEquals(0,$result);
+  }
 
   /**
    * @depends ocr
    */
   public function testOcr() {
-    $result = $this->islandoraServ->ocr('islandora:377', 'JPG', 'OCR_TEST', 'ocr function test', 'eng');
+    $result = $this->islandoraServ->ocr('islandora:377', 'OCR', 'OCR_TEST', 'ocr function test', 'eng');
     $this->assertEquals(0,$result);
   }
 
@@ -37,7 +61,7 @@ class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
    * @depends HOCR
    */
   public function testHOcr() {
-    $result = $this->islandoraServ->hOcr('islandora:377', '$dsid', 'JPG', 'HOCR_TEST', 'hOcr function test', 'eng');
+    $result = $this->islandoraServ->hOcr('islandora:377', 'JPEG', 'HOCR_TEST', 'hOcr function test', 'eng');
     $this->assertEquals(0,$result);
   }
 
@@ -45,7 +69,7 @@ class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
    * @depends encodedOcr
    */
   public function testEncodedOcr() {
-    $result = $this->islandoraServ->encodedOcr('islandora:377', '$dsid', 'JPG', 'ENCODED_OCR_TEST', 'encodedOcr function test', 'eng');
+    $result = $this->islandoraServ->encodedOcr('islandora:377', 'JPEG','ENCODED_OCR_TEST', 'eng');
     $this->assertEquals(0,$result);
   }
 
