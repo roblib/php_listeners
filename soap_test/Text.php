@@ -196,7 +196,7 @@ class Text extends Derivative {
       $hocr_datastream->checksum = TRUE;
       $hocr_datastream->checksumType = 'MD5';
       $hocr_datastream->logMessage = "HOCR derivative created by tesseract v3.0.1 using command - $command || SUCCESS";
-      $this->fedora_object->ingestDatastream($hocr_datastream);
+      $this->object->ingestDatastream($hocr_datastream);
       $hocr_xml = new DOMDocument();
       $hocr_xml->load($output_file . '.html');
       $xsl = new DOMDocument();
@@ -205,7 +205,7 @@ class Text extends Derivative {
       $proc->importStylesheet($xsl);
       $encoded_xml = $proc->transformToXml($hocr_xml);
       $encoded_xml = str_replace('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">', '<?xml version="1.0" encoding="UTF-8"?>', $encoded_xml);
-      $encoded_datastream = new NewFedoraDatastream($dsid, 'M', $this->fedora_object, $this->fedora_object->repository);
+      $encoded_datastream = new NewFedoraDatastream($dsid, 'M', $this->object, $this->fedora_object->repository);
       $encoded_datastream->setContentFromString($encoded_xml);
       $encoded_datastream->label = $label;
       $encoded_datastream->mimetype = 'text/xml';

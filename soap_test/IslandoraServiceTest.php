@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-require_once 'soap_serv.php';
+require_once '../soap_serv.php';
 
 
 class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
@@ -22,14 +22,14 @@ class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
    */
   public function testRead() {
     $result->$this->islandoraServ->read('islandora:313', 'JPG', NULL);
-    $this->assertEquals($result,  file_get_contents('soap_test/read_test_data'));
+    $this->assertEquals($result,  file_get_contents('read_test_data'));
   }
   
   /**
    * @depends write
    */
   public function testWrite() {
-    $result->$this->islandoraServ->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("soap_test/stanly.jpg")), "image/jpeg");
+    $result->$this->islandoraServ->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("stanly.jpg")), "image/jpeg");
     $this->assertEquals($result,'success');
     
   }
