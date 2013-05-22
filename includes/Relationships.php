@@ -13,7 +13,7 @@ class Relationship extends Derivative {
    * @param string $label
    */
   function addImageDimensionsToRels($dsid, $label = 'RELS-INT') {
-    $item = $this->fedora_object->object;
+    $item = $this->fedora_object;
     $source_dsid = $this->incoming_dsid;
     $height_width_arr = getimagesize($this->temp_file);
     $log_message = "$dsid derivative created using PHP  wit command - getImageSize || SUCCESS";
