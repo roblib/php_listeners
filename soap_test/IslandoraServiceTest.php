@@ -1,112 +1,75 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-require_once '../soap_serv.php';
-
+require_once "PHPUnit/Autoload.php";
+require_once "FedoraMock.php";
+require_once 'soap_serv.php';
 
 class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
 
-  protected $islandoraServ;
+  private $islandoraServ;
 
-  public function setUp() {
+  function __construct() {
+    $this->backupGlobals = false;
+    $this->backupStaticAttributes = false;
+
     $this->islandoraServ = new IslandoraService();
-    $this->islandoraServ->IslandoraService();
-  }
-  
-  /**
-   * @depends read
-   */
-  public function testRead() {
-    $result->$this->islandoraServ->read('islandora:313', 'JPG', NULL);
-    $this->assertEquals($result,  file_get_contents('read_test_data'));
-  }
-  
-  /**
-   * @depends write
-   */
-  public function testWrite() {
-    $result->$this->islandoraServ->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("stanly.jpg")), "image/jpeg");
-    $this->assertEquals($result,'success');
-    
+    $this->islandoraServ->fedora_connect = getFedoraMock($this);
   }
 
-  /**
-   * @depends allOcr
-   */
-  public function testAllOcr() {
-    $result = $this->islandoraServ->allOcr('islandora:377', 'JPG', 'ALL_OCR_TEST', 'allOcr function test', 'eng');
-    $this->assertEquals(0,$result);
+  function testRead() {
+    $result = $this->islandoraServ->read('islandora:313', 'TEST_TXT', NULL);
+    $this->assertEquals('test text', base64_decode($result));
   }
-  
-  /**
-   * @depends techmd
-   */
-  public function testTechmd() {
+
+  function testWrite() {
+    $result = $this->islandoraServ->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("soap_test/stanly.jpg")), "image/jpeg");
+    $this->assertEquals($result, 'success');
+  }
+
+  function testAllOcr() {
+    $result = $this->islandoraServ->allOcr('islandora:377', 'JPEG', 'ALL_OCR_TEST', 'allOcr function test', 'eng');
+    $this->assertEquals(0, $result);
+  }
+
+  function testTechmd() {
     $result = $this->islandoraServ->techmd('islandora:313', 'EXIF', 'Technical metadata test');
-    $this->assertEquals(0,$result);
-  }
-  
-  /**
-   * @depends scholarPolicy
-   */
-  public function testScholarPolicy() { 
-    $result = $this->islandoraServ->scholarPolicy('islandora:313', 'OBJ', 'SCHOLAR_POLICY_TEST','scholar policy function test');
-    $this->assertEquals(0,$result);
-  }
-  
-  /**
-   * @depends addImageDimensionsToRels
-   */
-  public function testAddImageDimensionsToRels() {
-    $result =  $this->islandoraServ->addImageDimensionsToRels('islandora:313', 'OBJ', 'RELS_INT_TEST', 'addImageDimensionsToRels function test');
-    $this->assertEquals(0,$result);
+    $this->assertEquals(0, $result);
   }
 
-  /**
-   * @depends ocr
-   */
-  public function testOcr() {
-    $result = $this->islandoraServ->ocr('islandora:377', 'OCR', 'OCR_TEST', 'ocr function test', 'eng');
-    $this->assertEquals(0,$result);
+  function testScholarPolicy() {
+    $result = $this->islandoraServ->scholarPolicy('islandora:313', 'OBJ', 'SCHOLAR_POLICY_TEST', 'scholar policy function test');
+    $this->assertEquals(0, $result);
   }
 
-  /**
-   * @depends HOCR
-   */
-  public function testHOcr() {
+  function testAddImageDimensionsToRels() {
+    $result = $this->islandoraServ->addImageDimensionsToRels('islandora:313', 'OBJ', 'RELS_INT_TEST', 'addImageDimensionsToRels function test');
+    $this->assertEquals(0, $result);
+  }
+
+  function testOcr() {
+    $result = $this->islandoraServ->ocr('islandora:377', 'JPEG', 'OCR_TEST', 'ocr function test', 'eng');
+    $this->assertEquals(0, $result);
+  }
+
+  function testHOcr() {
     $result = $this->islandoraServ->hOcr('islandora:377', 'JPEG', 'HOCR_TEST', 'hOcr function test', 'eng');
-    $this->assertEquals(0,$result);
+    $this->assertEquals(0, $result);
   }
 
-  /**
-   * @depends encodedOcr
-   */
   public function testEncodedOcr() {
-    $result = $this->islandoraServ->encodedOcr('islandora:377', 'JPEG','ENCODED_OCR_TEST', 'eng');
-    $this->assertEquals(0,$result);
+    $result = $this->islandoraServ->encodedOcr('islandora:377', 'JPEG', 'ENCODED_OCR_TEST', 'eng');
+    $this->assertEquals(0, $result);
   }
 
-  /**
-   * @depends scholarPdfa
-   */
-  public function testScholarPdfa() {
+  function testScholarPdfa() {
     $result = $this->islandoraServ->scholarPdfa('islandora:313', 'JPG', 'SCHOLAR_PDFA_TEST', 'scholar pdfa test');
-    $this->assertEquals(0,$result);
+    $this->assertEquals(0, $result);
   }
-  
-  /**
-   * @depends tn
-   */
-  public function testTn()
-  {
+
+  function testTn() {
     $result = $this->islandoraServ->tn('islandora:313', 'JPG', 'TN_TEST', 'tn function test', 400, 400);
-    $this->assertEquals(0,$result);
+    $this->assertEquals(0, $result);
   }
-  
 
 }
 
