@@ -49,6 +49,7 @@ class TavernaSender extends Sender {
     $this->curl_connect = new TavernaCurlConnection();
     $this->curl_connect->username = $this->username;
     $this->curl_connect->password = $this->password;
+    print($this->hostname);
   }
 
   /**
@@ -61,7 +62,7 @@ class TavernaSender extends Sender {
   }
 
   /**
-   * This function is to sent t2flow file to taverna server
+   * This function is to sent t2flow file to taverna server.
    * 
    * @param string $message
    *  T2flow file content
@@ -76,9 +77,9 @@ class TavernaSender extends Sender {
     if (!empty($message)) {
       $this->set_ssl();
       $response = $this->curl_connect->postRequest($this->hostname, 'string', $message, 'application/vnd.taverna.t2flow+xml');
-
+      print($message);
       if ($response['status'] != 201) {
-        throw new TavernaException($response['headers'] . $response['content']);
+        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'send message');
       }
 
       return $response['headers'] . $response['content'];
@@ -127,7 +128,7 @@ class TavernaSender extends Sender {
       $response = $this->curl_connect->tavernaPutRequest($url, 'string', 'Operating', 'text/plain');
 
       if ($response['status'] != 200) {
-        throw new TavernaException($response['headers'] . $response['content']);
+        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'run t2flow');
       }
       return $response['headers'] . $response['content'];
     }
@@ -153,7 +154,7 @@ class TavernaSender extends Sender {
       $this->set_ssl();
       $response = $this->curl_connect->getRequest($url, FALSE, NULL);
       if ($response['status'] != 200) {
-        throw new TavernaException($response['headers'] . $response['content']);
+        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'get t2flow status');
       }
       return $response['headers'] . $response['content'];
     }
@@ -178,7 +179,7 @@ class TavernaSender extends Sender {
       $response = $this->curl_connect->deleteRequest($url);
 
       if ($response['status'] != 202) {
-        throw new TavernaException($response['headers'] . $response['content']);
+        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'delete t2flow');
       }
       return $response['headers'] . $response['content'];
     }
@@ -211,14 +212,12 @@ class TavernaSender extends Sender {
       $response = $this->curl_connect->tavernaPutRequest($url, 'string', $input, 'application/xml');
 
       if ($response['status'] != 200) {
-        throw new TavernaException($response['headers'] . $response['content']);
+        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'add input');
       }
 
       return $response['headers'] . $response['content'];
     }
     return null;
   }
-
 }
-
 ?>
