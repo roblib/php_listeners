@@ -409,7 +409,7 @@ class IslandoraService {
         }
 
 
-    if ($text = new Text($fedora_object, $dsid, 'jpeg', $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -454,7 +454,7 @@ class IslandoraService {
 
 
 
-    if ($text = new Text($fedora_object, $dsid, 'txt', $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -497,7 +497,7 @@ class IslandoraService {
       $result = -2;
      }
 
-    if ($text = new Text($fedora_object, $dsid, 'jpg', $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -540,7 +540,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($text = new Text($fedora_object, $dsid, 'txt', $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -574,7 +574,7 @@ class IslandoraService {
    */
   function jpg($pid, $dsid = "JPEG", $outputdsid = "JPG", $label = "JPEG image", $resize = "800") {
     $fedora_object = $this->fedora_connect->repository->getObject($pid);
-    $image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
+    $image = new Image($fedora_object, $dsid, NULL, $this->log, null);
     return $image->jpg($outputdsid, $label, $resize);
   }
 
@@ -605,7 +605,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($image = new Image($fedora_object, $dsid, 'jp2', $this->log, null)) {
+    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -650,7 +650,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($image = new Image($fedora_object, $dsid, 'jpg', $this->log, null)) {
+    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -689,7 +689,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($tech = new Technical($fedora_object, $dsid, 'xml', $this->log, null)) {
+    if ($tech = new Technical($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Technical metadata derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
