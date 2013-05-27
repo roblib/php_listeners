@@ -244,7 +244,7 @@ class Connect {
       }
     } catch (Exception $e) {
       $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR: ' . $e->getCode());
-      //need further checking here as the 403 maybe legit (taverna issues a 403 if it has too many jobs but it could also be a true authorization error.s
+      //need further checking here as the 403 maybe legit (taverna issues a 403 if it has too many jobs but it could also be a true authorization error.
       if ($e->getCode() == 403) {
         $this->log->lwrite($e->getMessage(), 'send t2flow to taverna faild, sending agian.');
         sleep(10);

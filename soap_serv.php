@@ -371,7 +371,7 @@ class IslandoraService {
       $result = 0;
     }
     else {
-      $this->log->lwrite($funcname . " function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite($funcname . " function failed with code $funcresult", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = $funcresult;
     }
     return $result;
@@ -597,7 +597,7 @@ class IslandoraService {
    */
   function jp2($pid, $dsid = "OBJ", $outputdsid = "JP2", $label = "Compressed jp2") {
     $result = -1;
-    $this->log->lwrite("Function TN starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $this->log->lwrite("Function $outputdsid starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');

@@ -13,9 +13,9 @@ class Image extends Derivative {
     if (file_exists($this->temp_file)) {
       try {
         $output_file = $this->temp_file . '_JP2.jp2';
-        $command = 'kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file;
+        $command = 'kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes &> /var/log/phpfunctions/cmd1.log';
         $jp2_output = array();
-        $output = exec($command, $jp2_output, $return);
+        exec($command, $jp2_output, $return);
         $log_message = "$dsid derivative created using kdu_compress with command - $command || SUCCESS";
         $this->add_derivative($dsid, $label, $output_file, 'image/jp2', $log_message);
       } catch (Exception $e) {
