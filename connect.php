@@ -128,84 +128,16 @@ class Connect {
             }
         } //foreach contentmodel 
       }
-      $properties = get_object_vars($message);
-      $object_namespace_array = explode(':', $pid);
-      $object_namespace = $object_namespace_array[0];
-      $objects = $this->config_xml->xpath('//object');
-      foreach ($objects as $object) {
-        $namespaces = $object->nameSpace;
-        $content_models = $object->contentModel;
-        $xml_methods = $object->method;
-        $methods = array();
-        foreach ($xml_methods as $xml_method) {
-          $methods[] = (string) $xml_method[0];
-        }
-        $datastream = $object->datastream;
-        $datastream = (string) $datastream[0];
-        $new_datastreams = $object->derivative;
-        $extension = $object->extension;
-        $extension = (string) $extension[0];
-        $trigger_datastreams = (array) $object->trigger_datastream;
-        foreach ($content_models as $content_model) {
-//            $this->log->lwrite('Content models: ' . implode(', ', $fedora_object->object->models), "SERVER_INFO");
-//            $this->log->lwrite('Config models: ' . $content_model, "SERVER_INFO");
-          if (in_array($content_model, $fedora_object->object->models)) {
-            foreach ($namespaces as $namespace) {
-//                $this->log->lwrite('Namespace: ' . $object_namespace, "SERVER_INFO");
-//                $this->log->lwrite('Config namespace: ' . $namespace, "SERVER_INFO");
-              if ((string) $namespace == (string) $object_namespace) {
-//                  $this->log->lwrite('Method: ' . $this->msg->headers['methodName'], "SERVER_INFO");
-//                  $this->log->lwrite('Config method: ' . implode(', ', $methods), "SERVER_INFO");
-                if (in_array($this->msg->headers['methodName'], $methods)) {
-//                    $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
-//                    $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");
-                  if (in_array($message->dsID, $trigger_datastreams) || $message->dsID == NULL) {
-                    foreach ($new_datastreams as $new_datastream) {
-                      $include_file = (string) $new_datastream->file;
-                      $class = (string) $new_datastream->class;
-                      if (empty($include_file)) {
-                        $include_file = 'Derivatives.php';
-                      }
-                      if (empty($class)) {
-                        $class = 'Derivative';
-                      }
-                      $this->log->lwrite("File: $include_file Class: $class for dsid $new_datastream->dsid", 'SERVER_INFO');
-                      $include_file = __DIR__ . $include_file;
-                      require_once 'Derivatives.php';
-                      include_once $include_file;
-                      if (!class_exists($class)) {
-                        $this->log->lwrite("Error loading class $class, check your config file", $pid, NULL, $message->author, 'ERROR');
-                        continue;
-                      }
-                      else {
-                        $derivative = new $class($fedora_object, $datastream, $extension, $this->log, $message->dsID);
-                        $function = (string) $new_datastream->function;
-                        if (!method_exists($derivative, $function)) {
-                          $this->log->lwrite("Error calling $class->$function for $new_datastream->dsid, check your config file", $pid, NULL, $message->author, 'ERROR');
-                          continue;
-                        }
-                        $output = $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
-                        if (isset($output)) {
-                          $this->log->lwrite("PID: $pid File: $include_file Class: $class for $new_datastream->dsid output = $output", 'SERVER_INFO');
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        unset($namespaces);
-        unset($namespace);
-        unset($content_models);
-        unset($content_model);
-        unset($methods);
-        unset($datastream);
-        unset($new_datastreams);
-        unset($new_datastream);
-        unset($derivative);
-      }
+      $this->triggerDatastreams($message,$pid);
+      unset($namespaces);
+      unset($namespace);
+      unset($content_models);
+      unset($content_model);
+      unset($methods);
+      unset($datastream);
+      unset($new_datastreams);
+      unset($new_datastream);
+      unset($derivative);
 
       // Mark the message as received in the queue
       $this->con->ack($this->msg);
@@ -214,6 +146,78 @@ class Connect {
 
     // Close log file
     $this->log->lclose();
+  }
+
+  private function triggerDatastreams($message,$pid) {
+    $properties = get_object_vars($message);
+    $object_namespace_array = explode(':', $pid);
+    $object_namespace = $object_namespace_array[0];
+    $objects = $this->config_xml->xpath('//object');
+    foreach ($objects as $object) {
+      $namespaces = $object->nameSpace;
+      $content_models = $object->contentModel;
+      $xml_methods = $object->method;
+      $methods = array();
+      foreach ($xml_methods as $xml_method) {
+        $methods[] = (string) $xml_method[0];
+      }
+      $datastream = $object->datastream;
+      $datastream = (string) $datastream[0];
+      $new_datastreams = $object->derivative;
+      $extension = $object->extension;
+      $extension = (string) $extension[0];
+      $trigger_datastreams = (array) $object->trigger_datastream;
+      foreach ($content_models as $content_model) {
+//            $this->log->lwrite('Content models: ' . implode(', ', $fedora_object->object->models), "SERVER_INFO");
+//            $this->log->lwrite('Config models: ' . $content_model, "SERVER_INFO");
+        if (in_array($content_model, $fedora_object->object->models)) {
+          foreach ($namespaces as $namespace) {
+//                $this->log->lwrite('Namespace: ' . $object_namespace, "SERVER_INFO");
+//                $this->log->lwrite('Config namespace: ' . $namespace, "SERVER_INFO");
+            if ((string) $namespace == (string) $object_namespace) {
+//                  $this->log->lwrite('Method: ' . $this->msg->headers['methodName'], "SERVER_INFO");
+//                  $this->log->lwrite('Config method: ' . implode(', ', $methods), "SERVER_INFO");
+              if (in_array($this->msg->headers['methodName'], $methods)) {
+//                    $this->log->lwrite('Triggers: ' . $message->dsID, "SERVER_INFO");
+//                    $this->log->lwrite('Config triggers: ' . implode(', ', $trigger_datastreams), "SERVER_INFO");
+                if (in_array($message->dsID, $trigger_datastreams) || $message->dsID == NULL) {
+                  foreach ($new_datastreams as $new_datastream) {
+                    $include_file = (string) $new_datastream->file;
+                    $class = (string) $new_datastream->class;
+                    if (empty($include_file)) {
+                      $include_file = 'Derivatives.php';
+                    }
+                    if (empty($class)) {
+                      $class = 'Derivative';
+                    }
+                    $this->log->lwrite("File: $include_file Class: $class for dsid $new_datastream->dsid", 'SERVER_INFO');
+                    $include_file = __DIR__ . $include_file;
+                    require_once 'Derivatives.php';
+                    include_once $include_file;
+                    if (!class_exists($class)) {
+                      $this->log->lwrite("Error loading class $class, check your config file", $pid, NULL, $message->author, 'ERROR');
+                      continue;
+                    }
+                    else {
+                      $derivative = new $class($fedora_object, $datastream, $extension, $this->log, $message->dsID);
+                      $function = (string) $new_datastream->function;
+                      if (!method_exists($derivative, $function)) {
+                        $this->log->lwrite("Error calling $class->$function for $new_datastream->dsid, check your config file", $pid, NULL, $message->author, 'ERROR');
+                        continue;
+                      }
+                      $output = $derivative->{$function}((string) $new_datastream->dsid, (string) $new_datastream->label);
+                      if (isset($output)) {
+                        $this->log->lwrite("PID: $pid File: $include_file Class: $class for $new_datastream->dsid output = $output", 'SERVER_INFO');
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   private function processT2flowOnTaverna($stream, $pid, $dsID) {
