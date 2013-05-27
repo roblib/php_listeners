@@ -57,6 +57,7 @@
     <log>
         <!-- Specify the file name of the log file. -->
         <file>/var/log/listener.log</file>
+        <text>/var/log/phpfunctions</text>
     </log>
 
 </config>

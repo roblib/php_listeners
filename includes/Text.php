@@ -6,14 +6,14 @@ class Text extends Derivative {
   
   function __construct($fedora_object, $incoming_dsid, $extension = NULL, $log, $created_datastream) {
     parent::__construct($fedora_object, $incoming_dsid, $extension, $log, $created_datastream);
-    $config_file = file_get_contents("config.xml");
+    $config_file = file_get_contents("../config.xml");
     
     try {
       $config = new SimpleXMLElement($config_file);  
     } catch (Exception $e) {
       print("fail to open the config file");
     }
-    $this->log_path = $config->config->text->log_path;
+    $this->log_path = $config->config->log->text;
   }
       function __destruct() {
     parent::__destruct();
