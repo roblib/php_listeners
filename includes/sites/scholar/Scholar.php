@@ -8,7 +8,7 @@ class Scholar extends Derivative {
     parent::__destruct();
   }
 
-  function Scholar_Policy($dsid = 'POLICY', $label = "Embargo policy - Both") {
+  function scholarPolicy($dsid = 'POLICY', $label = "Embargo policy - Both") {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = '/opt/php_listeners/document-embargo.xml';

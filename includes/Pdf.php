@@ -6,7 +6,7 @@ class Pdf extends Derivative {
     parent::__destruct();
   }
 
-  function Scholar_PDFA($dsid = 'PDF', $label = 'PDF') {
+  function scholarPdfa($dsid = 'PDF', $label = 'PDF') {
     if ($this->created_datastream == 'OBJ') {
       $this->log->lwrite('Starting processing because the ' . $this->created_datastream . ' datastream was added', 'PROCESS_DATASTREAM', $this->pid, $dsid);
       try {

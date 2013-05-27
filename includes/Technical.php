@@ -6,7 +6,7 @@ class Technical extends Derivative {
     parent::__destruct();
   }
 
-  function TECHMD($dsid = 'TECHMD', $label = 'Technical metadata') {
+  function techmd($dsid = 'TECHMD', $label = 'Technical metadata') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = $this->temp_file . '_TECHMD.xml';
