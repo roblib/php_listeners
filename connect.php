@@ -64,13 +64,11 @@ class Connect {
     if ($this->msg = $this->con->readFrame()) {
       // do what you want with the message
       if ($this->msg != NULL) {
-//        sleep(1);
-//        $this->log->lwrite('Message: ' . $this->msg->body, 'SERVER_INFO');
         $message = new Message($this->msg->body);
         $pid = $this->msg->headers['pid'];
-        if (!isset($message->dsID)) {
-          $message->dsID = NULL;
-        }
+        // if (!isset($message->dsID)) {
+        //   $message->dsID = NULL;
+        // }
 
         $modMethod = $this->msg->headers['methodName'];
 
@@ -85,6 +83,9 @@ class Connect {
           $fedora_object = new ListenerObject($this->user, $this->fedora_url, $pid);
         } catch (Exception $e) {
           $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
+          $this->con->ack($this->msg);
+          unset($this->msg);
+          return;
         }
 
         foreach ($fedora_object->object->models as $contentMod) {   //each content model on the modified object
@@ -101,7 +102,7 @@ class Connect {
               foreach ($methods->children() as $method) {
                 $this->log->lwrite("Found a child method: " . $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
                 if ((string) $method['type'] == (string) $modMethod) {
-                  $this->log->lwrite("Modifed object in a way set in Trigger-Datastreams " . $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+                  $this->log->lwrite("Modifing object with workflow defined in Trigger-Datastreams " . $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
                   foreach ($method->children() as $trigger) {
 
                     if ($trigger->getName() == "t2flow") {
@@ -124,12 +125,12 @@ class Connect {
               }//foreach ($methods->children() as $method) 
             } //if($trigString != "") 
             } catch (Exception $e) {
-            $this->log->lwrite("An error occurred parsing for trigger datastreams $e", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
+            $this->log->lwrite("An error occurred parsing for trigger datastreams " . $e->getMessage(), 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
             }
         } //foreach contentmodel 
       }
       //we can call php code directly if the config.xml file is configured to do so. this would bypass taverna
-      $this->triggerDatastreams($message,$pid);
+      $this->triggerDatastreams($message, $pid);
       unset($namespaces);
       unset($namespace);
       unset($content_models);
@@ -149,7 +150,7 @@ class Connect {
     $this->log->lclose();
   }
 
-  private function triggerDatastreams($message,$pid) {
+  private function triggerDatastreams($message, $pid) {
     $properties = get_object_vars($message);
     $object_namespace_array = explode(':', $pid);
     $object_namespace = $object_namespace_array[0];
@@ -222,39 +223,24 @@ class Connect {
   }
 
   private function processT2flowOnTaverna($stream, $pid, $dsID) {
-    try {
-      //$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
-      $prot = empty($this->config_xml->taverna->protocol) ? 'http' : $this->config_xml->taverna->protocol;
-      $context = empty($this->config_xml->taverna->context) ? 'http' : $this->config_xml->taverna->context;
-      $taverna_sender = new TavernaSender($prot, $this->config_xml->taverna->host, $this->config_xml->taverna->port, $context, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
-
-      //Post t2flow
-
-      $result = $taverna_sender->send_Message($stream);
-      //$this->log->lwrite('result = ' . $result, "SERVER_INFO"); 
-
-      $uuid = $taverna_sender->parse_UUID($result);
-      if (empty($uuid)) {
-        //This message should never be seen, as it should break in send message first
-        $this->log->lwrite('No UUID was found', "TAVERNA_ERROR");
-      }
-      else { //uuid has a value
-        $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
-        $taverna_sender->add_input($uuid, "pid", $pid);
-        $taverna_sender->add_input($uuid, "dsid", $dsID);
-        $result = $taverna_sender->run_t2flow($uuid);
-        $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
-        $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
-        //$this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
-      }
-    } catch (Exception $e) {
-      $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR: ' . $e->getCode());
-      //need further checking here as the 403 maybe legit (taverna issues a 403 if it has too many jobs but it could also be a true authorization error.
-      if ($e->getCode() == 403) {
-        $this->log->lwrite($e->getMessage(), 'send t2flow to taverna faild, sending agian.');
-        sleep(10);
-        $this->processT2flowOnTaverna($stream, $pid, $dsID);
-      }
+    $prot = empty($this->config_xml->taverna->protocol) ? 'http' : $this->config_xml->taverna->protocol;
+    $context = empty($this->config_xml->taverna->context) ? 'http' : $this->config_xml->taverna->context;
+    $taverna_sender = new TavernaSender($prot, $this->config_xml->taverna->host, $this->config_xml->taverna->port, $context, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
+    //Post t2flow
+    $result = $taverna_sender->send_Message($stream);
+    $uuid = $taverna_sender->parse_UUID($result);
+    if (empty($uuid)) {
+      //This message should never be seen, as it should break in send message first
+      $this->log->lwrite('No UUID was found', "TAVERNA_ERROR");
+    }
+    else { //uuid has a value
+      $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
+      $taverna_sender->add_input($uuid, "pid", $pid);
+      $taverna_sender->add_input($uuid, "dsid", $dsID);
+      $result = $taverna_sender->run_t2flow($uuid);
+      $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
+      $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
+      //$this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
     }
   }
 
