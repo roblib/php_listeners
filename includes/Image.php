@@ -44,47 +44,24 @@ class Image extends Derivative {
     return $return;
   }
 
-  function tnDepartment($dsid = 'TN', $label = 'Thumbnail', $height = '200', $width = '200') {
-    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
-    try {
-      $tn_filename = 'department_tn.png';
-      if (!file_exists($tn_filename)) {
-        $this->log->lwrite("Could not find thumbnail image!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-        return FALSE;
-      }
-
-      $log_message = "$dsid derivative uploaded from file system || SUCCESS";
-      $this->add_derivative($dsid, $label, $tn_filename, 'image/png', $log_message);
-
-      } catch (Exception $e) {
-
-      $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-      }
-    return TRUE;
-  }
-
-  function tnFaculty($dsid = 'TN', $label = 'Thumbnail', $height = '200', $width = '200') {
-    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
-    try {
-      $tn_filename = 'faculty_tn.png';
-      if (!file_exists($tn_filename)) {
-        $this->log->lwrite("Could not find thumbnail image!", 'ERROR');
-        return FALSE;
-      }
-      $log_message = "$dsid derivative uploaded from file system || SUCCESS";
-      $this->add_derivative($dsid, $label, $tn_filename, 'image/png', $log_message);
-    } catch (Exception $e) {
-      $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-    }
-    return TRUE;
-  }
-
+  /**
+   * convert a file to a jpg, if resize is not equal to 0 it will also be resized
+   * @param string $dsid
+   * @param string $label
+   * @param string $resize
+   * @return string
+   *   
+   */
   function jpg($dsid = 'JPEG', $label = 'JPEG image', $resize = '800') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $pathinfo = pathinfo($this->temp_file);
       $output_file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'] . '_JPG.jpg';
-      $command = "convert $this->temp_file -resize $resize $output_file &> /var/log/phpfunctions/cmd1.log";
+      if($resize == '0'){
+        $command = "convert $this->temp_file $output_file &> /var/log/phpfunctions/cmd1.log";
+      } else {
+        $command = "convert $this->temp_file -resize $resize $output_file &> /var/log/phpfunctions/cmd1.log";
+      }
       exec($command, $jpg_output, $return);
       $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
       $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
