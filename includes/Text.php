@@ -13,7 +13,7 @@ class Text extends Derivative {
     } catch (Exception $e) {
       print("fail to open the config file");
     }
-    $this->log_path = $config->config->log->text_path;
+    $this->log_path = $config->config->log->function_log;
   }
       function __destruct() {
     parent::__destruct();

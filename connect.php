@@ -128,6 +128,7 @@ class Connect {
             }
         } //foreach contentmodel 
       }
+      //we can call php code directly if the config.xml file is configured to do so. this would bypass taverna
       $this->triggerDatastreams($message,$pid);
       unset($namespaces);
       unset($namespace);
