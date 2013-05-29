@@ -267,7 +267,7 @@ class Connect {
     } catch (Exception $e) {
       $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR: ' . $e->getCode());
       //need further checking here as the 403 maybe legit (taverna issues a 403 if it has too many jobs but it could also be a true authorization error.
-      //we also need a count here so we don't recurse for ever
+      //we also need a count here so we don't recurse forever
       if ($e->getCode() == 403) {
         $response = $e->getResponse();
         $responseString = $response['content'];
@@ -280,10 +280,14 @@ class Connect {
           }
           else {
             $this->log->lwrite($e->getMessage() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO");
+            return FALSE; //we probably want to try again as this is a server busy error
           }
         }
-      }
-      return FALSE;
+      }//end 403 handling
+      return TRUE;//returning false this will cause a negative (nack) back to the stomp server
+      //this means another connection will probably try this t2flow again so we could get an endless loop
+      //if we return TRUE we will send an ack which means we shouldn't see the workflow again but we 
+      //could lose messages
     }
   }
 
@@ -317,7 +321,7 @@ class Connect {
     }
     else { //stream =''
       $this->log->lwrite('No T2flow found on content model ' . $stream, 'FEDORA_ERROR');
-      return FALSE;
+      return TRUE; //we want to acknowledge that we received the message and have it removed from the queue
     }
   }
 
