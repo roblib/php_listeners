@@ -61,6 +61,7 @@ class Connect {
 
   function listen() {
     // Receive a message from the queue
+    $returnResult = FALSE;
     if ($this->msg = $this->con->readFrame()) {
       // do what you want with the message
       if ($this->msg != NULL) {
@@ -116,7 +117,7 @@ class Connect {
                         //TODO error check to make sure children are of type T2flow
                         foreach ($trigger->children() as $t2flow) {
                           $streamName = (string) $t2flow['id'];
-                          $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
+                          $returnResult = $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
                         }   //foreach t2flow file 
                       } //if matching trigger
                     } //else nname wasnt t2flow
@@ -142,7 +143,11 @@ class Connect {
       unset($derivative);
 
       // Mark the message as received in the queue
-      $this->con->ack($this->msg);
+      if($returnResult){
+        $this->con->ack($this->msg);
+      } else {
+        $this->con->nack($this->msg);
+      }
       unset($this->msg);
     }
 
@@ -222,25 +227,49 @@ class Connect {
     }
   }
 
-  private function processT2flowOnTaverna($stream, $pid, $dsID) {
-    $prot = empty($this->config_xml->taverna->protocol) ? 'http' : $this->config_xml->taverna->protocol;
-    $context = empty($this->config_xml->taverna->context) ? 'http' : $this->config_xml->taverna->context;
-    $taverna_sender = new TavernaSender($prot, $this->config_xml->taverna->host, $this->config_xml->taverna->port, $context, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
-    //Post t2flow
-    $result = $taverna_sender->send_Message($stream);
-    $uuid = $taverna_sender->parse_UUID($result);
-    if (empty($uuid)) {
-      //This message should never be seen, as it should break in send message first
-      $this->log->lwrite('No UUID was found', "TAVERNA_ERROR");
-    }
-    else { //uuid has a value
-      $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
-      $taverna_sender->add_input($uuid, "pid", $pid);
-      $taverna_sender->add_input($uuid, "dsid", $dsID);
-      $result = $taverna_sender->run_t2flow($uuid);
-      $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
-      $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
-      //$this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
+  private function processT2flowOnTaverna($stream, $pid, $dsID, $count = 0) {
+    try {
+      //$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
+      $prot = empty($this->config_xml->taverna->protocol) ? 'http' : $this->config_xml->taverna->protocol;
+      $context = empty($this->config_xml->taverna->context) ? 'http' : $this->config_xml->taverna->context;
+      $taverna_sender = new TavernaSender($prot, $this->config_xml->taverna->host, $this->config_xml->taverna->port, $context, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
+      //Post t2flow
+      $result = $taverna_sender->send_Message($stream);
+      $uuid = $taverna_sender->parse_UUID($result);
+      if (empty($uuid)) {
+        //This message should never be seen, as it should break in send message first
+        $this->log->lwrite('No UUID was found', "TAVERNA_ERROR");
+      }
+      else { //uuid has a value
+        $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
+        $taverna_sender->add_input($uuid, "pid", $pid);
+        $taverna_sender->add_input($uuid, "dsid", $dsID);
+        $result = $taverna_sender->run_t2flow($uuid);
+        $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
+        $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
+        //we should poll here for the job and remove from taverna when it is done
+        return TRUE;
+        //$this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
+      }
+    } catch (Exception $e) {
+      $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR: ' . $e->getCode());
+      //need further checking here as the 403 maybe legit (taverna issues a 403 if it has too many jobs but it could also be a true authorization error.
+      //we also need a count here so we don't recurse for ever
+      if ($e->getCode() == 403) {
+        $response = $e->getResponse();
+        $responseString = $response['content'];
+        if ('server load exceeded; please wait' == $responseString) {
+          //the taverna server is overloaded so give it sometime to recover
+          sleep(10);
+          $this->log->lwrite($e->getMessage(), "Taverna is overloaded, workflow t2flow for $pid $dsid failed, sending agian.");
+          if ($count <= 10) {
+            $this->processT2flowOnTaverna($stream, $pid, $dsID, ++$count);
+          } else {
+            $this->log->lwrite($e->getMessage() ." $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO");
+            return FALSE;
+          }
+        }
+      }
     }
   }
 
@@ -250,10 +279,11 @@ class Connect {
     //get t2flow with t2flow doc      
 
     if ($stream != '') { //if thl content model contained a t2flow 
-      $this->processT2flowOnTaverna($stream, $pid, $dsID);
+      return $this->processT2flowOnTaverna($stream, $pid, $dsID);
     }
     else { //stream =''
       $this->log->lwrite('No T2flow found on content model ' . $stream, 'FEDORA_ERROR');
+      return FALSE;
     }
   }
 
