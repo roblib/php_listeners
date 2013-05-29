@@ -79,6 +79,7 @@ class Connect {
             $this->log->lwrite("Could not find object", 'DELETED_OBJECT', $pid, NULL, $message->author, 'ERROR');
             $this->con->ack($this->msg);
             unset($this->msg);
+            //the listener should spawn a new connect object
             return;
           }
           $fedora_object = new ListenerObject($this->user, $this->fedora_url, $pid);
@@ -86,6 +87,7 @@ class Connect {
           $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
           $this->con->ack($this->msg);
           unset($this->msg);
+          //the listener should spawn another connection
           return;
         }
 
@@ -105,10 +107,9 @@ class Connect {
                 if ((string) $method['type'] == (string) $modMethod) {
                   $this->log->lwrite("Modifing object with workflow defined in Trigger-Datastreams " . $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
                   foreach ($method->children() as $trigger) {
-
                     if ($trigger->getName() == "t2flow") {
                       $streamName = (string) $trigger['id'];
-                      $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
+                      $returnResult = $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
                     }
                     else { //we have trigger
                       if ($trigger['id'] == $message->dsID) {
@@ -132,20 +133,22 @@ class Connect {
       }
       //we can call php code directly if the config.xml file is configured to do so. this would bypass taverna
       $this->triggerDatastreams($message, $pid);
-      unset($namespaces);
-      unset($namespace);
-      unset($content_models);
-      unset($content_model);
-      unset($methods);
-      unset($datastream);
-      unset($new_datastreams);
-      unset($new_datastream);
-      unset($derivative);
-
+      //thinking the unsets are not necassry and already out of scope
+      //just uncommenting for now in case I'm wrong
+      //unset($namespaces);
+      //unset($namespace);
+      //unset($content_models);
+      //unset($content_model);
+      //unset($methods);
+      //unset($datastream);
+      //unset($new_datastreams);
+      //unset($new_datastream);
+      // unset($derivative);
       // Mark the message as received in the queue
-      if($returnResult){
+      if ($returnResult) {
         $this->con->ack($this->msg);
-      } else {
+      }
+      else {
         $this->con->nack($this->msg);
       }
       unset($this->msg);
@@ -155,6 +158,14 @@ class Connect {
     $this->log->lclose();
   }
 
+  /**
+   * legacy function
+   * if config.xml is configured to do so we can call out to php functions directly.
+   * these functions do not require taverna.  this is the old way of calling the services
+   * as everything has to be installed on the listener server.
+   * @param type $message
+   * @param type $pid
+   */
   private function triggerDatastreams($message, $pid) {
     $properties = get_object_vars($message);
     $object_namespace_array = explode(':', $pid);
@@ -247,9 +258,11 @@ class Connect {
         $result = $taverna_sender->run_t2flow($uuid);
         $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
         $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
-        //we should poll here for the job and remove from taverna when it is done
+        $status = $this->pollStatus($uuid, $taverna_sender);
+        if ($status) {
+          $taverna_sender->delete_t2flow($uuid);
+        }
         return TRUE;
-        //$this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
       }
     } catch (Exception $e) {
       $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR: ' . $e->getCode());
@@ -264,13 +277,34 @@ class Connect {
           $this->log->lwrite($e->getMessage(), "Taverna is overloaded, workflow t2flow for $pid $dsid failed, sending agian.");
           if ($count <= 10) {
             $this->processT2flowOnTaverna($stream, $pid, $dsID, ++$count);
-          } else {
-            $this->log->lwrite($e->getMessage() ." $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO");
-            return FALSE;
+          }
+          else {
+            $this->log->lwrite($e->getMessage() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO");
           }
         }
       }
+      return FALSE;
     }
+  }
+
+  /**
+   * polls taverna until a workflow is finished or we get an error.
+   * as implemented this will poll forever if a workflow never reaches a
+   * status of  Finished and 
+   * Taverna does not throw any errors.
+   * @param type $uuid
+   * @param type $tavernaSender
+   * @return boolean
+   *   returns true if status is Finished
+   */
+  private function pollStatus($uuid, $tavernaSender) {
+    sleep(1);
+    $status = $tavernaSender->get_status($uuid);
+    while ($status != 'Finished') {
+      sleep(4);
+      $status = $tavernaSender->get_status($uuid);
+    }
+    return TRUE;
   }
 
   private function runT2flow($streamName, $modelObj, $pid, $dsID) {
