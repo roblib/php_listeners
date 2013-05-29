@@ -1,7 +1,7 @@
 <?php
 
 class Text extends Derivative {
-  
+
   /**
    * Creates all ocr datastreams in one call
    */
@@ -12,23 +12,25 @@ class Text extends Derivative {
       $this->log->lwrite('ENCODED_OCR exists skipping all OCR tasks', 'PROCESS_DATASTREAM', $this->pid, 'HOCR');
       return 0;
     }
-
+    $ingest = NULL;
+    $hocr_output = array();
     try {
       if (file_exists($this->temp_file)) {
         $output_file = $this->temp_file . '_HOCR';
+        $this->log->lwrite($this->temp_file,"temp file");
         $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 hocr 2>&1";
-        exec($command, $hocr_output = array(), $return);
-
+        exec($command, $hocr_output, $return);
+        $this->log->lwrite(implode(', ', $hocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');;
         if (file_exists($output_file . '.html')) {
           $log_message = "HOCR derivative created by tesseract v3.02.02 using command - $command || SUCCESS";
           $ingest = $this->add_derivative('HOCR', 'HOCR', $output_file . '.html', 'text/html', $log_message, FALSE);
         }
         else {
           $this->log->lwrite("Initial call to create ocr failed, converting to png for another attempt", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');
-          $convert_command = "/usr/bin/convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.png &> ".$this->log_path."cmd2.log";
-          exec($convert_command);
-          $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language -psm 1 hocr &> ".$this->log_path."cmd3.log";
-          exec($command, $hocr_output = array(), $return);
+          $convert_command = "/usr/bin/convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.png 2>&1";
+          exec($command, $hocr_output, $return);
+          $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language -psm 1 hocr 2>&1";
+          exec($command, $hocr_output, $return);
 
           if (file_exists($output_file . '.html')) {
             $log_message = "HOCR derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.02.02 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a PNG and reprocessed.";
@@ -90,9 +92,12 @@ class Text extends Derivative {
 
   function ocr($dsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+    $ingest = NULL;
+    $return = NULL;
     try {
       if (file_exists($this->temp_file)) {
         $output_file = $this->temp_file . '_OCR';
+        $this->log->lwrite($this->temp_file);
         $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 2>&1";
         exec($command, $ocr_output = array(), $return);
         if (file_exists($output_file . '.txt')) {
@@ -138,16 +143,16 @@ class Text extends Derivative {
         }
         else {
           $this->log->lwrite("Initial call to create ocr failed, converting to png for another attempt", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-          $convert_command = "/usr/bin/convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.png &> ".$this->log_path."cmd2.log";
-          exec($convert_command);
-          $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language -psm 1 hocr &> ".$this->log_path."cmd3.log";
-          exec($command, $hocr2_output = array(), $return);
+          $convert_command = "/usr/bin/convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.png 2>&1";
+          exec($convert_command, $hocr_output = array(), $return);
+          $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language -psm 1 hocr 2>&1";
+          exec($command, $hocr_output = array(), $return);
           if (file_exists($output_file . '.html')) {
             $log_message = "$dsid derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.0.1 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a PNG and reprocessed.";
             $ingest = $this->add_derivative($dsid, $label, $output_file . '.html', 'text/plain', $log_message);
           }
           else {
-            $this->log->lwrite("Could not find the file '$output_file.html' for the $dsid derivative!\nTesseract output: " . implode(', ', $hocr2_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+            $this->log->lwrite("Could not find the file '$output_file.html' for the $dsid derivative!\nTesseract output: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
           }
         }
       }
@@ -168,13 +173,13 @@ class Text extends Derivative {
     try {
       $output_file = $this->temp_file . '_HOCR';
       $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 hocr 2>&1";
-      exec($command, $hocr_output = array(), $return);
+      exec($command, $encodedocr_output = array(), $return);
       if (!file_exists($output_file . '.html')) {
-        exec("/usr/bin/convert -quality 99 " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg &> ".$this->log_path."cmd2.log");
-        $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 hocr &> ".$this->log_path."cmd3.log";
-        exec($command, $hocr2_output = array(), $return);
+        exec("/usr/bin/convert -quality 99 " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg 2>&1", $encodedocr_output = array(), $return);
+        $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 hocr 2>&1";
+        exec($command, $encodedocr_output = array(), $return);
         if (!file_exists($output_file . '.html')) {
-          $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+          $this->log->lwrite("Could not find the file '$output_file' for the Thumbail derivative!\nTesseract output: " . implode(', ', $encodedocr_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'TN', NULL, 'ERROR');
           return $return;
         }
         else {
