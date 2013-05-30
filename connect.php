@@ -61,7 +61,7 @@ class Connect {
 
   function listen() {
     // Receive a message from the queue
-    $returnResult = FALSE;
+    $returnResult = TRUE; //we will acknowledge message by default
     if ($this->msg = $this->con->readFrame()) {
       // do what you want with the message
       if ($this->msg != NULL) {
@@ -79,7 +79,6 @@ class Connect {
             $this->log->lwrite("Could not find object", 'DELETED_OBJECT', $pid, NULL, $message->author, 'ERROR');
             $this->con->ack($this->msg);
             unset($this->msg);
-            //the listener should spawn a new connect object
             return;
           }
           $fedora_object = new ListenerObject($this->user, $this->fedora_url, $pid);
@@ -87,7 +86,6 @@ class Connect {
           $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
           $this->con->ack($this->msg);
           unset($this->msg);
-          //the listener should spawn another connection
           return;
         }
 
@@ -133,18 +131,6 @@ class Connect {
       }
       //we can call php code directly if the config.xml file is configured to do so. this would bypass taverna
       $this->triggerDatastreams($message, $pid);
-      //thinking the unsets are not necassry and already out of scope
-      //just uncommenting for now in case I'm wrong
-      //unset($namespaces);
-      //unset($namespace);
-      //unset($content_models);
-      //unset($content_model);
-      //unset($methods);
-      //unset($datastream);
-      //unset($new_datastreams);
-      //unset($new_datastream);
-      // unset($derivative);
-      // Mark the message as received in the queue
       if ($returnResult) {
         $this->con->ack($this->msg);
       }
@@ -260,6 +246,7 @@ class Connect {
         $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
         $status = $this->pollStatus($uuid, $taverna_sender);
         if ($status) {
+          $this->log->lwrite("deleting workflow $uuid $pid $dsID", "SERVER_INFO");
           $taverna_sender->delete_t2flow($uuid);
         }
         return TRUE;
@@ -268,7 +255,7 @@ class Connect {
       $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR: ' . $e->getCode());
       //need further checking here as the 403 maybe legit (taverna issues a 403 if it has too many jobs but it could also be a true authorization error.
       //we also need a count here so we don't recurse forever
-      if ($e->getCode() == 403) {
+      if ($e->getCode() == 403 || $e->getCode() == 500) {
         $response = $e->getResponse();
         $responseString = $response['content'];
         if ('server load exceeded; please wait' == $responseString) {
@@ -279,12 +266,14 @@ class Connect {
             $this->processT2flowOnTaverna($stream, $pid, $dsID, ++$count);
           }
           else {
-            $this->log->lwrite($e->getMessage() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO");
-            return FALSE; //we probably want to try again as this is a server busy error
+            $this->log->lwrite($e->getMessage() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO");            
           }
         }
-      }//end 403 handling
-      return TRUE;//returning false this will cause a negative (nack) back to the stomp server
+        return FALSE; //we probably want to try again as this is a server busy error or it is unknown taverna error 
+        //we may want to keep the message.
+      }//end 403, 500 handling
+      return TRUE;//all other errors we figure are probably not recoverable so 
+      //we will send an ack so the message is removed from the queue, returning false this will cause a negative (nack) back to the stomp server
       //this means another connection will probably try this t2flow again so we could get an endless loop
       //if we return TRUE we will send an ack which means we shouldn't see the workflow again but we 
       //could lose messages
@@ -295,7 +284,7 @@ class Connect {
    * polls taverna until a workflow is finished or we get an error.
    * as implemented this will poll forever if a workflow never reaches a
    * status of  Finished and 
-   * Taverna does not throw any errors.
+   * Taverna does not throw an exception.
    * @param type $uuid
    * @param type $tavernaSender
    * @return boolean
