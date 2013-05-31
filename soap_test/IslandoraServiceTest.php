@@ -13,7 +13,6 @@ class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
     $this->backupStaticAttributes = false;
 
     $this->islandoraServ = new IslandoraService();
-    $this->islandoraServ->fedora_connect = getFedoraMock($this);
   }
 
   function testRead() {
