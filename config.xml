@@ -41,6 +41,7 @@
         <port>8080</port>
         <username>taverna</username>
         <password>taverna</password>
+        <ssl>false</ssl>
     </taverna>
     
     <stomp>
