@@ -61,6 +61,7 @@ class Connect {
 
   function listen() {
     // Receive a message from the queue
+    $returnResult = TRUE; //we will acknowledge message by default
     if ($this->msg = $this->con->readFrame()) {
       // do what you want with the message
       if ($this->msg != NULL) {
@@ -104,10 +105,9 @@ class Connect {
                 if ((string) $method['type'] == (string) $modMethod) {
                   $this->log->lwrite("Modifing object with workflow defined in Trigger-Datastreams " . $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
                   foreach ($method->children() as $trigger) {
-
                     if ($trigger->getName() == "t2flow") {
                       $streamName = (string) $trigger['id'];
-                      $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
+                      $returnResult = $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
                     }
                     else { //we have trigger
                       if ($trigger['id'] == $message->dsID) {
@@ -116,7 +116,7 @@ class Connect {
                         //TODO error check to make sure children are of type T2flow
                         foreach ($trigger->children() as $t2flow) {
                           $streamName = (string) $t2flow['id'];
-                          $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
+                          $returnResult = $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
                         }   //foreach t2flow file 
                       } //if matching trigger
                     } //else nname wasnt t2flow
@@ -131,18 +131,12 @@ class Connect {
       }
       //we can call php code directly if the config.xml file is configured to do so. this would bypass taverna
       $this->triggerDatastreams($message, $pid);
-      unset($namespaces);
-      unset($namespace);
-      unset($content_models);
-      unset($content_model);
-      unset($methods);
-      unset($datastream);
-      unset($new_datastreams);
-      unset($new_datastream);
-      unset($derivative);
-
-      // Mark the message as received in the queue
-      $this->con->ack($this->msg);
+      if ($returnResult) {
+        $this->con->ack($this->msg);
+      }
+      else {
+        $this->con->nack($this->msg);
+      }
       unset($this->msg);
     }
 
@@ -150,6 +144,14 @@ class Connect {
     $this->log->lclose();
   }
 
+  /**
+   * legacy function
+   * if config.xml is configured to do so we can call out to php functions directly.
+   * these functions do not require taverna.  this is the old way of calling the services
+   * as everything has to be installed on the listener server.
+   * @param type $message
+   * @param type $pid
+   */
   private function triggerDatastreams($message, $pid) {
     $properties = get_object_vars($message);
     $object_namespace_array = explode(':', $pid);
@@ -222,26 +224,80 @@ class Connect {
     }
   }
 
-  private function processT2flowOnTaverna($stream, $pid, $dsID) {
-    $prot = empty($this->config_xml->taverna->protocol) ? 'http' : $this->config_xml->taverna->protocol;
-    $context = empty($this->config_xml->taverna->context) ? 'http' : $this->config_xml->taverna->context;
-    $taverna_sender = new TavernaSender($prot, $this->config_xml->taverna->host, $this->config_xml->taverna->port, $context, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
-    //Post t2flow
-    $result = $taverna_sender->send_Message($stream);
-    $uuid = $taverna_sender->parse_UUID($result);
-    if (empty($uuid)) {
-      //This message should never be seen, as it should break in send message first
-      $this->log->lwrite('No UUID was found', "TAVERNA_ERROR");
+  private function processT2flowOnTaverna($stream, $pid, $dsID, $count = 0) {
+    try {
+      //$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
+      $prot = empty($this->config_xml->taverna->protocol) ? 'http' : $this->config_xml->taverna->protocol;
+      $context = empty($this->config_xml->taverna->context) ? 'http' : $this->config_xml->taverna->context;
+      $taverna_sender = new TavernaSender($prot, $this->config_xml->taverna->host, $this->config_xml->taverna->port, $context, $this->config_xml->taverna->username, $this->config_xml->taverna->password);
+      //Post t2flow
+      $result = $taverna_sender->send_Message($stream);
+      $uuid = $taverna_sender->parse_UUID($result);
+      if (empty($uuid)) {
+        //This message should never be seen, as it should break in send message first
+        $this->log->lwrite('No UUID was found', "TAVERNA_ERROR");
+      }
+      else { //uuid has a value
+        $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
+        $taverna_sender->add_input($uuid, "pid", $pid);
+        $taverna_sender->add_input($uuid, "dsid", $dsID);
+        $result = $taverna_sender->run_t2flow($uuid);
+        $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
+        $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
+        $status = $this->pollStatus($uuid, $taverna_sender);
+        if ($status) {
+          $this->log->lwrite("deleting workflow $uuid $pid $dsID", "SERVER_INFO");
+          $taverna_sender->delete_t2flow($uuid);
+        }
+        return TRUE;
+      }
+    } catch (Exception $e) {
+      $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR: ' . $e->getCode());
+      //need further checking here as the 403 maybe legit (taverna issues a 403 if it has too many jobs but it could also be a true authorization error.
+      //we also need a count here so we don't recurse forever
+      if ($e->getCode() == 403 || $e->getCode() == 500) {
+        $response = $e->getResponse();
+        $responseString = $response['content'];
+        if ('server load exceeded; please wait' == $responseString) {
+          //the taverna server is overloaded so give it sometime to recover
+          sleep(10);
+          $this->log->lwrite($e->getMessage(), "Taverna is overloaded, workflow t2flow for $pid $dsid failed, sending agian.");
+          if ($count <= 10) {
+            $this->processT2flowOnTaverna($stream, $pid, $dsID, ++$count);
+          }
+          else {
+            $this->log->lwrite($e->getMessage() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO");            
+          }
+        }
+        return FALSE; //we probably want to try again as this is a server busy error or it is unknown taverna error 
+        //we may want to keep the message.
+      }//end 403, 500 handling
+      return TRUE;//all other errors we figure are probably not recoverable so 
+      //we will send an ack so the message is removed from the queue, returning false this will cause a negative (nack) back to the stomp server
+      //this means another connection will probably try this t2flow again so we could get an endless loop
+      //if we return TRUE we will send an ack which means we shouldn't see the workflow again but we 
+      //could lose messages
     }
-    else { //uuid has a value
-      $this->log->lwrite('uuid = ' . $uuid, "SERVER_INFO");
-      $taverna_sender->add_input($uuid, "pid", $pid);
-      $taverna_sender->add_input($uuid, "dsid", $dsID);
-      $result = $taverna_sender->run_t2flow($uuid);
-      $this->log->lwrite('pid = ' . $pid, "SERVER_INFO");
-      $this->log->lwrite('dsid = ' . $dsID, "SERVER_INFO");
-      //$this->log->lwrite('final result =  ' . $result, "SERVER_INFO");
+  }
+
+  /**
+   * polls taverna until a workflow is finished or we get an error.
+   * as implemented this will poll forever if a workflow never reaches a
+   * status of  Finished and 
+   * Taverna does not throw an exception.
+   * @param type $uuid
+   * @param type $tavernaSender
+   * @return boolean
+   *   returns true if status is Finished
+   */
+  private function pollStatus($uuid, $tavernaSender) {
+    sleep(1);
+    $status = $tavernaSender->get_status($uuid);
+    while ($status != 'Finished') {
+      sleep(4);
+      $status = $tavernaSender->get_status($uuid);
     }
+    return TRUE;
   }
 
   private function runT2flow($streamName, $modelObj, $pid, $dsID) {
@@ -250,10 +306,11 @@ class Connect {
     //get t2flow with t2flow doc      
 
     if ($stream != '') { //if thl content model contained a t2flow 
-      $this->processT2flowOnTaverna($stream, $pid, $dsID);
+      return $this->processT2flowOnTaverna($stream, $pid, $dsID);
     }
     else { //stream =''
       $this->log->lwrite('No T2flow found on content model ' . $stream, 'FEDORA_ERROR');
+      return TRUE; //we want to acknowledge that we received the message and have it removed from the queue
     }
   }
 

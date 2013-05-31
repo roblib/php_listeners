@@ -156,7 +156,7 @@ class TavernaSender extends Sender {
       if ($response['status'] != 200) {
         throw new TavernaException($response['headers'] . $response['content'],$response['status'],'get t2flow status');
       }
-      return $response['headers'] . $response['content'];
+      return $response['content'];
     }
     return null;
   }
@@ -178,10 +178,10 @@ class TavernaSender extends Sender {
       $this->set_ssl();
       $response = $this->curl_connect->deleteRequest($url);
 
-      if ($response['status'] != 202) {
+      if ($response['status'] != 204) {
         throw new TavernaException($response['headers'] . $response['content'],$response['status'],'delete t2flow');
       }
-      return $response['headers'] . $response['content'];
+      return $response['status'];
     }
     return null;
   }
