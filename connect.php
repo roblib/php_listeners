@@ -125,7 +125,7 @@ class Connect {
               }//foreach ($methods->children() as $method) 
             } //if($trigString != "") 
             } catch (Exception $e) {
-            $this->log->lwrite("An error occurred parsing for trigger datastreams " . $e->getMessage(), 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
+            $this->log->lwrite("An error occurred parsing workflow for trigger datastreams " . $e->getMessage(), 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
             }
         } //foreach contentmodel 
       }
@@ -252,31 +252,25 @@ class Connect {
         return TRUE;
       }
     } catch (Exception $e) {
-      $this->log->lwrite($e->getMessage(), 'TAVERNA_ERROR: ' . $e->getCode());
-      //need further checking here as the 403 maybe legit (taverna issues a 403 if it has too many jobs but it could also be a true authorization error.
-      //we also need a count here so we don't recurse forever
-      if ($e->getCode() == 403 || $e->getCode() == 500) {
-        $response = $e->getResponse();
-        $responseString = $response['content'];
-        if ('server load exceeded; please wait' == $responseString) {
-          //the taverna server is overloaded so give it sometime to recover
-          sleep(10);
-          $this->log->lwrite($e->getMessage(), "Taverna is overloaded, workflow t2flow for $pid $dsid failed, sending agian.");
-          if ($count <= 10) {
-            $this->processT2flowOnTaverna($stream, $pid, $dsID, ++$count);
-          }
-          else {
-            $this->log->lwrite($e->getMessage() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO");            
-          }
-        }
-        return FALSE; //we probably want to try again as this is a server busy error or it is unknown taverna error 
-        //we may want to keep the message.
-      }//end 403, 500 handling
-      return TRUE;//all other errors we figure are probably not recoverable so 
-      //we will send an ack so the message is removed from the queue, returning false this will cause a negative (nack) back to the stomp server
-      //this means another connection will probably try this t2flow again so we could get an endless loop
-      //if we return TRUE we will send an ack which means we shouldn't see the workflow again but we 
-      //could lose messages
+      $this->log->lwrite($e->getMessage(). ' ' . $e->getCode(), 'TAVERNA_ERROR',
+          $pid, $dsid, NULL, 'ERROR');
+      $response = $e->getResponse();
+      $responseString = $response['content'];
+      //we rest and retry here as the most common taverna error will probable be a 403 forbidden
+      //due to the server being overloaded.  
+      sleep(10);
+      if ($count <= 10) {
+        $this->log->lwrite("Taverna error $responseString, workflow t2flow for $pid $dsid failed, sending agian.",'SERVER_INFO',
+            $pid, $dsid, NULL, 'INFO');
+        $this->processT2flowOnTaverna($stream, $pid, $dsID, ++$count);
+      }
+      else {
+        $this->log->lwrite($e->getMessage() . ' '. $e->getCode() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO",
+            $pid, $dsid, NULL, 'ERROR');
+      }
+      return FALSE; //we return false here so a negative ack will be sent.  this probably means (depending on the stomp server configs) that 
+      //we will get this message again.  This prevents us from losing messages but could cause a loop if Taverna is down, 
+      //inaccesible or just not responding
     }
   }
 
@@ -290,11 +284,11 @@ class Connect {
    * @return boolean
    *   returns true if status is Finished
    */
-  private function pollStatus($uuid, $tavernaSender) {
+  private function pollStatus($uuid, $tavernaSender, $wait=2) {
     sleep(1);
     $status = $tavernaSender->get_status($uuid);
     while ($status != 'Finished') {
-      sleep(4);
+      sleep($wait);
       $status = $tavernaSender->get_status($uuid);
     }
     return TRUE;
