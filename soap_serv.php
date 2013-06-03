@@ -3,7 +3,6 @@
 /**
  * @file this file is to provide soap services.
  */
-
 /**
  * read a config file of soap to determin the location of microservices.
  */
@@ -325,13 +324,16 @@ class IslandoraService {
    */
   function read($pid, $dsid, $extension) {
     try {
-      if (fedora_object_exists($this->config->fedora->host, $this->config->fedora->username, $pid)) {
+      $fedora_user = new stdClass();
+      $fedora_user->name = $this->config->fedora->username;
+      $fedora_user->pass = $this->config->fedora->password;
+      if (fedora_object_exists($this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora', $fedora_user, $pid)) {
         $content = $this->fedora_connect->getDatastream($pid, $dsid)->content;
         return base64_encode($content);
       }
-        } catch (Exception $e) {
+    } catch (Exception $e) {
       $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, $e->getMessage(), 'ERROR');
-        }
+    }
   }
 
   /**
@@ -365,7 +367,7 @@ class IslandoraService {
    * @param string $funcresult
    * @return int
    */
-  function getFunctionStatus($funcname, $funcresult,$pid,$dsid) {
+  function getFunctionStatus($funcname, $funcresult, $pid, $dsid) {
     if ($funcresult == 0) {
       $this->log->lwrite($funcname . " function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
       $result = 0;
@@ -417,7 +419,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $text->allOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("allOcr", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("allOcr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -452,7 +454,7 @@ class IslandoraService {
       $result = -2;
         }
 
-    if ($text = new Text($fedora_object, $dsid,NULL, $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -460,7 +462,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $text->ocr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("ocr", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("ocr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -504,7 +506,7 @@ class IslandoraService {
     }
 
     $funcresult = $text->hOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("hOcr", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("hOcr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -546,7 +548,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $text->encodedOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -611,7 +613,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $image->jp2($outputdsid, $label);
-    $result = $this->getFunctionStatus("jp2", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("jp2", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -656,7 +658,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $image->tn($outputdsid, $label, $height, $width);
-    $result = $this->getFunctionStatus("tn", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("tn", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -695,7 +697,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $tech->techmd($outputdsid, $label, $label);
-    $result = $this->getFunctionStatus("techmd", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("techmd", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -734,7 +736,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $pdf->scholarPdfa($outputdsid, $label);
-    $result = $this->getFunctionStatus("scholarPdfa", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("scholarPdfa", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -773,7 +775,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $rels->addImageDimensionsToRels($outputdsid, $label);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -812,7 +814,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $policy->scholarPolicy($outputdsid, $label);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult,$pid,$dsid);
+    $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
     return $result;
   }
 
