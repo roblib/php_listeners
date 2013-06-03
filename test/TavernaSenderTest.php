@@ -45,7 +45,7 @@ class TavernaSenderTest extends PHPUnit_Framework_TestCase {
 
   public function testSetSSLStatus() {
     $ssl_status = $this->tavernaSender->ssl_status;
-    $ssl_status_in_config = $this->config->taverna->ssl;
+    $ssl_status_in_config = $this->config->taverna->verify_ssl;
     if($ssl_status)
     {
       $this->assertEquals('true',  strtolower($ssl_status_in_config));
