@@ -46,7 +46,8 @@ class Connect {
     try {
       $this->con = new Stomp($stomp_url);
     } catch (StompException $e) {
-      file_put_contents('php://stderr', "Could not open a connection to $stomp_url - $e");
+      file_put_contents('php://stderr', "Could not open a connection to $stomp_url - " . $e->getMessage());
+      throw($e);
     }
     $this->con->sync = TRUE;
     $this->con->setReadTimeout(1);
@@ -55,7 +56,8 @@ class Connect {
     try {
       $this->con->subscribe((string) $channel[0], array('activemq.prefetchSize' => 1));
     } catch (Exception $e) {
-      file_put_contents('php://stderr', "Could not subscribe to the channel $channel - $e");
+      file_put_contents('php://stderr', "Could not subscribe to the channel $channel - " . $e->getMessage());
+      throw($e);
     }
   }
 
@@ -252,21 +254,18 @@ class Connect {
         return TRUE;
       }
     } catch (Exception $e) {
-      $this->log->lwrite($e->getMessage(). ' ' . $e->getCode(), 'TAVERNA_ERROR',
-          $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite($e->getMessage() . ' ' . $e->getCode(), 'TAVERNA_ERROR', $pid, $dsid, NULL, 'ERROR');
       $response = $e->getResponse();
       $responseString = $response['content'];
       //we rest and retry here as the most common taverna error will probable be a 403 forbidden
       //due to the server being overloaded.  
       sleep(10);
       if ($count <= 10) {
-        $this->log->lwrite("Taverna error $responseString, workflow t2flow for $pid $dsid failed, sending agian.",'SERVER_INFO',
-            $pid, $dsid, NULL, 'INFO');
+        $this->log->lwrite("Taverna error $responseString, workflow t2flow for $pid $dsid failed, sending agian.", 'SERVER_INFO', $pid, $dsid, NULL, 'INFO');
         $this->processT2flowOnTaverna($stream, $pid, $dsID, ++$count);
       }
       else {
-        $this->log->lwrite($e->getMessage() . ' '. $e->getCode() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO",
-            $pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite($e->getMessage() . ' ' . $e->getCode() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO", $pid, $dsid, NULL, 'ERROR');
       }
       return FALSE; //we return false here so a negative ack will be sent.  this probably means (depending on the stomp server configs) that 
       //we will get this message again.  This prevents us from losing messages but could cause a loop if Taverna is down, 
@@ -284,7 +283,7 @@ class Connect {
    * @return boolean
    *   returns true if status is Finished
    */
-  private function pollStatus($uuid, $tavernaSender, $wait=2) {
+  private function pollStatus($uuid, $tavernaSender, $wait = 2) {
     sleep(1);
     $status = $tavernaSender->get_status($uuid);
     while ($status != 'Finished') {
