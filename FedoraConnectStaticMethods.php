@@ -88,7 +88,7 @@ function temp_filename($extension = NULL) {
   return $filename;
 }
 
-function fedora_object_exists($fedora_url = 'http://:8080/fedora', $user = NULL, $pid = NULL) {
+function fedora_object_exists($fedora_url = 'http://localhost:8080/fedora', $user = NULL, $pid = NULL) {
   if (!isset($pid)) {
     return;
   }
