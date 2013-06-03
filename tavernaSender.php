@@ -20,6 +20,12 @@ class TavernaSender extends Sender {
   public $curl_connect;
 
   /**
+   * the option that if verif host and peer
+   * @var boolean
+   */
+  public $ssl_status;
+
+  /**
    * Constructor for the sender.
    * 
    * @param string $protocal
@@ -49,7 +55,42 @@ class TavernaSender extends Sender {
     $this->curl_connect = new TavernaCurlConnection();
     $this->curl_connect->username = $this->username;
     $this->curl_connect->password = $this->password;
-    print($this->hostname);
+    $this->set_ssl_status();
+  }
+
+  /**
+   * This method is to read ssl status from config file
+   */
+  function set_ssl_status() {
+    $location = $this->get_listener_config_path();
+    $config_file = file_get_contents($location . '/config.xml');
+    try{
+      $this->config = new SimpleXMLElement($config_file);
+    } catch (Exception $e)
+    {
+      print("fail to open the config file");
+    }
+
+    if (strcasecmp($config_file->taverna->ssl, 'true') == 0) {
+      $this->ssl_status = TRUE;
+    }
+    else {
+      $this->ssl_status = FALSE;
+    }
+  }
+
+  /**
+   * This function is to get config file location
+   * @return string
+   */
+  function get_listener_config_path() {
+    $location_env_veriable = 'PHP_LISTENERS_PATH';
+    $location = getenv($location_env_veriable);
+    if (empty($location)) {
+      //try using a default
+      $location = '/opt/php_listeners';
+    }
+    return $location;
   }
 
   /**
@@ -57,8 +98,8 @@ class TavernaSender extends Sender {
    */
   function set_ssl() {
     $this->curl_connect->sslVersion = 3;
-    $this->curl_connect->verifyHost = FALSE;
-    $this->curl_connect->verifyPeer = FALSE;
+    $this->curl_connect->verifyHost = $this->ssl_status;
+    $this->curl_connect->verifyPeer = $this->ssl_status;
   }
 
   /**
@@ -77,9 +118,8 @@ class TavernaSender extends Sender {
     if (!empty($message)) {
       $this->set_ssl();
       $response = $this->curl_connect->postRequest($this->hostname, 'string', $message, 'application/vnd.taverna.t2flow+xml');
-      print($message);
       if ($response['status'] != 201) {
-        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'send message');
+        throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'send message');
       }
 
       return $response['headers'] . $response['content'];
@@ -128,7 +168,7 @@ class TavernaSender extends Sender {
       $response = $this->curl_connect->tavernaPutRequest($url, 'string', 'Operating', 'text/plain');
 
       if ($response['status'] != 200) {
-        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'run t2flow');
+        throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'run t2flow');
       }
       return $response['headers'] . $response['content'];
     }
@@ -154,7 +194,7 @@ class TavernaSender extends Sender {
       $this->set_ssl();
       $response = $this->curl_connect->getRequest($url, FALSE, NULL);
       if ($response['status'] != 200) {
-        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'get t2flow status');
+        throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'get t2flow status');
       }
       return $response['content'];
     }
@@ -179,7 +219,7 @@ class TavernaSender extends Sender {
       $response = $this->curl_connect->deleteRequest($url);
 
       if ($response['status'] != 204) {
-        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'delete t2flow');
+        throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'delete t2flow');
       }
       return $response['status'];
     }
@@ -212,12 +252,14 @@ class TavernaSender extends Sender {
       $response = $this->curl_connect->tavernaPutRequest($url, 'string', $input, 'application/xml');
 
       if ($response['status'] != 200) {
-        throw new TavernaException($response['headers'] . $response['content'],$response['status'],'add input');
+        throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'add input');
       }
 
       return $response['headers'] . $response['content'];
     }
     return null;
   }
+
 }
+
 ?>

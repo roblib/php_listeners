@@ -42,7 +42,7 @@ XML;
       try{
         $return = $this->add_derivative($dsid, $label, $rels_int_str, 'text/xml', $log_message, FALSE, FALSE, 'X');
       } catch (Exception $e){
-        $this->log->lwrite('Error updating repository', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+        $this->log->lwrite('Error updating repository', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
       }
     }
     else {
@@ -54,7 +54,7 @@ XML;
         $about = $description->getAttribute('rdf:about');
         $length = strlen($source_dsid);
         if (substr($about, -$length) === $source_dsid) {
-          $this->log->lwrite('Relationship already exists aborting', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+          $this->log->lwrite('Relationship already exists aborting', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
           return 'Relationship already Exists';
         }
       }
@@ -73,7 +73,7 @@ XML;
       try{
         $return = $this->add_derivative($dsid, $label, $xml, 'text/xml', $log_message, FALSE, FALSE, 'X');
       } catch (Exception $e){
-        $this->log->lwrite('Error updating repository', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+        $this->log->lwrite('Error updating repository', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
       }
     }
     return $return;
