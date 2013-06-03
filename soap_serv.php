@@ -325,12 +325,12 @@ class IslandoraService {
    */
   function read($pid, $dsid, $extension) {
     try {
-      if (fedora_object_exists($this->fedora_url, $this->user, $pid)) {
+      if (fedora_object_exists($this->config->fedora->host, $this->config->fedora->username, $pid)) {
         $content = $this->fedora_connect->getDatastream($pid, $dsid)->content;
         return base64_encode($content);
       }
         } catch (Exception $e) {
-      $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, NULL, $message->author, 'ERROR');
+      $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, $e->getMessage(), 'ERROR');
         }
   }
 
@@ -365,13 +365,13 @@ class IslandoraService {
    * @param string $funcresult
    * @return int
    */
-  function getFunctionStatus($funcname, $funcresult) {
+  function getFunctionStatus($funcname, $funcresult,$pid,$dsid) {
     if ($funcresult == 0) {
       $this->log->lwrite($funcname . " function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
       $result = 0;
     }
     else {
-      $this->log->lwrite($funcname . " function failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite($funcname . " function failed with code $funcresult", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = $funcresult;
     }
     return $result;
@@ -409,7 +409,7 @@ class IslandoraService {
         }
 
 
-    if ($text = new Text($fedora_object, $dsid, 'jpeg', $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -417,7 +417,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $text->allOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("allOcr", $funcresult);
+    $result = $this->getFunctionStatus("allOcr", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -452,9 +452,7 @@ class IslandoraService {
       $result = -2;
         }
 
-
-
-    if ($text = new Text($fedora_object, $dsid, 'txt', $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid,NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -462,7 +460,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $text->ocr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("ocr", $funcresult);
+    $result = $this->getFunctionStatus("ocr", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -497,7 +495,7 @@ class IslandoraService {
       $result = -2;
      }
 
-    if ($text = new Text($fedora_object, $dsid, 'jpg', $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -506,7 +504,7 @@ class IslandoraService {
     }
 
     $funcresult = $text->hOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("hOcr", $funcresult);
+    $result = $this->getFunctionStatus("hOcr", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -540,7 +538,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($text = new Text($fedora_object, $dsid, 'txt', $this->log, null)) {
+    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -548,7 +546,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $text->encodedOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult);
+    $result = $this->getFunctionStatus("encodedOcr", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -574,7 +572,7 @@ class IslandoraService {
    */
   function jpg($pid, $dsid = "JPEG", $outputdsid = "JPG", $label = "JPEG image", $resize = "800") {
     $fedora_object = $this->fedora_connect->repository->getObject($pid);
-    $image = new Image($fedora_object, $dsid, 'jpg', $this->log, null);
+    $image = new Image($fedora_object, $dsid, NULL, $this->log, null);
     return $image->jpg($outputdsid, $label, $resize);
   }
 
@@ -597,7 +595,7 @@ class IslandoraService {
    */
   function jp2($pid, $dsid = "OBJ", $outputdsid = "JP2", $label = "Compressed jp2") {
     $result = -1;
-    $this->log->lwrite("Function TN starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $this->log->lwrite("Function $outputdsid starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -605,7 +603,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($image = new Image($fedora_object, $dsid, 'jp2', $this->log, null)) {
+    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -613,7 +611,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $image->jp2($outputdsid, $label);
-    $result = $this->getFunctionStatus("jp2", $funcresult);
+    $result = $this->getFunctionStatus("jp2", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -650,7 +648,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($image = new Image($fedora_object, $dsid, 'jpg', $this->log, null)) {
+    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -658,7 +656,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $image->tn($outputdsid, $label, $height, $width);
-    $result = $this->getFunctionStatus("tn", $funcresult);
+    $result = $this->getFunctionStatus("tn", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -689,15 +687,15 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($tech = new Technical($fedora_object, $dsid, 'xml', $this->log, null)) {
+    if ($tech = new Technical($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Technical metadata derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
       $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
-    $funcresult = $tech->techmd($outputdsid, $label, $height, $width);
-    $result = $this->getFunctionStatus("techmd", $funcresult);
+    $funcresult = $tech->techmd($outputdsid, $label, $label);
+    $result = $this->getFunctionStatus("techmd", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -736,7 +734,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $pdf->scholarPdfa($outputdsid, $label);
-    $result = $this->getFunctionStatus("scholarPdfa", $funcresult);
+    $result = $this->getFunctionStatus("scholarPdfa", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -774,8 +772,8 @@ class IslandoraService {
       $this->log->lwrite("Relationship class not loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
-    $funcresult = $rels->addImageDimensionsToRels($outputdsid, $label, $height, $width);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult);
+    $funcresult = $rels->addImageDimensionsToRels($outputdsid, $label);
+    $result = $this->getFunctionStatus("encodedOcr", $funcresult,$pid,$dsid);
     return $result;
   }
 
@@ -814,7 +812,7 @@ class IslandoraService {
       $result = -3;
     }
     $funcresult = $policy->scholarPolicy($outputdsid, $label);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult);
+    $result = $this->getFunctionStatus("encodedOcr", $funcresult,$pid,$dsid);
     return $result;
   }
 
