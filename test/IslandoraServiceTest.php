@@ -13,7 +13,6 @@ class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
     $this->backupStaticAttributes = false;
 
     $this->islandoraServ = new IslandoraService();
-    $this->islandoraServ->fedora_connect = getFedoraMock($this);
   }
 
   function testRead() {
@@ -22,7 +21,7 @@ class IslandoraServiceTest extends PHPUnit_Framework_TestCase {
   }
 
   function testWrite() {
-    $result = $this->islandoraServ->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("soap_test/stanly.jpg")), "image/jpeg");
+    $result = $this->islandoraServ->write('islandora:313', 'STANLEY_JPG', 'tiny Stanley', base64_encode(file_get_contents("test/TestData/stanley.jpg")), "image/jpeg");
     $this->assertEquals($result, 'success');
   }
 

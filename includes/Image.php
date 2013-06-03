@@ -13,13 +13,19 @@ class Image extends Derivative {
     if (file_exists($this->temp_file)) {
       try {
         $output_file = $this->temp_file . '_JP2.jp2';
-        $command = 'kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes &> /var/log/phpfunctions/cmd1.log';
+        $command = 'kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes 2>&1';
         $jp2_output = array();
         exec($command, $jp2_output, $return);
-        $log_message = "$dsid derivative created using kdu_compress with command - $command || SUCCESS";
-        $this->add_derivative($dsid, $label, $output_file, 'image/jp2', $log_message);
+        if (file_exists($output_file)) {
+          $log_message = "$dsid derivative created using kdu_compress with command - $command || SUCCESS";
+          $this->add_derivative($dsid, $label, $output_file, 'image/jp2', $log_message);
+        }
+        else {
+          $this->log->lwrite("Could not find the file '$output_file' for the HOCR derivative!\nTesseract output: " . implode(', ', $jp2_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JP2', NULL, 'ERROR');
+          return $return;
+        }
       } catch (Exception $e) {
-        $this->log->lwrite("Could not create the $dsid derivative! " . $return . ' ' . implode($jp2_output), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite("Could not create the $dsid derivative! " . $return . ' ' . implode(',', $jp2_output), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         unlink($output_file);
       }
     }
@@ -33,12 +39,18 @@ class Image extends Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {
       $output_file = $this->temp_file . '_TN.jpg';
-      $command = "convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file &> /var/log/phpfunctions/cmd1.log";
-      exec($command, $tn_output, $return);
-      $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
-      $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
+      $command = "convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file 2>&1";
+      exec($command, $tn_output = array(), $return);
+      if (file_exists($output_file)) {
+        $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
+        $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
+      }
+      else {
+        $this->log->lwrite("Could not find the file '$output_file' for the Thumbail derivative!\nTesseract output: " . implode(', ', $tn_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'TN', NULL, 'ERROR');
+        return $return;
+      }
       } catch (Exception $e) {
-      $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Could not create the $dsid derivative!", $return . ' ' . implode(',', $tn_output), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
     }
     return $return;
@@ -57,17 +69,24 @@ class Image extends Derivative {
     try {
       $pathinfo = pathinfo($this->temp_file);
       $output_file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'] . '_JPG.jpg';
-      if($resize == '0'){
-        $command = "convert $this->temp_file $output_file &> /var/log/phpfunctions/cmd1.log";
-      } else {
-        $command = "convert $this->temp_file -resize $resize $output_file &> /var/log/phpfunctions/cmd1.log";
+      if ($resize == '0') {
+        $command = "convert $this->temp_file $output_file 2>&1";
       }
-      exec($command, $jpg_output, $return);
-      $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
-      $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
+      else {
+        $command = "convert $this->temp_file -resize $resize $output_file 2>&1";
+      }
+      exec($command, $jpg_output = array(), $return);
+      if (file_exists($output_file)) {
+        $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
+        $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
+      }
+      else {
+        $this->log->lwrite("Could not find the file '$output_file' for the Thumbail derivative!\nTesseract output: " . implode(', ', $JPG_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JPG', NULL, 'ERROR');
+        return $return;
+      }
 
       } catch (Exception $e) {
-      $this->log->lwrite("Could not create the $dsid derivative!", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Could not create the $dsid derivative!", $return . ' ' . implode(',', $jpg_output), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       unlink($output_file);
 
       }
