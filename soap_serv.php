@@ -289,7 +289,7 @@ class IslandoraService {
     $fedora_user = new stdClass();
     $fedora_user->name = $this->config->fedora->username;
     $fedora_user->pass = $this->config->fedora->password;
-    $this->fedora_connect = new FedoraConnection($fedora_user, 'http://' . $this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora');
+    $this->fedora_connect = new FedoraConnection($fedora_user, $this->config->fedora->protocol.'://' . $this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora');
   }
 
   /**
@@ -327,7 +327,7 @@ class IslandoraService {
       $fedora_user = new stdClass();
       $fedora_user->name = $this->config->fedora->username;
       $fedora_user->pass = $this->config->fedora->password;
-      if (fedora_object_exists($this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora', $fedora_user, $pid)) {
+      if (fedora_object_exists($this->config->fedora->protocol.'://'.$this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora', $fedora_user, $pid)) {
         $content = $this->fedora_connect->getDatastream($pid, $dsid)->content;
         return base64_encode($content);
       }
