@@ -93,23 +93,23 @@ function fedora_object_exists($fedora_url = 'http://localhost:8080/fedora', $use
     return;
   }
 
+  $return = TRUE;
   $fedora_user = $user->name;
   $fedora_pass = $user->pass;
 
-  $url = $fedora_url . '/objects/' . $pid;
+  $connection = new RepositoryConnection($fedora_url, $fedora_user, $fedora_pass);
+  $connection->reuseConnection = TRUE;
+  $api = new FedoraApi($connection);
+  $cache = new SimpleCache();
+  $repos = new FedoraRepository($api, $cache);
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_USERPWD, "$fedora_user:$fedora_pass");
-  $content = curl_exec($ch);
+  try {
+    $repos->getObject($pid);
+  } catch (RepositoryException $exc) {
+    $return = FALSE;
 
-  if ($content == $pid) {
-    return FALSE;
   }
-  else {
-    return TRUE;
+  return $return;
   }
-}
 
 ?>
