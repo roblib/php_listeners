@@ -329,10 +329,11 @@ class IslandoraService {
       $fedora_user->pass = $this->config->fedora->password;
       if (fedora_object_exists($this->config->fedora->protocol.'://'.$this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora', $fedora_user, $pid)) {
         $content = $this->fedora_connect->getDatastream($pid, $dsid)->content;
+        $this->log->lwrite("Reading fedora content", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
         return base64_encode($content);
       }
     } catch (Exception $e) {
-      $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, $e->getMessage(), 'ERROR');
+      $this->log->lwrite("An error occurred reading fedora content " .$e->getMessage(), 'FAIL_OBJECT', $pid,$dsid, 'ERROR');
     }
   }
 
@@ -357,6 +358,7 @@ class IslandoraService {
    * @return string
    */
   function write($pid, $dsid, $label, $base64_content, $mimetype) {
+    $this->log->lwrite("Writing fedora content $label", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($base64_content), $mimetype, null, true, false);
   }
 
