@@ -71,7 +71,7 @@ class TavernaSender extends Sender {
       print("fail to open the config file");
     }
 
-    if (strcasecmp($config_file->taverna->ssl, 'true') == 0) {
+    if (strcasecmp($config_file->taverna->verify_ssl, 'true') == 0) {
       $this->ssl_status = TRUE;
     }
     else {
