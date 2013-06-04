@@ -30,7 +30,6 @@ class Text extends Derivative {
     try {
       if (file_exists($this->temp_file)) {
         $output_file = $this->temp_file . '_HOCR';
-        $this->log->lwrite($this->temp_file,"temp file");
         $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 hocr 2>&1";
         exec($command, $hocr_output, $return);
         $this->log->lwrite(implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');;
@@ -127,7 +126,6 @@ class Text extends Derivative {
     try {
       if (file_exists($this->temp_file)) {
         $output_file = $this->temp_file . '_OCR';
-        $this->log->lwrite($this->temp_file,"temp file");
         $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 2>&1";
         exec($command, $ocr_output = array(), $return);
         if (file_exists($output_file . '.txt')) {
