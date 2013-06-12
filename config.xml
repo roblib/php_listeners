@@ -31,7 +31,7 @@
         <host>ip/ordomain</host>
         <port>8080</port>
         <username>fedoraAdmin</username>
-        <password>password</password>
+        <password>fedora</password>
     </fedora>
     
     <taverna>
@@ -42,6 +42,46 @@
         <username>taverna</username>
         <password>taverna</password>
         <verify_ssl>false</verify_ssl>
+        <readusers>
+           <user username="taverna" password="taverna">taverna</user>
+        </readusers>
+        <writeusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </writeusers>
+        <allOcrusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </allOcrusers>
+        <ocrusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </ocrusers>
+        <hOcrusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </hOcrusers>
+        <encodedOcrusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </encodedOcrusers>
+        <jpgusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </jpgusers>
+        <jp2users>
+          <user username="taverna" password="taverna">taverna</user>
+        </jp2users>
+        <tnusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </tnusers>
+        <techmdusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </techmdusers>
+        <scholarPolicyusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </scholarPolicyusers>
+        <addImageDimensionsToRelsusers>
+          <user username="taverna" password="taverna">taverna</user>
+        </addImageDimensionsToRelsusers>
+        <scholarPdfausers>
+          <user username="taverna" password="taverna">taverna</user>
+        </scholarPdfausers>
+        <needAuth>true</needAuth>
     </taverna>
     
     <stomp>

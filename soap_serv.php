@@ -120,6 +120,100 @@ class IslandoraService {
     $this->connect();
 
     /**
+     * <b>read</b> read fedora objects
+     */
+    $this->__dispatch_map['read'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'extension' => 'string',
+        'username' => 'string',
+        'password' => 'string'
+      ),
+      'out' => array('base64_content' => 'string')
+    );
+
+    /**
+     * <b>write</b> write back to fedora
+     */
+    $this->__dispatch_map['write'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'label' => 'string',
+        'base64_content' => 'string',
+        'mimetype' => 'string',
+        'username' => 'string',
+        'password' => 'string'
+      ),
+      'out' => array('message' => 'string')
+    );
+    
+    /**
+     * <b>allOcr</b> processing in Text.php 
+     */
+    $this->__dispatch_map['allOcr'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+        'language' => 'string',
+        'username' => 'string',
+        'password' => 'string'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
+     * <b>ocr</b> processing in Text.php
+     */
+    $this->__dispatch_map['ocr'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+        'language' => 'string',
+        'username' => 'string',
+        'password' => 'string'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+    
+    /**
+     * <b>hOcr</b> processing in Text.php
+     */
+     $this->__dispatch_map['hOcr'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+        'language' => 'string',
+        'username' => 'string',
+        'password' => 'string'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+     
+    /**
+     * <b>encodedOcr</b> processing in Image.php
+     */
+    $this->__dispatch_map['encodedOcr'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+        'language' => 'string',
+        'username' => 'string',
+        'password' => 'string'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
      * <b>jpg</b> processing in Image.php
      */
     $this->__dispatch_map['jpg'] = array(
@@ -128,7 +222,24 @@ class IslandoraService {
         'dsid' => 'string',
         'outputdsid' => 'string',
         'label' => 'string',
-        'resize' => 'int'
+        'resize' => 'int',
+        'username' => 'string',
+        'password' => 'string'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+    
+    /**
+     * <b>jp2</b> processing in Image.php
+     */
+    $this->__dispatch_map['jp2'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+        'username' => 'string',
+        'password' => 'string'
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -143,62 +254,9 @@ class IslandoraService {
         'outputdsid' => 'string',
         'label' => 'string',
         'height' => 'int',
-        'width' => 'int'
-      ),
-      'out' => array('exit_status' => 'int')
-    );
-
-    /**
-     * <b>jp2</b> processing in Image.php
-     */
-    $this->__dispatch_map['jp2'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'outputdsid' => 'string',
-        'label' => 'string'
-      ),
-      'out' => array('exit_status' => 'int')
-    );
-
-    /**
-     * <b>allOcr</b> processing in Text.php 
-     */
-    $this->__dispatch_map['allOcr'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'outputdsid' => 'string',
-        'label' => 'string',
-        'language' => 'string'
-      ),
-      'out' => array('exit_status' => 'int')
-    );
-
-    /**
-     * <b>ocr</b> processing in Image.php
-     */
-    $this->__dispatch_map['ocr'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'outputdsid' => 'string',
-        'label' => 'string',
-        'language' => 'string'
-      ),
-      'out' => array('exit_status' => 'int')
-    );
-
-    /**
-     * <b>encodedOcr</b> processing in Image.php
-     */
-    $this->__dispatch_map['encodedOcr'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'outputdsid' => 'string',
-        'label' => 'string',
-        'language' => 'string'
+        'width' => 'int',
+        'username' => 'string',
+        'password' => 'string'
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -211,7 +269,9 @@ class IslandoraService {
         'pid' => 'string',
         'dsid' => 'string',
         'outputdsid' => 'string',
-        'label' => 'string'
+        'label' => 'string',
+        'username' => 'string',
+        'password' => 'string'
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -224,7 +284,9 @@ class IslandoraService {
         'pid' => 'string',
         'dsid' => 'string',
         'outputdsid' => 'string',
-        'label' => 'string'
+        'label' => 'string',
+        'username' => 'string',
+        'password' => 'string'
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -237,7 +299,9 @@ class IslandoraService {
         'pid' => 'string',
         'dsid' => 'string',
         'outputdsid' => 'string',
-        'label' => 'string'
+        'label' => 'string',
+        'username' => 'string',
+        'password' => 'string'
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -250,36 +314,12 @@ class IslandoraService {
         'pid' => 'string',
         'dsid' => 'string',
         'outputdsid' => 'string',
-        'label' => 'string'
+        'label' => 'string',
+        'username' => 'string',
+        'password' => 'string'
       ),
       'out' => array('exit_status' => 'int')
-    );
-
-    /**
-     * <b>read</b> read fedora objects
-     */
-    $this->__dispatch_map['read'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'extension' => 'string'
-      ),
-      'out' => array('base64_content' => 'string')
-    );
-
-    /**
-     * <b>write</b> write back to fedora
-     */
-    $this->__dispatch_map['write'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'label' => 'string',
-        'base64_content' => 'string',
-        'mimetype' => 'string'
-      ),
-      'out' => array('message' => 'string')
-    );
+    );    
   }
 
   /**
@@ -289,7 +329,78 @@ class IslandoraService {
     $fedora_user = new stdClass();
     $fedora_user->name = $this->config->fedora->username;
     $fedora_user->pass = $this->config->fedora->password;
-    $this->fedora_connect = new FedoraConnection($fedora_user, $this->config->fedora->protocol.'://' . $this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora');
+    $this->fedora_connect = new FedoraConnection($fedora_user, $this->config->fedora->protocol . '://' . $this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora');
+  }
+
+  function authorize($username = "", $password = "",$functionname="") {
+    $auth = FALSE;
+    $authinconfig = $this->config->taverna->needAuth;
+    if (strcasecmp($authinconfig, 'true') == 0) {
+      $auth = FALSE;
+      
+      $users = NULL;
+      switch ($functionname) {
+        case 'read':
+          $users = $this->config->taverna->readusers;
+          break;
+        case 'write':
+          $users = $this->config->taverna->writeusers;
+          break;
+        case 'allOcr':
+          $users = $this->config->taverna->allOcrusers;
+          break;
+        case 'ocr':
+          $users = $this->config->taverna->ocrusers;
+          break;
+        case 'hOcr':
+          $users = $this->config->taverna->hOcrusers;
+          break;
+        case 'encodedOcr':
+          $users = $this->config->taverna->encodedOcrusers;
+          break;
+        case 'jpg':
+          $users = $this->config->taverna->jpgusers;
+          break;
+        case 'jp2':
+          $users = $this->config->taverna->jp2users;
+          break;
+        case 'tn':
+          $users = $this->config->taverna->tnusers;
+          break;
+        case 'techmd':
+          $users = $this->config->taverna->techmdusers;
+          break;
+        case 'scholarPolicy':
+          $users = $this->config->taverna->scholarPolicyusers;
+          break;
+        case 'addImageDimensionsToRels':
+          $users = $this->config->taverna->addImageDimensionsToRelsusers;
+          break;
+        case 'scholarPdfa':
+           $users = $this->config->taverna->scholarPdfausers;
+          break;
+        default :
+          $users = NULL;
+          $this->log->lwrite("no that function", 'SOAP_LOG', $functionname, 'FAIL_AUTH');
+      }
+      
+      foreach ($users->children() as $user) {
+        if ((strcmp($username, $user['username']) == 0) & (strcmp($password, $user['password']) == 0)) {
+          $auth = TRUE;
+        }
+      }
+    }
+    else {
+      $auth = TRUE;
+    }
+
+    if ($auth) {
+      $this->log->lwrite("Athorized for $username", 'SOAP_LOG', $username, 'SUCCESS_AUTH');
+    }
+    else {
+      $this->log->lwrite("Athorized for $username", 'SOAP_LOG', $username, 'FAIL_AUTH');
+    }
+    return $auth;
   }
 
   /**
@@ -322,18 +433,23 @@ class IslandoraService {
    * @param string $extension
    *  
    */
-  function read($pid, $dsid, $extension) {
-    try {
-      $fedora_user = new stdClass();
-      $fedora_user->name = $this->config->fedora->username;
-      $fedora_user->pass = $this->config->fedora->password;
-      if (fedora_object_exists($this->config->fedora->protocol.'://'.$this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora', $fedora_user, $pid)) {
-        $content = $this->fedora_connect->getDatastream($pid, $dsid)->content;
-        $this->log->lwrite("Reading fedora content", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-        return base64_encode($content);
-      }
+  function read($pid, $dsid, $extension, $username="",$password="") {
+    if ($this->authorize($username, $password, 'read')) {
+      try {
+        $fedora_user = new stdClass();
+        $fedora_user->name = $this->config->fedora->username;
+        $fedora_user->pass = $this->config->fedora->password;
+        if (fedora_object_exists($this->config->fedora->protocol . '://' . $this->config->fedora->host . ':' . $this->config->fedora->port . '/fedora', $fedora_user, $pid)) {
+          $content = $this->fedora_connect->getDatastream($pid, $dsid)->content;
+          return base64_encode($content);
+        }
     } catch (Exception $e) {
-      $this->log->lwrite("An error occurred reading fedora content " .$e->getMessage(), 'FAIL_OBJECT', $pid,$dsid, 'ERROR');
+        $this->log->lwrite("An error occurred creating the fedora object", 'FAIL_OBJECT', $pid, $e->getMessage(), 'ERROR');
+    }
+    }
+    else {
+      $this->log->lwrite("Authorize failed", 'FAIL_AUTH', $pid, 'ERROR');
+      return null;
     }
   }
 
@@ -357,9 +473,13 @@ class IslandoraService {
    * 
    * @return string
    */
-  function write($pid, $dsid, $label, $base64_content, $mimetype) {
-    $this->log->lwrite("Writing fedora content $label", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($base64_content), $mimetype, null, true, false);
+  function write($pid, $dsid, $label, $base64_content, $mimetype,$username="",$password="") {
+    if ($this->authorize($username,$password,'write')) {
+      return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($base64_content), $mimetype, null, true, false);
+    }
+    else {
+      return null;
+    }
   }
 
   /**
@@ -401,27 +521,33 @@ class IslandoraService {
    * 
    * @return int
    */
-  function allOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
+  function allOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng',$username="", $password="") {
     $result = -1;
     $this->log->lwrite("Function AllOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'allOcr')) {
+      try {
+        $fedora_object = $this->fedora_connect->repository->getObject($pid);
+        $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
         } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
+        $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -2;
         }
 
 
-    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
+        $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      }
+      else {
+        $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -3;
+      }
+      $funcresult = $text->allOcr($outputdsid, $label, $language);
+      $result = $this->getFunctionStatus("allOcr", $funcresult, $pid, $dsid);
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
     }
-    $funcresult = $text->allOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("allOcr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -445,26 +571,32 @@ class IslandoraService {
    * 
    * @return int
    */
-  function ocr($pid, $dsid = 'OCR', $outputdsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
+  function ocr($pid, $dsid = 'OCR', $outputdsid = 'OCR', $label = 'Scanned text', $language = 'eng',$username="", $password="") {
     $result = -1;
     $this->log->lwrite("Function ocr starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'ocr')) {
+      try {
+        $fedora_object = $this->fedora_connect->repository->getObject($pid);
+        $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
         } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
+        $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -2;
         }
 
-    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
+        $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      }
+      else {
+        $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -3;
+      }
+      $funcresult = $text->ocr($outputdsid, $label, $language);
+      $result = $this->getFunctionStatus("ocr", $funcresult, $pid, $dsid);
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
     }
-    $funcresult = $text->ocr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("ocr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -488,27 +620,33 @@ class IslandoraService {
    * 
    * @return int
    */
-  function hOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
+  function hOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng', $username = "", $password = "") {
     $result = -1;
     $this->log->lwrite("Function HOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'hOcr')) {
+      try {
+        $fedora_object = $this->fedora_connect->repository->getObject($pid);
+        $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
         } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
+        $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -2;
      }
 
-    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
+        $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      }
+      else {
+        $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -3;
+      }
+
+      $funcresult = $text->hOcr($outputdsid, $label, $language);
+      $result = $this->getFunctionStatus("hOcr", $funcresult, $pid, $dsid);
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
     }
-
-    $funcresult = $text->hOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("hOcr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -532,25 +670,31 @@ class IslandoraService {
    * 
    * @return int
    */
-  function encodedOcr($pid, $dsid = 'JPEG', $outputdsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
+  function encodedOcr($pid, $dsid = 'JPEG', $outputdsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng', $username = "", $password = "") {
     $result = -1;
     $this->log->lwrite("Function encodedOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'encodedOcr')) {
+      try {
+        $fedora_object = $this->fedora_connect->repository->getObject($pid);
+        $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
+        $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -2;
     }
-    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
+        $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      }
+      else {
+        $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -3;
+      }
+      $funcresult = $text->encodedOcr($outputdsid, $label, $language);
+      $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
     }
-    $funcresult = $text->encodedOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
     return $result;
   }
 
@@ -574,10 +718,33 @@ class IslandoraService {
    *  
    * @return int
    */
-  function jpg($pid, $dsid = "JPEG", $outputdsid = "JPG", $label = "JPEG image", $resize = "800") {
-    $fedora_object = $this->fedora_connect->repository->getObject($pid);
-    $image = new Image($fedora_object, $dsid, NULL, $this->log, null);
-    return $image->jpg($outputdsid, $label, $resize);
+  function jpg($pid, $dsid = "JPEG", $outputdsid = "JPG", $label = "JPEG image", $resize = "800", $username = "", $password = "") {
+    $result = -1;
+    $this->log->lwrite("Function jpg starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'jpg')) {
+      try {
+        $fedora_object = $this->fedora_connect->repository->getObject($pid);
+        $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    } catch (Exception $ex) {
+        $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -2;
+    }
+      if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
+        $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      }
+      else {
+        $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+        $result = -3;
+      }
+
+      $funcresult = $image->jpg($outputdsid, $label, $resize);
+      $result = $this->getFunctionStatus("jpg", $funcresult, $pid, $dsid);
+    }
+    else {
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
+    }
+    return $result;
   }
 
   /**
@@ -597,9 +764,10 @@ class IslandoraService {
    * 
    * @return type
    */
-  function jp2($pid, $dsid = "OBJ", $outputdsid = "JP2", $label = "Compressed jp2") {
+  function jp2($pid, $dsid = "OBJ", $outputdsid = "JP2", $label = "Compressed jp2",$username="",$password="") {
     $result = -1;
     $this->log->lwrite("Function $outputdsid starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'jp2')) {
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -616,6 +784,11 @@ class IslandoraService {
     }
     $funcresult = $image->jp2($outputdsid, $label);
     $result = $this->getFunctionStatus("jp2", $funcresult, $pid, $dsid);
+     }
+    else {
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
+    }
     return $result;
   }
 
@@ -642,9 +815,10 @@ class IslandoraService {
    * 
    * @return int
    */
-  function tn($pid, $dsid = "JPG", $outputdsid = "TN", $label = "Thumbnail", $height = 200, $width = 200) {
+  function tn($pid, $dsid = "JPG", $outputdsid = "TN", $label = "Thumbnail", $height = 200, $width = 200,$username="",$password="") {
     $result = -1;
     $this->log->lwrite("Function TN starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'tn')) {
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -661,6 +835,11 @@ class IslandoraService {
     }
     $funcresult = $image->tn($outputdsid, $label, $height, $width);
     $result = $this->getFunctionStatus("tn", $funcresult, $pid, $dsid);
+    }
+    else {
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
+    }
     return $result;
   }
 
@@ -681,9 +860,10 @@ class IslandoraService {
    *
    *  @return int
    */
-  function techmd($pid, $dsid = 'OBJ', $outputdsid = "TECHMD", $label = 'Technical metadata') {
+  function techmd($pid, $dsid = 'OBJ', $outputdsid = "TECHMD", $label = 'Technical metadata',$username="",$password="") {
     $result = -1;
     $this->log->lwrite("Function techmd starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'techmd')) {
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -700,6 +880,11 @@ class IslandoraService {
     }
     $funcresult = $tech->techmd($outputdsid, $label, $label);
     $result = $this->getFunctionStatus("techmd", $funcresult, $pid, $dsid);
+    }
+    else {
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
+    }
     return $result;
   }
 
@@ -720,9 +905,10 @@ class IslandoraService {
    * 
    * @return int
    */
-  function scholarPdfa($pid, $dsid = 'OBJ', $outputdsid = "PDF", $label = 'PDF') {
+  function scholarPdfa($pid, $dsid = 'OBJ', $outputdsid = "PDF", $label = 'PDF',$username="",$password="") {
     $result = -1;
     $this->log->lwrite("Function scholar starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'scholarPdfa')) {
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -739,6 +925,11 @@ class IslandoraService {
     }
     $funcresult = $pdf->scholarPdfa($outputdsid, $label);
     $result = $this->getFunctionStatus("scholarPdfa", $funcresult, $pid, $dsid);
+    }
+    else {
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
+    }
     return $result;
   }
 
@@ -759,9 +950,10 @@ class IslandoraService {
    * 
    * @return int
    */
-  function addImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = 'RELS-INT') {
+  function addImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = 'RELS-INT',$username="",$password="") {
     $result = -1;
     $this->log->lwrite("Function addImagedimensionsToRels starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'addImageDimensionsToRels')) {
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -778,7 +970,11 @@ class IslandoraService {
     }
     $funcresult = $rels->addImageDimensionsToRels($outputdsid, $label);
     $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
-    return $result;
+    }
+    else {
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
+    }return $result;
   }
 
   /**
@@ -798,9 +994,10 @@ class IslandoraService {
    * 
    * @return type
    */
-  function scholarPolicy($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = "Embargo policy - Both") {
+  function scholarPolicy($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = "Embargo policy - Both",$username="",$password="") {
     $result = -1;
     $this->log->lwrite("Function scholarPolicy starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($this->authorize($username, $password, 'scholarPolicy')) {
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
@@ -817,7 +1014,11 @@ class IslandoraService {
     }
     $funcresult = $policy->scholarPolicy($outputdsid, $label);
     $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
-    return $result;
+    }
+    else {
+      $this->log->lwrite("Authorize failed", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -4;
+    }return $result;
   }
 
 }
