@@ -28,16 +28,16 @@
              contact the Fedora server and set up any XACML policies 
              to allow write access from the listener IP address -->
         <protocol>http</protocol>
-        <host>192.168.56.195</host>
+        <host>ip/ordomain</host>
         <port>8080</port>
         <username>fedoraAdmin</username>
-        <password>cs482isl@nd0r@</password>
+        <password>password</password>
     </fedora>
     
     <taverna>
         <protocol>http</protocol>
         <context>taverna</context>
-        <host>192.168.56.195</host>
+        <host>ip/ordomain</host>
         <port>8080</port>
         <username>taverna</username>
         <password>taverna</password>
