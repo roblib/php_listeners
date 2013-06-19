@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<root>
+    <roles>
+        <role name = "readandwrite" microservices="read,write"></role>
+        <role name = "ocrs" microservices = "allOcr,hOcr,encodedOcr,ocr"></role>
+        <role name = "jpgs" microservices = "jpg"></role>
+        <role name = "all" microservices = "read,write,allOcr,ocr,hOcr,encodedOcr,jpg,jp2,tn,techmd,scholarPolicy,addImageDimensionsToRels,scholarPdfa"></role>
+    </roles>
+    <users>
+        <user username = "taverna" password="taverna" roles = "readandwrite,jpgs,all"></user>
+    </users>
+</root>
