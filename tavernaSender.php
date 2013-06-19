@@ -252,6 +252,7 @@ class TavernaSender extends Sender {
                         <t2sr:value>' . $value . '</t2sr:value>             
                       </t2sr:runInput>';
       $url = $this->hostname . $uuid . "/input/input/" . $key;
+      $this->set_ssl();
       $response = $this->curl_connect->tavernaPutRequest($url, 'string', $input, 'application/xml');
 
       if ($response['status'] != 200) {
