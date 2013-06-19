@@ -24,6 +24,8 @@ class TavernaSender extends Sender {
    * @var boolean
    */
   public $ssl_status;
+  
+  public $config;
 
   /**
    * Constructor for the sender.
@@ -71,7 +73,7 @@ class TavernaSender extends Sender {
       print("fail to open the config file");
     }
 
-    if (strcasecmp($config_file->taverna->verify_ssl, 'true') == 0) {
+    if (strcasecmp($this->config->taverna->verify_ssl, 'true') == 0) {
       $this->ssl_status = TRUE;
     }
     else {
@@ -143,7 +145,7 @@ class TavernaSender extends Sender {
    */
   function parse_UUID($message) {
     if (!empty($message)) {
-      $uuid = substr($message, strrpos($message, $this->hostname) + strlen($this->hostname), 36);
+      $uuid = substr($message, strpos($message, $this->hostname) + strlen($this->hostname), 36);
       return $uuid;
     }
     return null;
@@ -162,7 +164,8 @@ class TavernaSender extends Sender {
    * @throws TavernaException
    */
   function run_t2flow($uuid) {
-    if (!empty($uuid)) {
+    $auth = $this->security_credentials($uuid); 
+    if (!empty($uuid)&& $auth) {
       $url = $this->hostname . $uuid . '/status/';
       $this->set_ssl();
       $response = $this->curl_connect->tavernaPutRequest($url, 'string', 'Operating', 'text/plain');
@@ -258,6 +261,50 @@ class TavernaSender extends Sender {
       return $response['headers'] . $response['content'];
     }
     return null;
+  }
+
+  function security_credentials($uuid) {
+    //get if it need verify security
+    $location = $this->get_listener_config_path();
+    $config_file = file_get_contents($location . '/config.xml');
+    $config = NULL;
+    try{
+      $config = new SimpleXMLElement($config_file);
+    } catch (Exception $e)
+    {
+      print("fail to open the config file");
+    }
+    $needAuth = TRUE;
+    if (strcasecmp('false', $config->taverna->needAuth) == 0) {
+      $needAuth = FALSE;
+    }
+    else {
+      $needAuth = TRUE;
+    }
+    $return = FALSE;
+    if ($needAuth) {
+      $username = $config->taverna->username;
+      $password = $config->taverna->password;
+      $host = $this->hostname.$uuid.'/security/credentials';
+      $data = '<credential xmlns="http://ns.taverna.org.uk/2010/xml/server/rest/">
+        <userpass xmlns="http://ns.taverna.org.uk/2010/xml/server/">
+        <serviceURI xmlns="http://ns.taverna.org.uk/2010/xml/server/">'.$config->service->protocol.'://'.$config->service->host.'/'.  $config->service->service_path.'</serviceURI>
+        <username xmlns="http://ns.taverna.org.uk/2010/xml/server/">'.$this->username.'</username>
+        <password xmlns="http://ns.taverna.org.uk/2010/xml/server/">'.$this->password.'</password>
+        </userpass>
+        </credential>';
+      $response = $this->curl_connect->postRequest($host, 'String', $data, 'application/xml');
+      if ($response['status'] == 201) {
+        $return = TRUE;
+      }
+      else {
+        $return = FALSE;
+      }
+    }
+    else {
+      $return = FALSE;
+    }
+    return $return;
   }
 
 }

@@ -28,24 +28,27 @@
              contact the Fedora server and set up any XACML policies 
              to allow write access from the listener IP address -->
         <protocol>http</protocol>
-        <host>ip/ordomain</host>
+        <host>ip/ordomin</host>
         <port>8080</port>
         <username>fedoraAdmin</username>
         <password>password</password>
     </fedora>
     
     <taverna>
-        <protocol>http</protocol>
-        <context>taverna</context>
-        <host>ip/ordomain</host>
-        <port>8080</port>
-        <username>taverna</username>
-        <password>taverna</password>
+        <protocol>https</protocol>
+        <context>taverna-server</context>
+        <host>ip/ordomin</host>
+        <port>8443</port>
+        <username>username</username>
+        <password>password</password>
         <verify_ssl>false</verify_ssl>
         <needAuth>true</needAuth>
-        <microservice_users_file>microservice_users.xml</microservice_users_file>
     </taverna>
-    
+    <service>
+        <protocol>http</protocol>
+        <host>codesprint-centos.islandora.ca</host>
+        <service_path>php_listeners/soap_serv.php?wsdl</service_path>
+    </service>
     <stomp>
         <!-- These are the details for the JMS broker. Usually the host
              will be the same as the Fedora server. If the Stomp port on
