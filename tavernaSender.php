@@ -24,7 +24,6 @@ class TavernaSender extends Sender {
    * @var boolean
    */
   public $ssl_status;
-  
   public $config;
 
   /**
@@ -58,6 +57,7 @@ class TavernaSender extends Sender {
     $this->curl_connect->username = $this->username;
     $this->curl_connect->password = $this->password;
     $this->set_ssl_status();
+    $this->set_ssl();
   }
 
   /**
@@ -86,8 +86,8 @@ class TavernaSender extends Sender {
    * @return string
    */
   function get_listener_config_path() {
-    $location_env_veriable = 'PHP_LISTENERS_PATH';
-    $location = getenv($location_env_veriable);
+    $location_env_variable = 'PHP_LISTENERS_PATH';
+    $location = getenv($location_env_variable);
     if (empty($location)) {
       //try using a default
       $location = '/opt/php_listeners';
@@ -118,7 +118,6 @@ class TavernaSender extends Sender {
    */
   function send_Message($message) {
     if (!empty($message)) {
-      $this->set_ssl();
       $response = $this->curl_connect->postRequest($this->hostname, 'string', $message, 'application/vnd.taverna.t2flow+xml');
       if ($response['status'] != 201) {
         throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'send message');
@@ -164,12 +163,10 @@ class TavernaSender extends Sender {
    * @throws TavernaException
    */
   function run_t2flow($uuid) {
-    $auth = $this->security_credentials($uuid); 
-    if (!empty($uuid)&& $auth) {
+    $auth = $this->check_credentials($uuid);
+    if (!empty($uuid) && $auth) {
       $url = $this->hostname . $uuid . '/status/';
-      $this->set_ssl();
       $response = $this->curl_connect->tavernaPutRequest($url, 'string', 'Operating', 'text/plain');
-
       if ($response['status'] != 200) {
         throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'run t2flow');
       }
@@ -194,7 +191,6 @@ class TavernaSender extends Sender {
   function get_status($uuid) {
     if (!empty($uuid)) {
       $url = $this->hostname . $uuid . "/status/";
-      $this->set_ssl();
       $response = $this->curl_connect->getRequest($url, FALSE, NULL);
       if ($response['status'] != 200) {
         throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'get t2flow status');
@@ -218,7 +214,6 @@ class TavernaSender extends Sender {
   function delete_t2flow($uuid) {
     if (!empty($uuid)) {
       $url = $this->hostname . $uuid . '/';
-      $this->set_ssl();
       $response = $this->curl_connect->deleteRequest($url);
 
       if ($response['status'] != 204) {
@@ -252,7 +247,6 @@ class TavernaSender extends Sender {
                         <t2sr:value>' . $value . '</t2sr:value>             
                       </t2sr:runInput>';
       $url = $this->hostname . $uuid . "/input/input/" . $key;
-      $this->set_ssl();
       $response = $this->curl_connect->tavernaPutRequest($url, 'string', $input, 'application/xml');
 
       if ($response['status'] != 200) {
@@ -264,48 +258,64 @@ class TavernaSender extends Sender {
     return null;
   }
 
-  function security_credentials($uuid) {
-    //get if it need verify security
+  /**
+   * checks if we want Taverna to send credentials to the services.
+   * if we do then it calls send_credentials to send the required creds
+   * 
+   * @param string $uuid
+   * @return boolean
+   * returns true if the credentials have been successfully sent.  also returns
+   * true if credentials are not required
+   */
+  function check_credentials($uuid) {
     $location = $this->get_listener_config_path();
     $config_file = file_get_contents($location . '/config.xml');
     $config = NULL;
     try{
       $config = new SimpleXMLElement($config_file);
-    } catch (Exception $e)
-    {
-      print("fail to open the config file");
+    } catch (Exception $e) {
+      throw new TavernaException('Error parsing config.xml ' . $e->getMessage());
     }
-    $needAuth = TRUE;
-    if (strcasecmp('false', $config->taverna->needAuth) == 0) {
-      $needAuth = FALSE;
+    $needAuth = strcasecmp('false', $config->taverna->needAuth) == 0 ? FALSE : TRUE;
+    $return = $needAuth ? $this->send_credentials() : TRUE;
+    return $return;
+  }
+
+  /**
+   * sends a username and password as well as the serviceURI to taverna
+   * 
+   * currently we don't check the t2flow doc for the service uris we just send
+   * all the username and passwords.  in some case there maybe extra overhead
+   * doing this but parsing a large t2flow doc has overhead of its own and for 
+   * most use case we will have a limited number of users configured.
+   * 
+   * @param string $uuid
+   */
+  function send_credentials($uuid) {
+    $users = $config->taverna->users;
+    $microservice_users = $config->taverna->microservice_users_file;
+    $location = $this->get_listener_config_path();
+    $microservice_users_file = file_get_contents($location . '/' . $microservice_users);
+    $microservice_users_xml = new SimpleXMLElement($microservice_users_file);
+    $users = $microservice_users_xml->users->children();
+    if (empty($users)) {
+      throw new TavernaException("Authentication is required, but no users defined in $microservice_users file", 'send credentials');
     }
-    else {
-      $needAuth = TRUE;
-    }
-    $return = FALSE;
-    if ($needAuth) {
-      $username = $config->taverna->username;
-      $password = $config->taverna->password;
-      $host = $this->hostname.$uuid.'/security/credentials';
+    $host = $this->hostname . $uuid . '/security/credentials';
+    foreach ($users as $user) {
       $data = '<credential xmlns="http://ns.taverna.org.uk/2010/xml/server/rest/">
         <userpass xmlns="http://ns.taverna.org.uk/2010/xml/server/">
-        <serviceURI xmlns="http://ns.taverna.org.uk/2010/xml/server/">'.$config->service->protocol.'://'.$config->service->host.'/'.  $config->service->service_path.'</serviceURI>
-        <username xmlns="http://ns.taverna.org.uk/2010/xml/server/">'.$this->username.'</username>
-        <password xmlns="http://ns.taverna.org.uk/2010/xml/server/">'.$this->password.'</password>
+        <serviceURI xmlns="http://ns.taverna.org.uk/2010/xml/server/">' . $user['serviceUri'] . '</serviceURI>
+        <username xmlns="http://ns.taverna.org.uk/2010/xml/server/">' . $user['username'] . '</username>
+        <password xmlns="http://ns.taverna.org.uk/2010/xml/server/">' . $user['password'] . '</password>
         </userpass>
         </credential>';
       $response = $this->curl_connect->postRequest($host, 'String', $data, 'application/xml');
-      if ($response['status'] == 201) {
-        $return = TRUE;
-      }
-      else {
-        $return = FALSE;
+      if ($response['status'] != 201) {
+        throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'send credentials');
       }
     }
-    else {
-      $return = FALSE;
-    }
-    return $return;
+    return TRUE;
   }
 
 }
