@@ -257,6 +257,7 @@ class Connect {
       $this->log->lwrite($e->getMessage() . ' ' . $e->getCode(), 'TAVERNA_ERROR', $pid, $dsid, NULL, 'ERROR');
       $response = $e->getResponse();
       $responseString = $response['content'];
+      $taverna_sender->delete_t2flow($uuid); //try to delete the failed attempt on the taverna server
       //we rest and retry here as the most common taverna error will probable be a 403 forbidden
       //due to the server being overloaded.  
       sleep(10);
@@ -266,6 +267,7 @@ class Connect {
       }
       else {
         $this->log->lwrite($e->getMessage() . ' ' . $e->getCode() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO", $pid, $dsid, NULL, 'ERROR');
+        $taverna_sender->delete_t2flow($uuid);
       }
       return FALSE; //we return false here so a negative ack will be sent.  this probably means (depending on the stomp server configs) that 
       //we will get this message again.  This prevents us from losing messages but could cause a loop if Taverna is down, 

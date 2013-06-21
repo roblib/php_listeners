@@ -164,15 +164,16 @@ class TavernaSender extends Sender {
    */
   function run_t2flow($uuid) {
     $auth = $this->check_credentials($uuid);
-    if (!empty($uuid) && $auth) {
-      $url = $this->hostname . $uuid . '/status/';
-      $response = $this->curl_connect->tavernaPutRequest($url, 'string', 'Operating', 'text/plain');
-      if ($response['status'] != 200) {
-        throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'run t2flow');
-      }
-      return $response['headers'] . $response['content'];
+    if (empty($uuid) || !$auth) {
+      throw new TavernaException("Error running t2flow, missing uuid or auth failure");
     }
-    return null;
+
+    $url = $this->hostname . $uuid . '/status/';
+    $response = $this->curl_connect->tavernaPutRequest($url, 'string', 'Operating', 'text/plain');
+    if ($response['status'] != 200) {
+      throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'run t2flow');
+    }
+    return $response['headers'] . $response['content'];
   }
 
   /**
@@ -222,6 +223,20 @@ class TavernaSender extends Sender {
       return $response['status'];
     }
     return null;
+  }
+  
+  
+  /**
+   * conveince function to delete all orphaned workflows
+   */
+  function delete_all_t2flows(){
+    $url = $this->hostname . 'rest/runs/';
+    $response = $this->curl_connect->getRequest($url);
+    $xml = $response['content'];
+    $sxml = new SimpleXml($xml);
+    foreach($sxml->runList->children() as $run){
+      $this->delete_t2flow((string)$run);
+    }
   }
 
   /**
@@ -292,14 +307,17 @@ class TavernaSender extends Sender {
    * @param string $uuid
    */
   function send_credentials($uuid) {
-    $users = $config->taverna->users;
-    $microservice_users = $config->taverna->microservice_users_file;
     $location = $this->get_listener_config_path();
-    $microservice_users_file = file_get_contents($location . '/' . $microservice_users);
-    $microservice_users_xml = new SimpleXMLElement($microservice_users_file);
+    $microservice_users_file = file_get_contents($location . '/microservice_users_file.xml');
+    try{
+      $microservice_users_xml = new SimpleXMLElement($microservice_users_file);
+   } catch (Exception $e){
+      throw new TavernaException("error reading microservice_users_file.xml " . $e->getMessage(), 'send credentials');
+    }
     $users = $microservice_users_xml->users->children();
+
     if (empty($users)) {
-      throw new TavernaException("Authentication is required, but no users defined in $microservice_users file", 'send credentials');
+      throw new TavernaException("Authentication is required, but no users defined in microservice_users_file.xml ", 'send credentials');
     }
     $host = $this->hostname . $uuid . '/security/credentials';
     foreach ($users as $user) {
@@ -312,7 +330,7 @@ class TavernaSender extends Sender {
         </credential>';
       $response = $this->curl_connect->postRequest($host, 'String', $data, 'application/xml');
       if ($response['status'] != 201) {
-        throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'send credentials');
+        throw new TavernaException('Error sending credentials ' . $response['headers'] . $response['content'], $response['status'], 'send credentials');
       }
     }
     return TRUE;

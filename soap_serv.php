@@ -123,6 +123,9 @@ class IslandoraService {
     $this->log = new Logging();
     $this->log->lfile($this->config->log->file);
     $this->connect();
+    foreach ($_SERVER as $key => $value) {
+      $this->log->lwrite("HEADERS $key = $value", 'SOAP_HEADERS', NULL, NULL, 'INFO');
+    }
 
     /**
      * <b>read</b> read fedora objects
@@ -317,9 +320,8 @@ class IslandoraService {
       return TRUE; //we are authorized as authorization is not required
     }
     else {
-      $microservice_users = $this->config->taverna->microservice_users_file;
-      $location = get_listener_config_path();
-      $microservice_users_file = file_get_contents($location . '/' . $microservice_users);
+      $location = $this->get_listener_config_path();
+      $microservice_users_file = file_get_contents($location . '/' . 'microservice_users_file.xml');
       $microservice_users_xml = new SimpleXMLElement($microservice_users_file);
       foreach ($microservice_users_xml->users->children() as $user) {
         if (strcmp($_SERVER['PHP_AUTH_USER'], $user['username']) == 0 && strcmp($_SERVER['PHP_AUTH_PW'], $user['password']) == 0) {

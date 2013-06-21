@@ -18,10 +18,6 @@
         <child_processes>2</child_processes>    
     </listeners>
 
-	<httpAuth>
-		<username>islandora</username>
-		<password>islandora</password>
-	</httpAuth>
     <fedora>
         <!-- These are the details for your Fedora server. You should
              make sure that the firewall rules allow the listeners to
@@ -43,14 +39,8 @@
         <password>password</password>
         <verify_ssl>false</verify_ssl>
         <needAuth>true</needAuth>
-        <microservice_users_file>microservice_users.xml</microservice_users_file>
     </taverna>
     
-    <service>
-        <protocol>http</protocol>
-        <host>codesprint-centos.islandora.ca</host>
-        <service_path>php_listeners/soap_serv.php?wsdl</service_path>
-    </service>
     <stomp>
         <!-- These are the details for the JMS broker. Usually the host
              will be the same as the Fedora server. If the Stomp port on
