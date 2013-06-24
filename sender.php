@@ -61,7 +61,7 @@ class Sender
     return $this->password;
   }
   
-  function send_Message($message = null)
+  function send_Message($message)
   {
   }  
 }

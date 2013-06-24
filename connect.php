@@ -226,6 +226,15 @@ class Connect {
     }
   }
 
+  /**
+   * TODO: rework the logic so instead of sending a new workflow when we first receive an 
+   * error we could just try changing the state to Operating
+   * @param string $stream
+   * @param string $pid
+   * @param string $dsID
+   * @param int $count
+   * @return boolean
+   */
   private function processT2flowOnTaverna($stream, $pid, $dsID, $count = 0) {
     try {
       //$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");

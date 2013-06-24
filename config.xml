@@ -37,7 +37,9 @@
         <port>8443</port>
         <username>username</username>
         <password>password</password>
+        <!--if you use a self signed cert you probably want to leave verify ssl to false-->
         <verify_ssl>false</verify_ssl>
+        <!-- if you want to limit access to the soap_server this should be true-->
         <needAuth>true</needAuth>
     </taverna>
     

@@ -35,23 +35,27 @@ $soap->addObjectMap($service, 'urn:php-islandora-soapservice');
  */
 if (isset($_SERVER['REQUEST_METHOD']) &&
     $_SERVER['REQUEST_METHOD'] == 'POST') {
-  if (isset($service->config->taverna->needAuth) &&
-      (!isset($_SERVER['PHP_AUTH_PW']) || !isset($_SERVER['PHP_AUTH_USER']))) {
-    $service->log->lwrite("missing username or password", NULL, NULL, NULL, 'ERROR');
-    header('WWW-Authenticate: Basic realm="php-islandora-soapservice');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'authentication required';
-    exit;
+  if (isset($service->config->taverna->needAuth)) {
+    if (!isset($_SERVER['PHP_AUTH_PW']) || !isset($_SERVER['PHP_AUTH_USER'])) {
+      $service->log->lwrite("missing username or password, sending 401 unauthorized to Taverna", 'SOAP_SERVER', NULL, NULL, 'ERROR');
+      header('WWW-Authenticate: Basic realm="php-islandora-soapservice');
+      header('HTTP/1.0 401 Unauthorized');
+      echo 'authentication required';
+      exit;
+    }
+    if (!$service->authorize()) {
+      $service->log->lwrite("User " . $_SERVER['PHP_AUTH_USER'] . " unauthorized with password " . $_SERVER['PHP_AUTH_PW'],"SOAP_SERVER", NULL, NULL, 'ERROR');
+      header('WWW-Authenticate: Basic realm="php-islandora-services"');
+      header('HTTP/1.0 403 Forbidden');
+      echo 'authentication failed';
+      exit;
+    }
+    $soap->service($HTTP_RAW_POST_DATA);
   }
-  if (!$service->authorize()) {
-    $service->log->lwrite("User " . $_SERVER['PHP_AUTH_USER'] . " unauthorized with password " . $_SERVER['PHP_AUTH_PW'], NULL, NULL, NULL, 'ERROR');
-    header('WWW-Authenticate: Basic realm="php-islandora-services"');
-    header('HTTP/1.0 403 Forbidden');
-    echo 'authentication failed';
-    exit;
+  else {// auth not required
+    $soap->service($HTTP_RAW_POST_DATA);
   }
-  $soap->service($HTTP_RAW_POST_DATA);
-}//end check for POST
+}
 else {
   require_once 'SOAP/Disco.php';
   $disco = new SOAP_DISCO_Server($soap, 'DiscoServer');
@@ -63,7 +67,7 @@ else {
 }
 
 /**
- * reads the php listener from an environment varible.  if the variable is not
+ * reads the php listener config path from an environment varible.  if the variable is not
  * set it returns a default location
  * @return string
  *   the path to the php_listeners
@@ -123,9 +127,6 @@ class IslandoraService {
     $this->log = new Logging();
     $this->log->lfile($this->config->log->file);
     $this->connect();
-    foreach ($_SERVER as $key => $value) {
-      $this->log->lwrite("HEADERS $key = $value", 'SOAP_HEADERS', NULL, NULL, 'INFO');
-    }
 
     /**
      * <b>read</b> read fedora objects
@@ -304,6 +305,10 @@ class IslandoraService {
     );
   }
 
+  /**
+   * reads the config.xml file to see if authentication is required
+   * @return boolean TRUE if authentication is required
+   */
   function auth_required() {
     $authinconfig = $this->config->taverna->needAuth;
     if (strcasecmp($authinconfig, 'false') == 0) {
@@ -313,17 +318,28 @@ class IslandoraService {
   }
 
   /**
+   * checks the micoroservices user file for a password and username that
+   * match the PHP_AUTH_USER and PHP_AUTH_PW php $_SERVER variables
    * 
+   * @return boolean TRUE if authentication is successfull FALSE otherwise
    */
   function authorize() {
     if (!$this->auth_required()) {
       return TRUE; //we are authorized as authorization is not required
     }
     else {
-      $location = $this->get_listener_config_path();
-      $microservice_users_file = file_get_contents($location . '/' . 'microservice_users_file.xml');
-      $microservice_users_xml = new SimpleXMLElement($microservice_users_file);
-      foreach ($microservice_users_xml->users->children() as $user) {
+      $microservice_users_file = $this->location . '/microservice_users.xml';
+      $microservice_users_xml = simplexml_load_file($microservice_users_file);
+      if ($microservice_users_xml == FALSE) {
+        $service->log->lwrite("Could not load microservices user file", 'SOAP_SERVER', NULL, NULL, 'INFO');
+        return FALSE;
+      }
+      $users = $microservice_users_xml->xpath("//user");
+      if ($users == FALSE) {
+        $service->log->lwrite("No Users found in microserices user file", 'SOAP_SERVER', NULL, NULL, 'INFO');
+        return FALSE;
+      }
+      foreach ($users as $user) {
         if (strcmp($_SERVER['PHP_AUTH_USER'], $user['username']) == 0 && strcmp($_SERVER['PHP_AUTH_PW'], $user['password']) == 0) {
           return TRUE;
         }
