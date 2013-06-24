@@ -5,7 +5,6 @@
  * 
  * @author Richard Wincewicz
  */
-include_once 'PREMIS.php';
 
 class Derivative {
 
