@@ -43,8 +43,8 @@ if (isset($_SERVER['REQUEST_METHOD']) &&
       echo 'authentication required';
       exit;
     }
-    if (!$service->authorize()) {
-      $service->log->lwrite("User " . $_SERVER['PHP_AUTH_USER'] . " unauthorized with password " . $_SERVER['PHP_AUTH_PW'],"SOAP_SERVER", NULL, NULL, 'ERROR');
+   if (!$service->authorize()) {
+      $service->log->lwrite("User " . $_SERVER['PHP_AUTH_USER'] . " unauthorized with  " . $_SERVER['PHP_AUTH_PW'], "SOAP_SERVER", NULL, NULL, 'ERROR');
       header('WWW-Authenticate: Basic realm="php-islandora-services"');
       header('HTTP/1.0 403 Forbidden');
       echo 'authentication failed';
@@ -94,6 +94,7 @@ class IslandoraService {
   var $config;
   var $log;
   var $fedora_connect;
+  var $location;
 
   /**
    * Each of these I/O arrays must be defined specifically for individual 
@@ -115,8 +116,8 @@ class IslandoraService {
    */
   function IslandoraService() {
     //documentation must mention the need to set the php listener path
-    $location = get_listener_config_path();
-    $config_file = file_get_contents($location . '/config.xml');
+    $this->location = get_listener_config_path();
+    $config_file = file_get_contents($this->location . '/config.xml');
     try{
       $this->config = new SimpleXMLElement($config_file);
     } catch (Exception $e)
@@ -330,12 +331,12 @@ class IslandoraService {
     else {
       $microservice_users_file = $this->location . '/microservice_users.xml';
       $microservice_users_xml = simplexml_load_file($microservice_users_file);
-      if ($microservice_users_xml == FALSE) {
+      if (empty($microservice_users_xml)) {
         $service->log->lwrite("Could not load microservices user file", 'SOAP_SERVER', NULL, NULL, 'INFO');
         return FALSE;
       }
       $users = $microservice_users_xml->xpath("//user");
-      if ($users == FALSE) {
+      if (empty($users)) {
         $service->log->lwrite("No Users found in microserices user file", 'SOAP_SERVER', NULL, NULL, 'INFO');
         return FALSE;
       }
