@@ -8,6 +8,13 @@ class Scholar extends Derivative {
     parent::__destruct();
   }
 
+  /**
+   * TODO: update this to work with location env variable and add 
+   * and correct path to document embargo.xml
+   * @param string $dsid
+   * @param string $label
+   * @return int
+   */
   function scholarPolicy($dsid = 'POLICY', $label = "Embargo policy - Both") {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     try {

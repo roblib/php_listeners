@@ -2,6 +2,7 @@
 
 /**
  * Class to build PREMIS events.
+ * TODO: Finish this class
  * 
  * @author Richard Wincewicz
  */

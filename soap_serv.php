@@ -428,7 +428,7 @@ class IslandoraService {
   }
 
   /**
-   * This fonciton is to write the function excute status to the log file
+   * This funciton is to write the function excute status to the log file
    * 
    * @param string $funcname
    * @param string $funcresult
@@ -479,10 +479,10 @@ class IslandoraService {
 
 
     if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Text Class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Text class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $text->allOcr($outputdsid, $label, $language);
@@ -523,10 +523,10 @@ class IslandoraService {
         }
 
     if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Text class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Text class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $text->ocr($outputdsid, $label, $language);
@@ -568,10 +568,10 @@ class IslandoraService {
      }
 
     if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Text class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed Loading Text class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
 
@@ -613,10 +613,10 @@ class IslandoraService {
       $result = -2;
     }
     if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Text class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Text class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $text->encodedOcr($outputdsid, $label, $language);
@@ -657,10 +657,10 @@ class IslandoraService {
       $result = -2;
     }
     if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Image class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Image class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
 
@@ -699,10 +699,10 @@ class IslandoraService {
       $result = -2;
     }
     if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Image class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Image class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $image->jp2($outputdsid, $label);
@@ -746,10 +746,10 @@ class IslandoraService {
       $result = -2;
     }
     if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Image derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Image class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Image class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $image->tn($outputdsid, $label, $height, $width);
@@ -787,10 +787,10 @@ class IslandoraService {
       $result = -2;
     }
     if ($tech = new Technical($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Technical metadata derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Technical class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Technical class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $tech->techmd($outputdsid, $label, $label);
@@ -828,10 +828,10 @@ class IslandoraService {
       $result = -2;
     }
     if ($pdf = new Pdf($fedora_object, $dsid, 'jpg', $this->log, null)) {
-      $this->log->lwrite("Pdf derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Pdf class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Pdf class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $pdf->scholarPdfa($outputdsid, $label);
@@ -869,10 +869,10 @@ class IslandoraService {
       $result = -2;
     }
     if ($rels = new Relationship($fedora_object, $dsid, 'xml', $this->log, null)) {
-      $this->log->lwrite("Relationship derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Relationship class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Relationship class not loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Relationship class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $rels->addImageDimensionsToRels($outputdsid, $label);
@@ -909,10 +909,10 @@ class IslandoraService {
       $result = -2;
     }
     if ($policy = new Scholar($fedora_object, $dsid, 'xml', $this->log, null)) {
-      $this->log->lwrite("Policy derivative created", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+      $this->log->lwrite("Policy class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Derivative not created", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Failed loading Policy class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
     $funcresult = $policy->scholarPolicy($outputdsid, $label);
