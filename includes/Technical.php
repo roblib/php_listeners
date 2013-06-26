@@ -13,7 +13,7 @@ class Technical extends Derivative {
       $command = "/opt/fits/fits.sh -i $this->temp_file -o $output_file 2>&1";
       exec($command, $techmd_output = array(), $return);
 
-      if (file_exists($output_file . '.html')) {
+      if (file_exists($output_file)) {
         $log_message = "$dsid derivative created using FITS with command - $command || SUCCESS";
         $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
       }
