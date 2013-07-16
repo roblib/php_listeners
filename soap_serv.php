@@ -43,7 +43,7 @@ if (isset($_SERVER['REQUEST_METHOD']) &&
       echo 'authentication required';
       exit;
     }
-   if (!$service->authorize()) {
+    if (!$service->authorize()) {
       $service->log->lwrite("User " . $_SERVER['PHP_AUTH_USER'] . " unauthorized with  " . $_SERVER['PHP_AUTH_PW'], "SOAP_SERVER", NULL, NULL, 'ERROR');
       header('WWW-Authenticate: Basic realm="php-islandora-services"');
       header('HTTP/1.0 403 Forbidden');
@@ -67,12 +67,19 @@ else {
 }
 
 /**
- * reads the php listener config path from an environment varible.  if the variable is not
- * set it returns a default location
+ * reads the php listener config path.  first checks for a local 
+ * config.xml file with an element path the for a environment varible.  if 
+ * both fail it returns a default location
  * @return string
  *   the path to the php_listeners
  */
 function get_listener_config_path() {
+  $config_file = file_get_contents('config.xml');
+  $config_xml = new SimpleXMLElement($config_file);
+  $location = $config_xml->path;
+  if(!empty($location)){
+    return $location;
+  }
   $location_env_variable = 'PHP_LISTENERS_PATH';
   $location = getenv($location_env_variable);
   if (empty($location)) {
@@ -793,7 +800,11 @@ class IslandoraService {
       $this->log->lwrite("Failed loading Technical class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
-    $funcresult = $tech->techmd($outputdsid, $label, $label);
+    //$fits_path = $this->config->fits_path;
+    //if(empty($fits_path)){
+    //  $fits_path = '/opt/fits.fits.sh';
+    //}
+    $funcresult = $tech->techmd($outputdsid, $label, $label, $fits_path);
     $result = $this->getFunctionStatus("techmd", $funcresult, $pid, $dsid);
 
     return $result;

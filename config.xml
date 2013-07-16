@@ -54,6 +54,8 @@
         <channel>/queue/listener.update</channel>
     </stomp>
     
+    <fits_path>/opt/fits/fits.sh</fits_path>
+    
     <log>
         <!-- Specify the file name of the log file. -->
         <file>/var/log/listener.log</file>

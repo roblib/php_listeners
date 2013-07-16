@@ -6,19 +6,47 @@ class Technical extends Derivative {
     parent::__destruct();
   }
 
-  function techmd($dsid = 'TECHMD', $label = 'Technical metadata') {
+  function techmd($dsid = 'TECHMD', $label = 'Technical metadata', $fits = '/opt/fits/fits.sh') {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
-    try {
-      $output_file = $this->temp_file . '_TECHMD.xml';
-      $command = "/opt/fits/fits.sh -i $this->temp_file -o $output_file 2>&1";
-      exec($command, $techmd_output = array(), $return);
 
-      if (file_exists($output_file)) {
+    $output_file = $this->temp_file . '_TECHMD.xml';
+    $command = "$fits -i $this->temp_file -xc -o $output_file 2>&1";
+    //exec($command, $techmd_output = array(), $return);
+    $valid_fits = FALSE;
+    exec($command, $output = array(), $return);
+    if ($return == '0') {
+      if (verify_fits_xml($output_file)) {
+        $valid_fits = TRUE;
+      }
+    }
+    // It failed, lets try a simpler command 
+    if (!$valid_fits) {
+      $command = "$fits -i $this->temp_file -x -o $output_file 2>&1";
+      exec($command, $output = array(), $return);
+      if ($return == '0') {
+        if (verify_fits_xml($output_file)) {
+          $valid_fits = TRUE;
+        }
+      }
+    }
+    // In case of disaster, fall back to the simplest possibly command line.
+    if (!$valid_fits) {
+      $command = "$fits -i $this->temp_file -o $output_file 2>&1";
+      exec($command, $output, $return);
+      if ($return == '0') {
+        if (verify_fits_xml($output_file)) {
+          $valid_fits = TRUE;
+        }
+      }
+    }
+
+    try{
+      if ($valid_fits) {
         $log_message = "$dsid derivative created using FITS with command - $command || SUCCESS";
         $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
       }
       else {
-        $this->log->lwrite("Could not find the file '$output_file' for the Techmd derivative!\nTesseract output: " . implode(', ', $techmd_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'techmd', NULL, 'ERROR');
+        $this->log->lwrite("Could not find the file '$output_file' for the Techmd derivative!" . implode(', ', $output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'techmd', NULL, 'ERROR');
       }
     } catch (Exception $e) {
       $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage(), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
@@ -27,6 +55,31 @@ class Technical extends Derivative {
     }
     unlink($output_file);
     return $return;
+  }
+
+  /**
+   * Helper to verify the fits xml file size is greater then 0.
+   * 
+   * borrowed from the islandora_fits module
+   *
+   * This function does not verify the contents of the provided xml file.
+   * WARNING: This function will delete said file if its file size
+   *   is equel to 0.
+   *
+   * @param String $xml_file
+   *   The path to the created xml file to validate
+   */
+  function verify_fits_xml($xml_file) {
+    if (filesize($xml_file) > 0) {
+      return TRUE;
+    }
+    else {
+      // Fits wont write to a file if it already exists.
+      if (file_exists($xml_file)) {
+        unlink($xml_file);
+      }
+      return FALSE;
+    }
   }
 
 }
