@@ -86,6 +86,10 @@ class TavernaSender extends Sender {
    * @return string
    */
   function get_listener_config_path() {
+    $location = $this->config->path;
+    if (!empty($location)) {
+      return $location;
+    }
     $location_env_variable = 'PHP_LISTENERS_PATH';
     $location = getenv($location_env_variable);
     if (empty($location)) {
@@ -225,7 +229,6 @@ class TavernaSender extends Sender {
     return null;
   }
 
-  
   /**
    * This function is to add inputs in t2flow on taverna server.
    * 
@@ -293,7 +296,7 @@ class TavernaSender extends Sender {
     $microservice_users_file = $location . '/microservice_users.xml';
     $microservice_users_xml = simplexml_load_file($microservice_users_file);
     if ($microservice_users_xml == FALSE) {
-      throw new TavernaException("error reading microservice_users.xml ", 'send credentials');
+      throw new TavernaException("error reading microservice_users.xml ", 404, 'send credentials');
     }
     $users = $microservice_users_xml->xpath("//user");
     if ($users == FALSE) {
