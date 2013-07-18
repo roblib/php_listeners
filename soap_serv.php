@@ -76,15 +76,14 @@ else {
 function get_listener_config_path() {
   $config_file = file_get_contents('config.xml');
   $config_xml = new SimpleXMLElement($config_file);
-  $location = $config_xml->path;
-  if(!empty($location)){
-    return $location;
-  }
-  $location_env_variable = 'PHP_LISTENERS_PATH';
-  $location = getenv($location_env_variable);
+  $location = $config_xml->path; 
   if (empty($location)) {
-    //try using a default
-    $location = '/opt/php_listeners';
+    $location_env_variable = 'PHP_LISTENERS_PATH';
+    $location = getenv($location_env_variable);
+    if (empty($location)) {
+      //try using a default
+      $location = '/opt/php_listeners';
+    }
   }
   return $location;
 }
@@ -135,7 +134,6 @@ class IslandoraService {
     $this->log = new Logging();
     $this->log->lfile($this->config->log->file);
     $this->connect();
-
     /**
      * <b>read</b> read fedora objects
      */
@@ -800,11 +798,7 @@ class IslandoraService {
       $this->log->lwrite("Failed loading Technical class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -3;
     }
-    //$fits_path = $this->config->fits_path;
-    //if(empty($fits_path)){
-    //  $fits_path = '/opt/fits.fits.sh';
-    //}
-    $funcresult = $tech->techmd($outputdsid, $label, $label, $fits_path);
+    $funcresult = $tech->techmd($outputdsid, $label, $label);
     $result = $this->getFunctionStatus("techmd", $funcresult, $pid, $dsid);
 
     return $result;

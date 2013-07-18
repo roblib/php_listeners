@@ -6,7 +6,12 @@ class Technical extends Derivative {
     parent::__destruct();
   }
 
-  function techmd($dsid = 'TECHMD', $label = 'Technical metadata', $fits = '/opt/fits/fits.sh') {
+  function techmd($dsid = 'TECHMD', $label = 'Technical metadata') {
+    //check for env variable for location of fits in case it is in a different location
+    $fits = getenv('LISTENER_FITS_PATH');
+    if(empty($fits)){
+      $fits = '/opt/fits/fits.sh';
+    }
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
 
     $output_file = $this->temp_file . '_TECHMD.xml';
@@ -15,7 +20,7 @@ class Technical extends Derivative {
     $valid_fits = FALSE;
     exec($command, $output = array(), $return);
     if ($return == '0') {
-      if (verify_fits_xml($output_file)) {
+      if ($this->verify_fits_xml($output_file)) {
         $valid_fits = TRUE;
       }
     }
@@ -24,7 +29,7 @@ class Technical extends Derivative {
       $command = "$fits -i $this->temp_file -x -o $output_file 2>&1";
       exec($command, $output = array(), $return);
       if ($return == '0') {
-        if (verify_fits_xml($output_file)) {
+        if ($this->verify_fits_xml($output_file)) {
           $valid_fits = TRUE;
         }
       }
@@ -34,7 +39,7 @@ class Technical extends Derivative {
       $command = "$fits -i $this->temp_file -o $output_file 2>&1";
       exec($command, $output, $return);
       if ($return == '0') {
-        if (verify_fits_xml($output_file)) {
+        if ($this->verify_fits_xml($output_file)) {
           $valid_fits = TRUE;
         }
       }
