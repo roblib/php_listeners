@@ -76,7 +76,7 @@ else {
 function get_listener_config_path() {
   $config_file = file_get_contents('config.xml');
   $config_xml = new SimpleXMLElement($config_file);
-  $location = $config_xml->path; 
+  $location = $config_xml->path;
   if (empty($location)) {
     $location_env_variable = 'PHP_LISTENERS_PATH';
     $location = getenv($location_env_variable);
@@ -110,9 +110,7 @@ class IslandoraService {
    * specifying their own arrays of $pid, $dsid, $label, and any other 
    * parameter required by the service's fucntion.
    * 
-   * Defining, _L are called from listener with pid only, others can be called
-   * from workflow.
-   * 
+   *  
    * @var array Description__dispatch_map
    */
   var $__dispatch_map = array();
@@ -275,6 +273,19 @@ class IslandoraService {
      * <b>scholarPdfa</b> processing in Pdf.php
      */
     $this->__dispatch_map['scholarPdfa'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
+     * <b>pdf</b> processing in Pdf.php
+     */
+    $this->__dispatch_map['pdf'] = array(
       'in' => array(
         'pid' => 'string',
         'dsid' => 'string',
@@ -832,7 +843,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($pdf = new Pdf($fedora_object, $dsid, 'jpg', $this->log, null)) {
+    if ($pdf = new Pdf($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("Pdf class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -873,7 +884,7 @@ class IslandoraService {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
       $result = -2;
     }
-    if ($rels = new Relationship($fedora_object, $dsid, 'xml', $this->log, null)) {
+    if ($rels = new Relationship($fedora_object, $dsid, 'xml', $this->log, NULL)) {
       $this->log->lwrite("Relationship class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
@@ -882,6 +893,47 @@ class IslandoraService {
     }
     $funcresult = $rels->addImageDimensionsToRels($outputdsid, $label);
     $result = $this->getFunctionStatus("addImageDimensionsToRels", $funcresult, $pid, $dsid);
+    return $result;
+  }
+
+  /**
+   * This file will call pdf command Pdf.php
+   * 
+   * @param string $pid
+   *  The pID of fedora Object which to read and write
+   * 
+   * @param string $dsid
+   *  The dsid of fedora Object which to read 
+   * 
+   * @param string $outputdsid
+   *  The dsid of fedora Object to write back
+   * 
+   * @param string $label
+   *  The label of fedora Object to write 
+   *
+   *  @return int
+   */
+  function pdf($pid, $dsid = 'OBJ', $outputdsid = "PDF", $label = 'PDF') {
+    $result = -1;
+    $this->log->lwrite("Function pdf starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    try {
+      $fedora_object = $this->fedora_connect->repository->getObject($pid);
+      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    } catch (Exception $ex) {
+      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -2;
+    }
+    if ($pdfObject = new Pdf($fedora_object, $dsid, NULL, $this->log, null)) {
+      $this->log->lwrite("Pdf class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    }
+    else {
+      $this->log->lwrite("Failed loading Pdf class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      $result = -3;
+    }
+
+    $funcresult = $pdfObject->toPdf($outputdsid, $label);
+    $result = $this->getFunctionStatus("pdf", $funcresult, $pid, $dsid);
+
     return $result;
   }
 
