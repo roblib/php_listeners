@@ -40,11 +40,13 @@ class Text extends Derivative {
         }
         else {
           $this->log->lwrite("Initial call to create ocr failed, converting to png for another attempt", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');
-          $convert_command = "/usr/bin/convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.png 2>&1";
-          exec($command, $hocr_output, $return);
-          $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language -psm 1 hocr 2>&1";
-          exec($command, $hocr_output, $return);
-
+          $convert_command = "convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.png 2>&1";
+          exec($convert_command, $hocr_output = array(), $return);
+          $this->log->lwrite("attempted conversion to png: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
+          $command = "/usr/local/bin/tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language -pms 1 hocr 2>&1";
+          exec($command, $hocr_output = array(), $return);
+          $this->log->lwrite("attempting OCR on png derivative: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
+          
           if (file_exists($output_file . '.html')) {
             $log_message = "HOCR derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.02.02 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a PNG and reprocessed.";
             $ingest = $this->add_derivative('HOCR', 'HOCR', $output_file . '.html', 'text/html', $log_message, FALSE);

@@ -9,11 +9,15 @@ class Image extends Derivative {
   }
 
   function jp2($dsid = 'JP2', $label = 'Compressed jp2') {
+    $kdu_path = getenv('LISTENER_KDU_PATH');
+    if(empty($kdu_path)){
+      $kdu_path = '/usr/local/bin';
+    }
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     if (file_exists($this->temp_file)) {
       try {
         $output_file = $this->temp_file . '_JP2.jp2';
-        $command = 'kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes 2>&1';
+        $command = $kdu_path . '/kdu_compress -i ' . $this->temp_file . ' -o ' . $output_file . ' -rate 0.5 Clayers=1 Clevels=7 Cprecincts=\{256,256\},\{256,256\},\{256,256\},\{128,128\},\{128,128\},\{64,64\},\{64,64\},\{32,32\},\{16,16\} Corder=RPCL ORGgen_plt=yes ORGtparts=R Cblk=\{32,32\} Cuse_sop=yes 2>&1';
         $jp2_output = array();
         exec($command, $jp2_output, $return);
         if (file_exists($output_file)) {
@@ -21,7 +25,7 @@ class Image extends Derivative {
           $this->add_derivative($dsid, $label, $output_file, 'image/jp2', $log_message);
         }
         else {
-          $this->log->lwrite("Could not find the file '$output_file' for the HOCR derivative!\nTesseract output: " . implode(', ', $jp2_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JP2', NULL, 'ERROR');
+          $this->log->lwrite("Could not find the file '$output_file' for output: " . implode(', ', $jp2_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JP2', NULL, 'ERROR');
           return $return;
         }
       } catch (Exception $e) {
