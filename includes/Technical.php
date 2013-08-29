@@ -7,6 +7,7 @@ class Technical extends Derivative {
   }
 
   function techmd($dsid = 'TECHMD', $label = 'Technical metadata') {
+    $return = MS_SYSTEM_EXCEPTION;
     //check for env variable for location of fits in case it is in a different location
     $fits = getenv('LISTENER_FITS_PATH');
     if(empty($fits)){
@@ -19,7 +20,7 @@ class Technical extends Derivative {
     //exec($command, $techmd_output = array(), $return);
     $valid_fits = FALSE;
     exec($command, $output = array(), $return);
-    if ($return == '0') {
+    if ($return == MS_SUCCESS) {
       if ($this->verify_fits_xml($output_file)) {
         $valid_fits = TRUE;
       }
@@ -28,7 +29,7 @@ class Technical extends Derivative {
     if (!$valid_fits) {
       $command = "$fits -i $this->temp_file -x -o $output_file 2>&1";
       exec($command, $output = array(), $return);
-      if ($return == '0') {
+      if ($return == MS_SUCCESS) {
         if ($this->verify_fits_xml($output_file)) {
           $valid_fits = TRUE;
         }
@@ -38,27 +39,19 @@ class Technical extends Derivative {
     if (!$valid_fits) {
       $command = "$fits -i $this->temp_file -o $output_file 2>&1";
       exec($command, $output, $return);
-      if ($return == '0') {
+      if ($return == MS_SUCCESS) {
         if ($this->verify_fits_xml($output_file)) {
           $valid_fits = TRUE;
         }
       }
     }
-
-    try{
       if ($valid_fits) {
         $log_message = "$dsid derivative created using FITS with command - $command || SUCCESS";
-        $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
+        $return = $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
       }
       else {
         $this->log->lwrite("Could not find the file '$output_file' for the Techmd derivative!" . implode(', ', $output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'techmd', NULL, 'ERROR');
       }
-    } catch (Exception $e) {
-      $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage(), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-      unlink($output_file);
-      return 'ERROR';
-    }
-    unlink($output_file);
     return $return;
   }
 

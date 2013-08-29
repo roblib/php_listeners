@@ -74,8 +74,8 @@ class Connect {
         // }
 
         $modMethod = $this->msg->headers['methodName'];
-
-        $this->log->lwrite("Method: " . $modMethod, 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+        $message_dsid = isset($message->dsID) ? $message->dsID : NULL;
+        $this->log->lwrite("Method: " . $modMethod, 'MODIFY_OBJECT', $pid, $message_dsid, $message->author);
         try {
           if (fedora_object_exists($this->fedora_url, $this->user, $pid) === FALSE) {
             $this->log->lwrite("Could not find object", 'DELETED_OBJECT', $pid, NULL, $message->author, 'ERROR');
@@ -103,22 +103,22 @@ class Connect {
               $methods = new SimpleXMLElement($trigString->content);
 
               foreach ($methods->children() as $method) {
-                $this->log->lwrite("Found a child method: " . $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+                $this->log->lwrite("Found a child method: " . $method['type'], 'MODIFY_OBJECT', $pid, $message_dsid, $message->author);
                 if ((string) $method['type'] == (string) $modMethod) {
-                  $this->log->lwrite("Modifing object with workflow defined in Trigger-Datastreams " . $method['type'], 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+                  $this->log->lwrite("Modifing object with workflow defined in Trigger-Datastreams " . $method['type'], 'MODIFY_OBJECT', $pid, $message_dsid, $message->author);
                   foreach ($method->children() as $trigger) {
                     if ($trigger->getName() == "t2flow") {
                       $streamName = (string) $trigger['id'];
-                      $returnResult = $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
+                      $returnResult = $this->runT2flow($streamName, $modelObj, $pid, $message_dsid);
                     }
                     else { //we have trigger
-                      if ($trigger['id'] == $message->dsID) {
-                        $this->log->lwrite("Matching Trigger  " . $trigger->getName(), 'MODIFY_OBJECT', $pid, $message->dsID, $message->author);
+                      if ($trigger['id'] == $message_dsid) {
+                        $this->log->lwrite("Matching Trigger  " . $trigger->getName(), 'MODIFY_OBJECT', $pid, $message_dsid, $message->author);
                         //  $this->log->lwrite("Listener Object: ". $t2flowList, 'SERVER_cINFO');
                         //TODO error check to make sure children are of type T2flow
                         foreach ($trigger->children() as $t2flow) {
                           $streamName = (string) $t2flow['id'];
-                          $returnResult = $this->runT2flow($streamName, $modelObj, $pid, $message->dsID);
+                          $returnResult = $this->runT2flow($streamName, $modelObj, $pid, $message_dsid);
                         }   //foreach t2flow file 
                       } //if matching trigger
                     } //else nname wasnt t2flow
@@ -263,7 +263,7 @@ class Connect {
         return TRUE;
       }
     } catch (Exception $e) {
-      $this->log->lwrite($e->getMessage() . ' ' . $e->getCode(), 'TAVERNA_ERROR', $pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite($e->getMessage() . ' ' . $e->getCode(), 'TAVERNA_ERROR', $pid, $dsID, NULL, 'ERROR');
       $response = $e->getResponse();
       $responseString = $response['content'];
       $taverna_sender->delete_t2flow($uuid); //try to delete the failed attempt on the taverna server
@@ -271,11 +271,11 @@ class Connect {
       //due to the server being overloaded.  
       sleep(10);
       if ($count <= 10) {
-        $this->log->lwrite("Taverna error $responseString, workflow t2flow for $pid $dsid failed, sending agian.", 'SERVER_INFO', $pid, $dsid, NULL, 'INFO');
+        $this->log->lwrite("Taverna error $responseString, workflow t2flow for $pid $dsID failed, sending agian.", 'SERVER_INFO', $pid, $dsID, NULL, 'INFO');
         $this->processT2flowOnTaverna($stream, $pid, $dsID, ++$count);
       }
       else {
-        $this->log->lwrite($e->getMessage() . ' ' . $e->getCode() . " $pid $dsid reached the maximum number of tries giving up", "SERVER_INFO", $pid, $dsid, NULL, 'ERROR');
+        $this->log->lwrite($e->getMessage() . ' ' . $e->getCode() . " $pid $dsID reached the maximum number of tries giving up", "SERVER_INFO", $pid, $dsID, NULL, 'ERROR');
         $taverna_sender->delete_t2flow($uuid);
       }
       return FALSE; //we return false here so a negative ack will be sent.  this probably means (depending on the stomp server configs) that 

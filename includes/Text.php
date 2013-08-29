@@ -21,10 +21,10 @@ class Text extends Derivative {
 
     if (isset($this->object['ENCODED_OCR'])) {
       $this->log->lwrite('ENCODED_OCR exists skipping all OCR tasks', 'PROCESS_DATASTREAM', $this->pid, 'HOCR');
-      return 0;
+      return MS_SUCCESS;
     }
     
-    $return=NULL;
+    $return=MS_SYSTEM_EXCEPTION;
     $ingest = NULL;
     $hocr_output = array();
     try {
@@ -59,11 +59,11 @@ class Text extends Derivative {
         $this->createEncodedOcrStream($output_file . '.html');
       }
       else {
-        $this->log->lwrite("Could not find the input file '$this->temp_file' for the HOCR derivative!", 'FAIL_DATASTREAM', $this->pid, 'allOcr', $e->getMessage(), 'ERROR');
+        $this->log->lwrite("Could not find the input file '$this->temp_file' for the HOCR derivative!", 'FAIL_DATASTREAM', $this->pid, 'allOcr', NULL, 'ERROR');
       }
 
     } catch (Exception $e) {
-      $this->log->lwrite("Could not create the HOCR or one of its derivatives", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');
+      $this->log->lwrite("Could not create the HOCR or one of its derivatives " , 'FAIL_DATASTREAM', $this->pid, 'HOCR',$e->getMessage(), 'ERROR');
 
       if ($ingest) {
         unlink($output_file . '.html');
@@ -121,8 +121,9 @@ class Text extends Derivative {
    * 
    * @return int
    */
-  function ocr($dsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
+  function ocr($dsid = 'OCR', $label = 'Scanned text', $params= array('language' => 'eng')) {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+    $language = $params['language'];
     $ingest = NULL;
     $return = NULL;
     try {
@@ -174,8 +175,9 @@ class Text extends Derivative {
    * 
    * @return int
    */
-  function hOcr($dsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
+  function hOcr($dsid = 'HOCR', $label = 'HOCR', $params= array('language' => 'eng')) {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+    $language = $params['language'];
     try {
       if (file_exists($this->temp_file)) {
         $output_file = $this->temp_file . '_HOCR';
@@ -226,8 +228,9 @@ class Text extends Derivative {
    * 
    * @return int
    */
-  function encodedOcr($dsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
+  function encodedOcr($dsid = 'ENCODED_OCR', $label = 'Encoded OCR', $params= array('language' => 'eng')) {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+    $language = $params['language'];
     try {
       $output_file = $this->temp_file . '_HOCR';
       $command = "/usr/local/bin/tesseract $this->temp_file $output_file -l $language -psm 1 hocr 2>&1";

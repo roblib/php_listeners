@@ -5,6 +5,10 @@
  * 
  * @author Richard Wincewicz
  */
+define('MS_FEDORA_EXCEPTION', -100);
+define('MS_SYSTEM_EXCEPTION', -1);//errors returned from imagemagick or other system calls
+define('MS_SUCCESS', 0);
+
 
 class Derivative {
 
@@ -30,7 +34,7 @@ class Derivative {
     //$this->log->lwrite('Mimetype: ' . $this->mimetype, 'SERVER_INFO');
     $this->extension = $extension;
     if ($this->incoming_dsid != NULL) {
-     	$this->temp_file = $this->create_temp_file();
+      $this->temp_file = $this->create_temp_file();
     }
     $extension_array = explode('.', $this->temp_file);
     $extension = $extension_array[1];
@@ -38,41 +42,53 @@ class Derivative {
 
   function __destruct() {
     unlink($this->temp_file);
-    if(isset($this->object)){
+    if (isset($this->object)) {
       unset($this->object);
     }
   }
 
-	protected function create_temp_file()
-	{
-		$datastream_array = array();
+  protected function create_temp_file() {
+    $datastream_array = array();
 
-    	foreach ($this->fedora_object as $datastream) {
-      		$datastream_array[] = $datastream->id;
-    	}
+    foreach ($this->fedora_object as $datastream) {
+      $datastream_array[] = $datastream->id;
+    }
 
-    	if (!in_array($this->incoming_dsid, $datastream_array)) {
-      		print "Could not find the $this->incoming_dsid datastream!";
-    	}
-    	try {
-      		$datastream = $this->fedora_object->getDatastream($this->incoming_dsid);
-      		$mime_type = $datastream->mimetype;
-      		if (!$this->extension) {
-        		$this->extension = system_mime_type_extension($mime_type);
-      		}	
-      		$tempfile = temp_filename($this->extension);
-      		$file_handle = fopen($tempfile, 'w');
-      		fwrite($file_handle, $datastream->content);
-      		fclose($file_handle);
-    	} catch (Exception $e) {
-        $this->log->lwrite('Could not create temp file from datastream '.$e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $dsid);
-    	}
-    	return $tempfile;
-	}
+    if (!in_array($this->incoming_dsid, $datastream_array)) {
+      print "Could not find the $this->incoming_dsid datastream!";
+    }
+    try {
+      $datastream = $this->fedora_object->getDatastream($this->incoming_dsid);
+      $mime_type = $datastream->mimetype;
+      if (!$this->extension) {
+        $this->extension = system_mime_type_extension($mime_type);
+      }
+      $tempfile = temp_filename($this->extension);
+      $file_handle = fopen($tempfile, 'w');
+      fwrite($file_handle, $datastream->content);
+      fclose($file_handle);
+      } catch (Exception $e) {
+      $this->log->lwrite('Could not create temp file from datastream ' . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $dsid);
+      }
+    return $tempfile;
+  }
 
+  /**
+   * calls tuque to add the datastream to the object.  Also logs success or failure
+   * @param type $dsid
+   * @param type $label
+   * @param type $content
+   * @param type $mimetype
+   * @param type $log_message
+   * @param type $delete
+   * @param type $from_file
+   * @param type $stream_type
+   * @return string
+   *   re
+    */
   protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE, $stream_type = "M") {
-    $return = FALSE;
-    //we are don't seem to be sending custom log message for updates only ingests
+    $return = MS_SUCCESS;
+    //TODO we are don't seem to be sending custom log message for updates only ingests
     if (isset($this->object[$dsid])) {
       if ($from_file) {
         $this->object[$dsid]->content = file_get_contents($content);
@@ -97,12 +113,24 @@ class Derivative {
       if ($log_message) {
         $datastream->logMessage = $log_message;
       }
-      $return = $this->fedora_object->ingestDatastream($datastream);
+      try{
+        $return = $this->fedora_object->ingestDatastream($datastream);
+        if ($return == FALSE) {
+          $this->log->lwrite("Could not create the $dsid derivative! it may have already existed in this object" . $e->getMessage() , 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
+          //we have to return success here or we will get in an endless loop if the workflows are configured to loop until success.
+        }
+        $return = MS_SUCCESS; //in microservices 0 = success
+      } catch (Exception $e){
+        $return = MS_FEDORA_EXCEPTION;
+        $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage() . ' ' . $e->getTraceAsString(), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      }
     }
     if ($delete && $from_file) {
       unlink($content);
     }
-    $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+    if ($return == MS_SUCCESS) {
+      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+    }
     return $return;
   }
 

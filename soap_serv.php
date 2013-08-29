@@ -6,7 +6,10 @@
 /**
  * read a config file of soap to determin the location of microservices.
  */
+define('MS_OBJECT_NOT_FOUND', -2);
+define('MS_SERVICE_NOT_FOUND', -3);
 $location = get_listener_config_path();
+
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $location);
 
@@ -444,20 +447,28 @@ class IslandoraService {
   }
 
   /**
-   * This funciton is to write the function excute status to the log file
+   * This funciton is to write the function excute status to the log file all 
+   * services should return 0 on success.  On failure they should return a 
+   * negative int
    * 
    * @param string $funcname
-   * @param string $funcresult
+   * @param mixed $funcresult
    * @return int
    */
   function getFunctionStatus($funcname, $funcresult, $pid, $dsid) {
-    if ($funcresult == 0) {
+    $type = gettype($funcresult);
+    if ($funcresult == MS_SUCCESS) {
       $this->log->lwrite($funcname . " function successful", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
       $result = 0;
     }
     else {
       $this->log->lwrite($funcname . " function failed with code $funcresult", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = $funcresult;
+      if ($type == 'integer') {
+        $result = $funcresult;
+      }
+      else {
+        $result = MS_SYSTEM_EXCEPTION; //make sure we return an int;
+      }
     }
     return $result;
   }
@@ -483,27 +494,8 @@ class IslandoraService {
    * @return int
    */
   function allOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
-    $result = -1;
-    $this->log->lwrite("Function AllOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-        } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-        }
-
-
-    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text Class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Text class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-    $funcresult = $text->allOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("allOcr", $funcresult, $pid, $dsid);
-    return $result;
+    $params = array('class' => 'Text', 'function' => 'allOcr', 'language' => $language);
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -527,28 +519,9 @@ class IslandoraService {
    * @return int
    */
   function ocr($pid, $dsid = 'OCR', $outputdsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
-    $result = -1;
-    $this->log->lwrite("Function ocr starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-        } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-        }
-
-    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Text class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-    $funcresult = $text->ocr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("ocr", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Text', 'function' => 'ocr', 'language' => $language);
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
+    
   }
 
   /**
@@ -572,29 +545,8 @@ class IslandoraService {
    * @return int
    */
   function hOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
-    $result = -1;
-    $this->log->lwrite("Function HOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-        } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-     }
-
-    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed Loading Text class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-
-    $funcresult = $text->hOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("hOcr", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Text', 'function' => 'hOcr', 'language' => $language);
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -618,27 +570,8 @@ class IslandoraService {
    * @return int
    */
   function encodedOcr($pid, $dsid = 'JPEG', $outputdsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
-    $result = -1;
-    $this->log->lwrite("Function encodedOCR starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-    }
-    if ($text = new Text($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Text class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Text class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-    $funcresult = $text->encodedOcr($outputdsid, $label, $language);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Text', 'function' => 'encoded', 'language' => $language);
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -662,30 +595,10 @@ class IslandoraService {
    * @return int
    */
   function jpg($pid, $dsid = "JPEG", $outputdsid = "JPG", $label = "JPEG image", $resize = "800") {
-    $result = -1;
-    $this->log->lwrite("Function jpg starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-    }
-    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Image class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Image class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-
-    $funcresult = $image->jpg($outputdsid, $label, $resize);
-    $result = $this->getFunctionStatus("jpg", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Image', 'function' => 'jpg','resize' => $resize);
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
-
+  
   /**
    * This file is to process JP2 files
    * 
@@ -704,27 +617,8 @@ class IslandoraService {
    * @return type
    */
   function jp2($pid, $dsid = "OBJ", $outputdsid = "JP2", $label = "Compressed jp2") {
-    $result = -1;
-    $this->log->lwrite("Function $outputdsid starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-    }
-    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Image class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Image class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-    $funcresult = $image->jp2($outputdsid, $label);
-    $result = $this->getFunctionStatus("jp2", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Image', 'function' => 'jp2');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -751,27 +645,8 @@ class IslandoraService {
    * @return int
    */
   function tn($pid, $dsid = "JPG", $outputdsid = "TN", $label = "Thumbnail", $height = 200, $width = 200) {
-    $result = -1;
-    $this->log->lwrite("Function TN starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-    }
-    if ($image = new Image($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Image class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Image class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-    $funcresult = $image->tn($outputdsid, $label, $height, $width);
-    $result = $this->getFunctionStatus("tn", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Image', 'function' => 'tn', 'height'=>$height, 'width' => $width);
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -792,27 +667,8 @@ class IslandoraService {
    *  @return int
    */
   function techmd($pid, $dsid = 'OBJ', $outputdsid = "TECHMD", $label = 'Technical metadata') {
-    $result = -1;
-    $this->log->lwrite("Function techmd starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-    }
-    if ($tech = new Technical($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Technical class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Technical class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-    $funcresult = $tech->techmd($outputdsid, $label, $label);
-    $result = $this->getFunctionStatus("techmd", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Technical', 'function' => 'techmd');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -833,27 +689,8 @@ class IslandoraService {
    * @return int
    */
   function scholarPdfa($pid, $dsid = 'OBJ', $outputdsid = "PDF", $label = 'PDF') {
-    $result = -1;
-    $this->log->lwrite("Function scholar starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-    }
-    if ($pdf = new Pdf($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Pdf class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Pdf class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-    $funcresult = $pdf->scholarPdfa($outputdsid, $label);
-    $result = $this->getFunctionStatus("scholarPdfa", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Pdf', 'function' => 'scholarPdfa');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -874,26 +711,8 @@ class IslandoraService {
    * @return int
    */
   function addImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = 'RELS-INT') {
-    $result = -1;
-    $this->log->lwrite("Function addImagedimensionsToRels starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-    }
-    if ($rels = new Relationship($fedora_object, $dsid, 'xml', $this->log, NULL)) {
-      $this->log->lwrite("Relationship class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Relationship class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-    $funcresult = $rels->addImageDimensionsToRels($outputdsid, $label);
-    $result = $this->getFunctionStatus("addImageDimensionsToRels", $funcresult, $pid, $dsid);
-    return $result;
+    $params = array('class' => 'Relationship', 'function' => 'addImageDimensionsToRels');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -914,27 +733,8 @@ class IslandoraService {
    *  @return int
    */
   function pdf($pid, $dsid = 'OBJ', $outputdsid = "PDF", $label = 'PDF') {
-    $result = -1;
-    $this->log->lwrite("Function pdf starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    try {
-      $fedora_object = $this->fedora_connect->repository->getObject($pid);
-      $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
-    }
-    if ($pdfObject = new Pdf($fedora_object, $dsid, NULL, $this->log, null)) {
-      $this->log->lwrite("Pdf class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-    }
-    else {
-      $this->log->lwrite("Failed loading Pdf class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
-    }
-
-    $funcresult = $pdfObject->toPdf($outputdsid, $label);
-    $result = $this->getFunctionStatus("pdf", $funcresult, $pid, $dsid);
-
-    return $result;
+    $params = array('class' => 'Pdf', 'function' => 'toPdf');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
   /**
@@ -955,27 +755,37 @@ class IslandoraService {
    * @return type
    */
   function scholarPolicy($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = "Embargo policy - Both") {
-    $result = -1;
-    $this->log->lwrite("Function scholarPolicy starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    $params = array('class' => 'Scholar', 'function' => 'scholarPolicy');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
+  }
+  
+  private function service($pid, $dsid, $outputdsid, $label, $params){
+    $class = $params['class'];
+    $function = $params['function'];
+    $result = MS_SYSTEM_EXCEPTION;
+    $this->log->lwrite("Function $function starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
 
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     } catch (Exception $ex) {
       $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -2;
+      return MS_OBJECT_NOT_FOUND;
     }
-    if ($policy = new Scholar($fedora_object, $dsid, 'xml', $this->log, null)) {
-      $this->log->lwrite("Policy class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
+    if ($service = new $class($fedora_object, $dsid, NULL, $this->log, null)) {
+      $this->log->lwrite("$class class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {
-      $this->log->lwrite("Failed loading Policy class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      $result = -3;
+      $this->log->lwrite("Failed loading $class class", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      return MS_SERVICE_NOT_FOUND;
     }
-    $funcresult = $policy->scholarPolicy($outputdsid, $label);
-    $result = $this->getFunctionStatus("encodedOcr", $funcresult, $pid, $dsid);
+
+    $funcresult = $service->{$function}($outputdsid, $label, $params);
+    $result = $this->getFunctionStatus($function, $funcresult, $pid, $dsid);
+
     return $result;
   }
+
 
 }
 ?>

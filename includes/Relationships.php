@@ -14,6 +14,7 @@ class Relationship extends Derivative {
    */
   function addImageDimensionsToRels($dsid, $label = 'RELS-INT') {
     $item = $this->fedora_object;
+    $return = MS_SYSTEM_EXCEPTION;
     $source_dsid = $this->incoming_dsid;
     $height_width_arr = getimagesize($this->temp_file);
     if ($height_width_arr === FALSE) {
@@ -33,17 +34,13 @@ XML;
     if (!isset($item[$source_dsid])) {
       //no datastream to reference in RELS
       $this->log->lwrite('Source does not exist aborting', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
-      return 'no source datastream';
+      return MS_SUCCESS;//return success for now as we don't want to loop as this maybe unrecoverable as there is no datastream to get the height and width from
     }
     if (!isset($item[$dsid])) {
       $to_replace = array('XPID', 'XWIDTH', 'XHEIGHT', 'XTIFF');
       $replace_with = array($item->id, $height_width_arr[0], $height_width_arr[1], $source_dsid);
       $rels_int_str = str_replace($to_replace, $replace_with, $rels_int_str);
-      try{
-        $return = $this->add_derivative($dsid, $label, $rels_int_str, 'text/xml', $log_message, FALSE, FALSE, 'X');
-      } catch (Exception $e){
-        $this->log->lwrite('Error updating repository', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
-      }
+      $return = $this->add_derivative($dsid, $label, $rels_int_str, 'text/xml', $log_message, FALSE, FALSE, 'X');
     }
     else {
       $rels_ds = $item[$dsid];
@@ -55,9 +52,10 @@ XML;
         $length = strlen($source_dsid);
         if (substr($about, -$length) === $source_dsid) {
           $this->log->lwrite('Relationship already exists aborting', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
-          return 'Relationship already Exists';
+          return MS_SUCCESS; //we tell taverna everything is ok as we don't want it to try again
         }
       }
+      //TODO update this to use tuque relationship functions
       $description = $doc->createElement('rdf:Description');
       $about = $doc->createAttribute('rdf:about');
       $about->value = "info:fedora/$item->id/$source_dsid";
@@ -73,6 +71,7 @@ XML;
       try{
         $return = $this->add_derivative($dsid, $label, $xml, 'text/xml', $log_message, FALSE, FALSE, 'X');
       } catch (Exception $e){
+        $return = MS_FEDORA_EXCEPTION;
         $this->log->lwrite('Error updating repository', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
       }
     }
