@@ -531,7 +531,7 @@ class IslandoraService {
    * @return int
    */
   function hOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
-    $params = array('class' => 'Text', 'function' => 'hOcr', 'language' => $language);
+    $params = array('class' => 'Text', 'function' => 'ocr', 'language' => $language, 'hocr' => 'hocr');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
