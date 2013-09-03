@@ -204,20 +204,6 @@ class IslandoraService {
     );
 
     /**
-     * <b>encodedOcr</b> processing in Image.php
-     */
-    $this->__dispatch_map['encodedOcr'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'outputdsid' => 'string',
-        'label' => 'string',
-        'language' => 'string'
-      ),
-      'out' => array('exit_status' => 'int')
-    );
-
-    /**
      * <b>jpg</b> processing in Image.php
      */
     $this->__dispatch_map['jpg'] = array(
@@ -549,31 +535,7 @@ class IslandoraService {
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
-  /**
-   * This function is processing all type of the ocr files
-   * 
-   * @param string $pid
-   *  The pID of fedora Object which to read and write
-   * 
-   * @param string $dsid
-   *  The dsid of fedora Object which to read 
-   * 
-   * @param string $outputdsid
-   *  The dsid of fedora Object to write back
-   * 
-   * @param string $label
-   *  The label of fedora Object to write 
-   * 
-   * @param string $language
-   *  The language of ocr
-   * 
-   * @return int
-   */
-  function encodedOcr($pid, $dsid = 'JPEG', $outputdsid = 'ENCODED_OCR', $label = 'Encoded OCR', $language = 'eng') {
-    $params = array('class' => 'Text', 'function' => 'encoded', 'language' => $language);
-    return $this->service($pid, $dsid, $outputdsid, $label, $params);
-  }
-
+  
   /**
    * This file is to process JPG files
    * 
