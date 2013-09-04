@@ -39,7 +39,7 @@
         <port>61613</port>
         <channel>/queue/listener.update</channel>
     </stomp>
-    
+    <!-- LEGACY CONFIG below can be used without Taverna-->
     <derivatives>
         <!-- In this section you can specify as many object elements as you
              want. Each of these defines a set of rules that are used to filter

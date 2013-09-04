@@ -1,0 +1,9 @@
+This directory and included files should be put in a web accessible location.
+
+
+PUT custom services in this directory, use the RoblibServices.php as a guide.  
+
+
+The implementation of the services should go in the listener includes directory or
+a subdirectory of the includes directory.
+

@@ -57,7 +57,9 @@
     <fits_path>/opt/fits/fits.sh</fits_path>
     
     <log>
-        <!-- Specify the file name of the log file. -->
+        <!-- Specify the file name of the log file. 
+         the webserver AND the user used to invoke the listeners both need
+        to have write access to this file -->
         <file>/var/log/listener.log</file>
     </log>
 

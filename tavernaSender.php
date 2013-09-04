@@ -64,7 +64,6 @@ class TavernaSender extends Sender {
    * This method is to read ssl status from config file
    */
   function set_ssl_status() {
-    //$location = $this->get_listener_config_path();
     $config_file = file_get_contents('config.xml');
     try{
       $this->config = new SimpleXMLElement($config_file);
@@ -81,23 +80,6 @@ class TavernaSender extends Sender {
     }
   }
 
-  /**
-   * This function is to get config file location
-   * @return string
-   */
-  function get_listener_config_path() {
-    $location = $this->config->path;
-    if (!empty($location)) {
-      return $location;
-    }
-    $location_env_variable = 'PHP_LISTENERS_PATH';
-    $location = getenv($location_env_variable);
-    if (empty($location)) {
-      //try using a default
-      $location = '/opt/php_listeners';
-    }
-    return $location;
-  }
 
   /**
    * This function is to set ssl verify to false
@@ -292,7 +274,6 @@ class TavernaSender extends Sender {
     if (empty($uuid)) {
       throw new TavernaException("no uuid specified when sending credentials ", 'send credentials');
     }
-    //$location = $this->get_listener_config_path();
     $microservice_users_file = 'microservice_users.xml';
     $microservice_users_xml = simplexml_load_file($microservice_users_file);
     if ($microservice_users_xml == FALSE) {
