@@ -178,7 +178,9 @@ class RoblibServices extends IslandoraService{
   }
   
    /**
-   * Reads a fedora object from an external repository
+   * Reads a fedora object from an external repository used to so we can 
+   * read a datastream from Fedora and then pass it to extarnal non islandora 
+   * services.  Most islandora services should not need this service.
    * 
    * @param string $pid
    * The object's pid
@@ -204,7 +206,9 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * Writes a fedora object back to the repository
+   * Writes a fedora object back to the repository.  Used for storing the 
+   * results of external non islandora services.  Most islandora services 
+   * should not need this service.
    * 
    * @param string $pid
    *  The pid of fedora object to write back
@@ -229,7 +233,7 @@ class RoblibServices extends IslandoraService{
 
 
   /**
-   * This function is creates an HOCR and OCR datastream
+   * This function creates an HOCR and OCR datastream
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
@@ -280,7 +284,7 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * This function is processing all type of the ocr files
+   * This function creates a hocr datastream
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
@@ -381,7 +385,7 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * This file will call commend in Technical.php
+   * This file will call command in Technical.php
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
@@ -425,7 +429,7 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * This function is to add image dimendions to the relationships.
+   * This function is to add image dimendions to the RELS-INT datastream.
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write

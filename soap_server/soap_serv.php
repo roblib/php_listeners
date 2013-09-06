@@ -107,8 +107,10 @@ class IslandoraService {
    * specifying their own arrays of $pid, $dsid, $label, and any other 
    * parameter required by the service's fucntion.
    * 
+   * The array is populated by a subclass
+   * 
    *  
-   * @var array Description__dispatch_map
+   * @var array 
    */
   var $__dispatch_map = array();
 

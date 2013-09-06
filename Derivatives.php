@@ -116,7 +116,7 @@ class Derivative {
       try{
         $return = $this->fedora_object->ingestDatastream($datastream);
         if ($return == FALSE) {
-          $this->log->lwrite("Could not create the $dsid derivative! it may have already existed in this object" . $e->getMessage() , 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
+          $this->log->lwrite("Could not create the $dsid derivative! it may have already existed in this object" , 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
           //we have to return success here or we will get in an endless loop if the workflows are configured to loop until success.
         }
         $return = MS_SUCCESS; //in microservices 0 = success
