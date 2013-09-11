@@ -227,8 +227,8 @@ class Connect {
   }
 
   /**
-   * TODO: rework the logic so instead of sending a new workflow when we first receive an 
-   * error we could just try changing the state to Operating
+   * send a t2flow document to Tavarna also sends the inputs to the input 
+   * ports
    * @param string $stream
    * @param string $pid
    * @param string $dsID
@@ -236,8 +236,12 @@ class Connect {
    * @return boolean
    */
   private function processT2flowOnTaverna($stream, $pid, $dsID, $count = 0) {
+    if(empty($dsID)){
+      $dsID = 'empty_stream_id';//in order to share workflows with ingest and other methods
+      //we must always send both a PID and DSID other taverna will complain that
+      //the number of inputs don't match what was defined in the workflow.
+    }
     try {
-      //$this->log->lwrite('parsed the datasream ' . $stream, "SERVER_INFO");
       $prot = empty($this->config_xml->taverna->protocol) ? 'http' : $this->config_xml->taverna->protocol;
       $context = empty($this->config_xml->taverna->context) ? 'http' : $this->config_xml->taverna->context;
       $taverna_sender = new TavernaSender($prot, $this->config_xml->taverna->host, $this->config_xml->taverna->port, $context, $this->config_xml->taverna->username, $this->config_xml->taverna->password);

@@ -1,14 +1,12 @@
 <?php
-
 /**
  * Class to create derivatives and ingets them into Fedora
  * 
  * @author Richard Wincewicz
  */
 define('MS_FEDORA_EXCEPTION', -100);
-define('MS_SYSTEM_EXCEPTION', -1);//errors returned from imagemagick or other system calls
+define('MS_SYSTEM_EXCEPTION', -1); //errors returned from imagemagick or other system calls
 define('MS_SUCCESS', 0);
-
 
 class Derivative {
 
@@ -42,8 +40,8 @@ class Derivative {
 
   function __destruct() {
     unlink($this->temp_file);
-    if (isset($this->object)) {
-      unset($this->object);
+    if (isset($this->fedora_object)) {
+      unset($this->fedora_object);
     }
   }
 
@@ -84,17 +82,25 @@ class Derivative {
    * @param type $from_file
    * @param type $stream_type
    * @return string
-   *   re
-    */
+   *   
+   */
   protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE, $stream_type = "M") {
     $return = MS_SUCCESS;
     //TODO we are don't seem to be sending custom log message for updates only ingests
-    if (isset($this->object[$dsid])) {
+    if (isset($this->fedora_object[$dsid])) {
+      $this->log->lwrite("updating the datastream $dsid derivative! ", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
       if ($from_file) {
-        $this->object[$dsid]->content = file_get_contents($content);
+        $content = file_get_contents($content);
       }
-      else {
-        $this->object[$dsid]->content = $content;
+      $arr = array('dsString' => $content);
+      if ($log_message) {
+        $arr['logMessage'] = $log_message;
+      }
+      try{
+        $this->fedora_object->repository->api->m->modifyDatastream($this->fedora_object->id, $dsid, $arr);
+      }catch(Exception $e){
+        $this->log->lwrite("Could not update the $dsid derivative! " . $e->getMessage().' '. $e->getTraceAsString(), 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'ERROR');
+        $return = MS_FEDORA_EXCEPTION;
       }
     }
     else {
@@ -116,8 +122,8 @@ class Derivative {
       try{
         $return = $this->fedora_object->ingestDatastream($datastream);
         if ($return == FALSE) {
-          $this->log->lwrite("Could not create the $dsid derivative! it may have already existed in this object" , 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
-          //we have to return success here or we will get in an endless loop if the workflows are configured to loop until success.
+          $this->log->lwrite("Could not create the $dsid derivative! it may have already existed in this object", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
+          //we have to return success here or we will get in an endless loop if the workflows are configured to loop until success.  this scenario should not happen very often
         }
         $return = MS_SUCCESS; //in microservices 0 = success
       } catch (Exception $e){
@@ -135,5 +141,4 @@ class Derivative {
   }
 
 }
-
 ?>
