@@ -229,12 +229,14 @@ class IslandoraService {
   }
 
   /**
-   * This funciton sanitizes error codes/status and writes to the log file. all 
-   * services should return 0 on success.  On failure they should return a 
+   * This funciton sanitizes error codes/status and writes to the log file. all
+   * services should return 0 on success.  On failure they should return a
    * negative int
-   * 
+   *
    * @param string $funcname
    * @param mixed $funcresult
+   * @param string $pid
+   * @param string $dsid
    * @return int
    */
   function getFunctionStatus($funcname, $funcresult, $pid, $dsid) {
@@ -265,7 +267,7 @@ class IslandoraService {
    *   an associative array which must include a class and function keys, the 
    * values of these keys will determine what function gets called from 
    * what class.
-   * the params array will be passed to function called by this array so it may
+   * the params array will be passed to the function called so it may
    * also include custom keys.
    * 
    * @return int

@@ -3,7 +3,7 @@
 require_once 'tuque/HttpConnection.php';
 
 /**
- *This class defines HttpConnection to taverna server using the PHP cURL library
+ *This class defines extends Tuque's CurlConnectioin
  */
 class TavernaCurlConnection extends CurlConnection {
 
@@ -17,7 +17,7 @@ class TavernaCurlConnection extends CurlConnection {
    *   The URL to post the request to. Should start with the
    *   protocol. For example: http://.
    * @param string $type
-   *   This paramerter must be one of: string, file.
+   *   This paramarter must be one of: string, file.
    * @param string $data
    *   What this parameter contains is decided by the $type parameter.
    * @param string $content_type

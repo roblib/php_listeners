@@ -435,7 +435,7 @@ class RoblibServices extends IslandoraService{
    *  The pID of fedora Object which to read and write
    * 
    * @param string $dsid
-   *  The dsID of fedora Object which to read 
+   *  The dsID of fedora datastream to use as a source
    * 
    * @param string $outputdsid
    *  The dsID of fedora Object to write back
@@ -445,7 +445,7 @@ class RoblibServices extends IslandoraService{
    * 
    * @return int
    */
-  function addImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = 'RELS-INT') {
+  function addImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "RELS-INT", $label = 'RELS-INT') {
     $params = array('class' => 'Relationship', 'function' => 'addImageDimensionsToRels');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }

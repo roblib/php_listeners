@@ -7,10 +7,14 @@ class Relationship extends Derivative {
   }
 
   /**
-   * update the object so the RELS-INT datastream contains the height and width of the 
-   * selected datastream.  We are using the standard islandora RELS-INT namespace
+   * Update the object so the RELS-INT datastream contains the height and width of the
+   * selected datastream.  We are using the standard islandora RELS-EXT namespace
    * @param string $dsid
+   *   The output dsid
    * @param string $label
+   *   the datastream label
+   *
+   * @return int|string
    */
   function addImageDimensionsToRels($dsid, $label = 'RELS-INT') {
     $item = $this->fedora_object;
@@ -25,8 +29,8 @@ class Relationship extends Derivative {
     $rels_int_str = <<<XML
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description rdf:about="info:fedora/XPID/XTIFF">
-    <width xmlns="http://islandora.ca/ontology/relsint#">XWIDTH</width>
-    <height xmlns="http://islandora.ca/ontology/relsint#">XHEIGHT</height>
+    <width xmlns="http://islandora.ca/ontology/relsext#">XWIDTH</width>
+    <height xmlns="http://islandora.ca/ontology/relsext#">XHEIGHT</height>
   </rdf:Description>
 </rdf:RDF>
 XML;
@@ -62,8 +66,8 @@ XML;
       $description->appendChild($about);
       $width = $doc->createElement('width', $height_width_arr[0]);
       $height = $doc->createElement('height', $height_width_arr[1]);
-      $width->setAttribute('xmlns', "http://islandora.ca/ontology/relsint#");
-      $height->setAttribute('xmlns', "http://islandora.ca/ontology/relsint#");
+      $width->setAttribute('xmlns', "http://islandora.ca/ontology/relsext#");
+      $height->setAttribute('xmlns', "http://islandora.ca/ontology/relsext#");
       $description->appendChild($width);
       $description->appendChild($height);
       $rdf->appendChild($description);

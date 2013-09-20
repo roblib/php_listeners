@@ -238,7 +238,7 @@ class Connect {
   private function processT2flowOnTaverna($stream, $pid, $dsID, $count = 0) {
     if(empty($dsID)){
       $dsID = 'empty_stream_id';//in order to share workflows with ingest and other methods
-      //we must always send both a PID and DSID other taverna will complain that
+      //(like addDatastream) we must always send both a PID and DSID otherwise taverna will complain that
       //the number of inputs don't match what was defined in the workflow.
     }
     try {
@@ -289,12 +289,13 @@ class Connect {
   }
 
   /**
-   * polls taverna until a workflow is finished or we get an error.
+   * Polls taverna until a workflow is finished or we get an error.
    * as implemented this will poll forever if a workflow never reaches a
-   * status of  Finished and 
+   * status of  Finished and
    * Taverna does not throw an exception.
-   * @param type $uuid
-   * @param type $tavernaSender
+   * @param string $uuid
+   * @param TarvernaSender $tavernaSender
+   * @param int $wait
    * @return boolean
    *   returns true if status is Finished
    */
