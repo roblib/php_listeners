@@ -283,8 +283,10 @@ class IslandoraService {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     } catch (Exception $ex) {
-      $this->log->lwrite("Fedora object not fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
-      return MS_OBJECT_NOT_FOUND;
+      $this->log->lwrite("Fedora object not fetched Aborting", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      // We can't act on this object as it doesn't exist but we may need to return success so
+      // Tavarna stops looping if it is configured to loop until it succeeds
+      return MS_SUCCESS;
     }
     if ($service = new $class($fedora_object, $dsid, NULL, $this->log, null)) {
       $this->log->lwrite("$class class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');

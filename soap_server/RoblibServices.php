@@ -10,7 +10,7 @@ require_once 'includes/Pdf.php';
 require_once 'includes/Relationships.php';
 
 class RoblibServices extends IslandoraService{
-  
+
   function RoblibServices(){
     parent::__construct();
     $this->connect();
