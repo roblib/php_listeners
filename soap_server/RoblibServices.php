@@ -8,8 +8,9 @@ require_once 'includes/Text.php';
 require_once 'includes/Technical.php';
 require_once 'includes/Pdf.php';
 require_once 'includes/Relationships.php';
+require_once 'includes/ObjectManagement.php';
 
-class RoblibServices extends IslandoraService{
+class RoblibServices extends IslandoraService {
   
   function RoblibServices(){
     parent::__construct();
@@ -36,6 +37,18 @@ class RoblibServices extends IslandoraService{
         'mimetype' => 'string'
       ),
       'out' => array('message' => 'string')
+    );
+
+    /**
+     * Deletes the given datastream.
+     * Processing in ObjectManagement.php
+     */
+    $this->__dispatch_map['deleteDatastream'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
     );
 
     /**
@@ -177,10 +190,12 @@ class RoblibServices extends IslandoraService{
     
   }
   
+  function getDispatchMap(){
+    return $this->__dispatch_map;
+  }
+  
    /**
-   * Reads a fedora object from an external repository used to so we can 
-   * read a datastream from Fedora and then pass it to extarnal non islandora 
-   * services.  Most islandora services should not need this service.
+   * Reads a fedora object from an external repository
    * 
    * @param string $pid
    * The object's pid
@@ -206,9 +221,7 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * Writes a fedora object back to the repository.  Used for storing the 
-   * results of external non islandora services.  Most islandora services 
-   * should not need this service.
+   * Writes a fedora object back to the repository
    * 
    * @param string $pid
    *  The pid of fedora object to write back
@@ -231,9 +244,28 @@ class RoblibServices extends IslandoraService{
     return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($base64_content), $mimetype, null, true, false);
   }
 
+  /**
+   * This function deletes the given datastream.
+   *
+   * @param string $pid
+   *  The PID of the fedora object which datastream will be deleted
+   *
+   * @param string $dsid
+   *  The DSID of fedora object datastream which will be deleted
+   *
+   * @return int
+   */
+  function deleteDatastream($pid, $dsid) {
+    $params = array(
+      'class' => 'ObjectManagement',
+      'function' => 'deleteDatastream',
+    );
+
+    return $this->service($pid, $dsid, $dsid, $dsid, $params);
+  }
 
   /**
-   * This function creates an HOCR and OCR datastream
+   * This function is creates an HOCR and OCR datastream
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
@@ -284,7 +316,7 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * This function creates a hocr datastream
+   * This function is processing all type of the ocr files
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
@@ -308,7 +340,6 @@ class RoblibServices extends IslandoraService{
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
-  
   /**
    * This file is to process JPG files
    * 
@@ -385,7 +416,7 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * This file will call command in Technical.php
+   * This file will call commend in Technical.php
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
@@ -429,13 +460,13 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * This function is to add image dimendions to the RELS-INT datastream.
+   * This function is to add image dimendions to the relationships.
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
    * 
    * @param string $dsid
-   *  The dsID of fedora datastream to use as a source
+   *  The dsID of fedora Object which to read 
    * 
    * @param string $outputdsid
    *  The dsID of fedora Object to write back
@@ -445,7 +476,7 @@ class RoblibServices extends IslandoraService{
    * 
    * @return int
    */
-  function addImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "RELS-INT", $label = 'RELS-INT') {
+  function addImageDimensionsToRels($pid, $dsid = 'OBJ', $outputdsid = "POLICY", $label = 'RELS-INT') {
     $params = array('class' => 'Relationship', 'function' => 'addImageDimensionsToRels');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }

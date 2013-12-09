@@ -1,4 +1,5 @@
 <?php
+require_once 'Derivatives.php';
 
 class Relationship extends Derivative {
 
@@ -25,7 +26,7 @@ class Relationship extends Derivative {
       $this->log->lwrite('Error reading image height and width', 'PROCESS_DATASTREAM', $this->pid, $dsid);
       return 'Error reading image height and width for datastream';
     }
-    $log_message = "$dsid derivative created using PHP  with command - getImageSize || SUCCESS";
+    $log_message = "$dsid derivative created using PHP with command - getImageSize || SUCCESS";
     $rels_int_str = <<<XML
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description rdf:about="info:fedora/XPID/XTIFF">
@@ -72,9 +73,9 @@ XML;
       $description->appendChild($height);
       $rdf->appendChild($description);
       $xml = $doc->saveXML();
-      try{
+      try {
         $return = $this->add_derivative($dsid, $label, $xml, 'text/xml', $log_message, FALSE, FALSE, 'X');
-      } catch (Exception $e){
+      } catch (Exception $e) {
         $return = MS_FEDORA_EXCEPTION;
         $this->log->lwrite('Error updating repository', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
       }
@@ -82,5 +83,54 @@ XML;
     return $return;
   }
 
+  /**
+   * Update the object RELS-EXT datastream to add given cmodel type. We are using the standard islandora RELS-EXT namespace
+   * @param string $outputdsid
+   *    The output dsid
+   * @param string $label
+   *   the datastream label
+   * @param array $params
+   * @return int|string
+   */
+  function addCModelToObject($outputdsid, $label = 'RELS-EXT', $params) {
+    $item = $this->fedora_object;
+    $cmodel = $params['cmodel'];
+
+    try{
+      $item->relationships->add('info:fedora/fedora-system:def/model#', 'hasModel', $cmodel);
+      $return = MS_SUCCESS;
+      $this->log->lwrite("$cmodel CModel relationship successfully added.", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
+    } catch (Exception $e){
+      $return = MS_FEDORA_EXCEPTION;
+      $this->log->lwrite("$cmodel CModel relationship failed to add.", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+    }
+
+    return $return;
+  }
+
+  /**
+   * Update the object RELS-EXT datastream to remove given cmodel type. We are using the standard islandora RELS-EXT namespace
+   * @param string $outputdsid
+   *   The output dsid
+   * @param string $label
+   *   the datastream label
+   * @param $params
+   * @return int|string
+   */
+  function removeCModelFromObject($outputdsid, $label, $params) {
+    $item = $this->fedora_object;
+    $cmodel = $params['cmodel'];
+
+    try {
+      $item->relationships->remove('info:fedora/fedora-system:def/model#', 'hasModel', $cmodel);
+      $return = MS_SUCCESS;
+      $this->log->lwrite("$cmodel CModel relationship successfully removed.", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
+    } catch (Exception $e) {
+      $return = MS_FEDORA_EXCEPTION;
+      $this->log->lwrite("$cmodel CModel relationship failed to remove.", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+    }
+
+    return $return;
+  }
 }
 
