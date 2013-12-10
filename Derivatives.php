@@ -86,6 +86,11 @@ class Derivative {
    */
   protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE, $stream_type = "M") {
     $return = MS_SUCCESS;
+    if(!isset($this->fedora_object)){
+      $this->log->lwrite("Could not create the $dsid derivative! The object does not exist", 'OBJECT_DELETED', $this->pid, $dsid, NULL, 'INFO');
+      //we want to acknowledge that we have received and processed the message
+      return $return;
+    }
     //TODO we are don't seem to be sending custom log message for updates only ingests
     if (isset($this->fedora_object[$dsid])) {
       $this->log->lwrite("updating the datastream $dsid derivative! ", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
