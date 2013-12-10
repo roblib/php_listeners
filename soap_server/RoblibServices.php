@@ -8,6 +8,7 @@ require_once 'includes/Text.php';
 require_once 'includes/Technical.php';
 require_once 'includes/Pdf.php';
 require_once 'includes/Relationships.php';
+require_once 'includes/ObjectManagement.php';
 
 class RoblibServices extends IslandoraService{
 
@@ -36,6 +37,18 @@ class RoblibServices extends IslandoraService{
         'mimetype' => 'string'
       ),
       'out' => array('message' => 'string')
+    );
+
+    /**
+     * Deletes the given datastream.
+     * Processing in ObjectManagement.php
+     */
+    $this->__dispatch_map['deleteDatastream'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
     );
 
     /**
@@ -231,6 +244,25 @@ class RoblibServices extends IslandoraService{
     return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($base64_content), $mimetype, null, true, false);
   }
 
+  /**
+   * This function deletes the given datastream.
+   *
+   * @param string $pid
+   *  The PID of the fedora object which datastream will be deleted
+   *
+   * @param string $dsid
+   *  The DSID of fedora object datastream which will be deleted
+   *
+   * @return int
+   */
+  function deleteDatastream($pid, $dsid) {
+    $params = array(
+      'class' => 'ObjectManagement',
+      'function' => 'deleteDatastream',
+    );
+
+    return $this->service($pid, $dsid, $dsid, $dsid, $params);
+  }
 
   /**
    * This function creates an HOCR and OCR datastream
