@@ -6,7 +6,8 @@
  * Time: 11:36 AM
  * To change this template use File | Settings | File Templates.
  */
-//require_once 'includes/ContentModel.php';
+
+require_once 'includes/Relationships.php';
 
 class RoblibContentModelServices extends IslandoraService {
   public $namespace = 'urn:php-roblibCModel-soapservice';
@@ -24,7 +25,7 @@ class RoblibContentModelServices extends IslandoraService {
         'dsid' => 'string',
         'outputdsid' => 'string',
         'label' => 'string',
-        'language' => 'string'
+        'cmodel' => 'string'
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -38,7 +39,7 @@ class RoblibContentModelServices extends IslandoraService {
         'dsid' => 'string',
         'outputdsid' => 'string',
         'label' => 'string',
-        'language' => 'string'
+        'cmodel' => 'string'
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -67,7 +68,7 @@ class RoblibContentModelServices extends IslandoraService {
    */
   function addCModelToObject($pid, $dsid = 'RELS-EXT', $outputdsid = 'RELS-EXT', $label = 'RELS-EXT', $cmodel) {
     $params = array(
-      'class' => 'CModel',
+      'class' => 'Relationship',
       'function' => 'addCModelToObject',
       'cmodel' => $cmodel
     );
@@ -96,7 +97,7 @@ class RoblibContentModelServices extends IslandoraService {
    */
   function removeCModelFromObject($pid, $dsid = 'RELS-EXT', $outputdsid = 'RELS-EXT', $label = 'RELS-EXT', $cmodel) {
     $params = array(
-      'class' => 'CModel',
+      'class' => 'Relationship',
       'function' => 'removeCModelFromObject',
       'cmodel' => $cmodel
     );
