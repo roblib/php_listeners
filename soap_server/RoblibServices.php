@@ -259,8 +259,8 @@ class RoblibServices extends IslandoraService{
     $params = array(
       'class' => 'ObjectManagement',
       'function' => 'deleteDatastream',
+      'logMessage' => "$dsid datastream successfully deleted using microservices funcion ObjectManagement->deleteDatastream() || SUCCESS",
     );
-
     return $this->service($pid, $dsid, $dsid, $dsid, $params);
   }
 

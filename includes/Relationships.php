@@ -96,10 +96,9 @@ XML;
   function addCModelToObject($outputdsid, $label = 'RELS-EXT', $params) {
     $item = $this->fedora_object;
     $cmodel = $params['cmodel'];
-
+    $return = MS_SUCCESS;
     try{
       $item->relationships->add('info:fedora/fedora-system:def/model#', 'hasModel', $cmodel);
-      $return = MS_SUCCESS;
       $this->log->lwrite("$cmodel CModel relationship successfully added.", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
     } catch (Exception $e){
       $return = MS_FEDORA_EXCEPTION;
@@ -120,10 +119,9 @@ XML;
   function removeCModelFromObject($outputdsid, $label, $params) {
     $item = $this->fedora_object;
     $cmodel = $params['cmodel'];
-
+    $return = MS_SUCCESS;
     try {
       $item->relationships->remove('info:fedora/fedora-system:def/model#', 'hasModel', $cmodel);
-      $return = MS_SUCCESS;
       $this->log->lwrite("$cmodel CModel relationship successfully removed.", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
     } catch (Exception $e) {
       $return = MS_FEDORA_EXCEPTION;
