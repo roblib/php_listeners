@@ -1,0 +1,144 @@
+#!/bin/bash
+#
+
+
+# it's a service!
+# chkconfig: 2345 95 15
+# description: PHP Listeners.
+### BEGIN INIT INFO
+# Provides: php_listeners
+# Required-Start: $all
+# Required-Stop: $all
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start the php listeners.
+# Description: Start the php listeners.
+### END INIT INFO
+
+
+START_STOP_WAIT=5
+# change the lines below to match your use case
+# a user that can read and write to the LISTENER_DIR
+LISTENER_USER="microservices"
+# the directory where the listeners are installed
+LISTENER_DIR="/opt/php_listeners"
+
+PID_SEARCH="pgrep -nf php.listener.php -u $LISTENER_USER"
+
+
+run_this_one() {   
+    /bin/su - $LISTENER_USER --shell=/bin/bash --command="$*"
+}
+
+start() {
+  if [ `$PID_SEARCH` ]; then
+    echo "PHP_Listeners already running! Try running with \"force-start\" if you know for certain it is not running."
+  else
+    force_start
+  fi
+}
+
+force_start() {
+  echo "> Starting..."
+  run_this_one "$LISTENER_DIR/listener.sh $LISTENER_DIR"
+  echo "Waiting for server startup to complete"
+  sleep 2
+  startwait=$START_STOP_WAIT
+  count=0
+  while [ $count -lt $startwait ]; do
+    echo -n "."
+    sleep 1
+    count=`expr $count + 1`
+    PID=`$PID_SEARCH`
+    if [ ! $PID = "" ]; then
+      break
+    fi
+  done
+  ps -p $PID &>/dev/null 2>/dev/null
+    RETVAL=$?
+    if [ $RETVAL = 0 ]; then
+      echo ""
+      echo "Listeners have started..."
+      return 0
+    else
+      echo ""
+      echo "Listeners failed to start... Check your logs"
+      return 1
+    fi
+}
+
+stop()
+{
+  PID=`$PID_SEARCH`
+  if [ $PID ]; then
+    echo "> Stopping..."
+    kill $PID
+    echo "Waiting for server shutdown to complete"
+    sleep 2
+    kwait=$START_STOP_WAIT
+    count=0;
+    while [ $count -lt $kwait ]; do
+      sleep 1
+      count=`expr $count + 1`
+      PID=`$PID_SEARCH`
+      if [ ! $PID = "" ]; then
+        echo -n "."
+      else
+        break
+      fi
+    done
+    echo ""
+    if [ $count -eq $kwait ]; then
+      echo "process is still running after $START_STOP_WAIT seconds, killing process"
+      PID=`$PID_SEARCH`
+      kill $PID
+      sleep 5
+
+      # if it’s still running use kill -9
+      PID=`$PID_SEARCH`
+      if [ $PID ]; then
+      echo "process is still running, using kill -9"
+      kill -9 $PID
+      sleep 5
+      fi
+    fi
+    PID=`$PID_SEARCH`
+    if [ $PID ]; then
+      echo "process is still running, I give up"
+      return 1
+    else
+      echo "Listeners shutdown completed"
+      return 0
+    fi
+  else
+    echo "Listeners are not currently running, you can start them with $0 start"
+  fi
+}
+
+status()
+{
+  PID=`$PID_SEARCH`
+
+  if [ $PID ]; then
+    echo "Listeners are up and running with PID="$PID
+    return 0
+  else
+    echo "Listeners are not currently running, you can start them with $0 start"
+    return 1
+  fi
+
+}
+
+case "$1" in
+  start) start ;;
+  force-start) force_start ;;
+  stop) stop ;;
+  restart) stop ; start ;;
+  status) status ;;
+  *)
+    echo "Usage: `basename $0` {start|stop|status|restart|force-start}"
+    exit 2
+  ;;
+esac
+
+exit $?
