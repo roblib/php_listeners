@@ -23,6 +23,8 @@ LISTENER_USER="microservices"
 # the directory where the listeners are installed
 LISTENER_DIR="/opt/php_listeners"
 
+# You should not need to modify anything below this line
+
 PID_SEARCH="pgrep -nf php.listener.php -u $LISTENER_USER"
 
 

@@ -108,11 +108,34 @@ class TavernaSender extends Sender {
       if ($response['status'] != 201) {
         throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'send message');
       }
-
-      return $response['headers'] . $response['content'];
+      return $response['headers'];
     }
     return null;
   }
+
+  /**
+   * replacement for pecl parse headers
+   * taken from php.net
+   * @param string $header
+   * @return array
+   */
+  function http_parse_headers($header) {
+    $retVal = array();
+    $fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $header));
+    foreach ($fields as $field) {
+      if (preg_match('/([^:]+): (.+)/m', $field, $match)) {
+        $match[1] = preg_replace('/(?<=^|[\x09\x20\x2D])./e', 'strtoupper("\0")', strtolower(trim($match[1])));
+        if (isset($retVal[$match[1]])) {
+          $retVal[$match[1]] = array($retVal[$match[1]], $match[2]);
+        }
+        else {
+          $retVal[$match[1]] = trim($match[2]);
+        }
+      }
+    }
+    return $retVal;
+  }
+
 
   /**
    * This function is to parse uuid from the feedback message.
@@ -130,11 +153,14 @@ class TavernaSender extends Sender {
    */
   function parse_UUID($message) {
     if (!empty($message)) {
-      $uuid = substr($message, strpos($message, $this->hostname) + strlen($this->hostname), 36);
+      $headers = $this->http_parse_headers($message);
+      $location = $headers['Location'];
+      $uuid = substr($location, strrpos($location, '/')+1);
       return $uuid;
     }
     return null;
   }
+
 
   /**
    * This function is to run t2flow on taverna server
