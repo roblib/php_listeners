@@ -182,7 +182,7 @@ class TavernaSender extends Sender {
 
     $url = $this->hostname . $uuid . '/status/';
     $response = $this->curl_connect->tavernaPutRequest($url, 'string', 'Operating', 'text/plain');
-    if ($response['status'] != 200) {
+    if (($response['status'] != 200) && ($response['status'] != 202)) {
       throw new TavernaException($response['headers'] . $response['content'], $response['status'], 'run t2flow');
     }
     return $response['headers'] . $response['content'];
