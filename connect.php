@@ -268,9 +268,8 @@ class Connect {
       }
     } catch (Exception $e) {
       $this->log->lwrite($e->getMessage() . ' ' . $e->getCode(), 'TAVERNA_ERROR', $pid, $dsID, NULL, 'ERROR');
-      $response = $e->getResponse();
-      $responseString = $response['content'];
-      $taverna_sender->delete_t2flow($uuid); //try to delete the failed attempt on the taverna server
+      $responseString = $e->getMessage();
+      $response = $taverna_sender->delete_t2flow($uuid); //try to delete the failed attempt on the taverna server
       //we rest and retry here as the most common taverna error will probable be a 403 forbidden
       //due to the server being overloaded.  
       sleep(10);
