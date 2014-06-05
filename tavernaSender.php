@@ -310,6 +310,7 @@ class TavernaSender extends Sender {
       throw new TavernaException("Authentication is required, but no users defined in microservice_users_file.xml ", 'send credentials');
     }
     $host = $this->hostname . $uuid . '/security/credentials';
+    $hostTrust = $this->hostname . $uuid . '/security/trusts';
     foreach ($users as $user) {
       $data = '<credential xmlns="http://ns.taverna.org.uk/2010/xml/server/rest/">
         <userpass xmlns="http://ns.taverna.org.uk/2010/xml/server/">
@@ -321,6 +322,15 @@ class TavernaSender extends Sender {
       $response = $this->curl_connect->postRequest($host, 'String', $data, 'application/xml');
       if ($response['status'] != 201) {
         throw new TavernaException('Error sending credentials ' . $response['headers'] . $response['content'], $response['status'], 'send credentials');
+      }
+      if ($user['trustCA'] != ""){
+        $data = '<trustedIdentity xmlns="http://ns.taverna.org.uk/2010/xml/server/">
+          <certificateBytes xmlns="http://ns.taverna.org.uk/2010/xml/server/">' . $user['trustCA'] . '</certificateBytes>
+          </trustedIdentity>';
+        $response = $this->curl_connect->postRequest($hostTrust, 'String', $data, 'application/xml');
+        if ($response['status'] != 201) {
+          throw new TavernaException('Error sending trusted Identity ' . $response['headers'] . $response['content'], $response['status'], 'send trustedIdentity');
+        }
       }
     }
     return TRUE;
