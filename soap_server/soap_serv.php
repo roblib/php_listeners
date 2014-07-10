@@ -278,7 +278,6 @@ class IslandoraService {
     $function = $params['function'];
     $result = MS_SYSTEM_EXCEPTION;
     $this->log->lwrite("Function $function starting...", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
-
     try {
       $fedora_object = $this->fedora_connect->repository->getObject($pid);
       $this->log->lwrite("Fedora object successfully fetched", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');

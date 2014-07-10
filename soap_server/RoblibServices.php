@@ -9,6 +9,7 @@ require_once 'includes/Technical.php';
 require_once 'includes/Pdf.php';
 require_once 'includes/Relationships.php';
 require_once 'includes/ObjectManagement.php';
+require_once 'includes/Transforms.php';
 
 class RoblibServices extends IslandoraService{
 

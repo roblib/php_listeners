@@ -7,4 +7,6 @@ config.xml
 tuque
 *.inc
 listener_test*
-/nbproject/private/
+/nbproject
+util.php
+.idea/

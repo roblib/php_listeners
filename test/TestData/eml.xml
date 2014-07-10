@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eml:eml xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:critters="http://vre.upei.ca/critters/" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 https://code.ecoinformatics.org/code/eml/tags/RELEASE_EML_2_1_1/eml.xsd" packageId="mnpl" system="islandora">
+    <dataset id="fgsgshsfg">
+        <shortName>AlgaeKey1</shortName>
+        <title>Algae </title>
+        <creator>
+            <organizationName>Marine Natural Products Lab, University of Prince Edward Island</organizationName>
+        </creator>
+        <creator>
+            <individualName>
+                <salutation>Dr.</salutation>
+                <givenName>Russ</givenName>
+                <surName>surName</surName>
+            </individualName>
+            <positionName>Primary Investigator</positionName>
+        </creator>
+        <creator>
+            <references system="islandora"/>
+        </creator>
+        <associatedParty>
+            <individualName>
+                <givenName>Russ</givenName>
+                <surName>surName</surName>
+            </individualName>
+            <role>Collector</role>
+        </associatedParty>
+        <associatedParty>
+            <individualName>
+                <givenName>givenName</givenName>
+                <surName>surName</surName>
+            </individualName>
+            <role>Collector</role>
+        </associatedParty>
+        <abstract>
+            <para>Specimen collected by the lab somewhere in the US</para>
+        </abstract>
+        <keywordSet>
+            <keyword>Algae</keyword>
+            <keyword keywordType="place">Keys</keyword>
+            <keyword keywordType="place">Florida</keyword>
+        </keywordSet>
+        <coverage>
+            <taxonomicCoverage>
+                <taxonomicClassification>
+                    <taxonRankName>Genus</taxonRankName>
+                    <taxonRankValue>Sargassum</taxonRankValue>
+                </taxonomicClassification>
+            </taxonomicCoverage>
+            <geographicCoverage>
+                <geographicDescription>Keys</geographicDescription>
+                <boundingCoordinates>
+                    <westBoundingCoordinate>-88.42</westBoundingCoordinate>
+                    <eastBoundingCoordinate>-88.42</eastBoundingCoordinate>
+                    <northBoundingCoordinate>21.01</northBoundingCoordinate>
+                    <southBoundingCoordinate>21.01</southBoundingCoordinate>
+                    <boundingAltitudes>
+                        <altitudeMinimum>-115</altitudeMinimum>
+                        <altitudeMaximum>-115</altitudeMaximum>
+                        <altitudeUnits>foot</altitudeUnits>
+                    </boundingAltitudes>
+                </boundingCoordinates>
+            </geographicCoverage>
+            <temporalCoverage>
+                <singleDateTime>
+                    <calendarDate>2007-09-06</calendarDate>
+                </singleDateTime>
+            </temporalCoverage>
+        </coverage>
+        <contact>
+            <individualName>
+                <givenName>Example</givenName>
+                <surName>Name</surName>
+            </individualName>
+            <positionName>Lab Manager</positionName>
+            <electronicMailAddress>example@example.com</electronicMailAddress>
+        </contact>
+    </dataset>
+</eml:eml>

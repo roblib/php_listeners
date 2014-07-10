@@ -80,11 +80,12 @@ class Image extends Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     $pathinfo = pathinfo($this->temp_file);
     $output_file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'] . '_JPG.jpg';
+    $command_prefix = "convert $this->temp_file[0]";
     if ($resize == '0') {
-      $command = "convert $this->temp_file $output_file 2>&1";
+      $command = "$command_prefix $output_file 2>&1";
     }
     else {
-      $command = "convert $this->temp_file -resize $resize $output_file 2>&1";
+      $command = "$command_prefix -resize $resize $output_file 2>&1";
     }
     exec($command, $jpg_output = array(), $return);
     if (file_exists($output_file)) {
