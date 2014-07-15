@@ -27,7 +27,7 @@ function transform_service_eml_with_itis($eml_path, $itis_string) {
   foreach ($key_value_arr as $key => $value) {
     $taxon_rank = $eml_doc->createElement('taxonRankName', $key);
     $taxon_value = $eml_doc->createElement('taxonRankValue', $value);
-    $classification = $eml_doc->createElement('taxonicClassification');
+    $classification = $eml_doc->createElement('taxonomicClassification');
     $classification->appendChild($taxon_rank);
     $classification->appendChild($taxon_value);
     $coverage->appendChild($classification);
