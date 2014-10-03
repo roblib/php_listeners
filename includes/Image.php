@@ -93,7 +93,7 @@ class Image extends Derivative {
       $return = $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
     }
     else {
-      $this->log->lwrite("Could not find the file '$output_file' for the Thumbail derivative!\nTesseract output: " . implode(', ', $JPG_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JPG', NULL, 'ERROR');
+      $this->log->lwrite("Could not find the file '$output_file' for the Thumbail derivative!\nConvert output: " . implode(', ', $JPG_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JPG', NULL, 'ERROR');
       $return = MS_SYSTEM_EXCEPTION;
     }
     return $return;
