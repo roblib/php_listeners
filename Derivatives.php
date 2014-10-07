@@ -92,20 +92,20 @@ class Derivative {
     }
     switch ($type) {
       case 'video':
-        $out_file = '../images/crystal_clear_app_camera.png';
+        $out_file = 'images/crystal_clear_app_camera.png';
         break;
 
       case 'audio':
-        $out_file = '../images/audio-TN.jpg';
+        $out_file = 'images/audio-TN.jpg';
         break;
 
       default:
-        $out_file = '../images/folder.jpg';
+        $out_file = 'images/folder.jpg';
     }
     $return = MS_SUCCESS;
     try {
       $log_message = "created $outputdsid using default thumbnail || SUCCESS";
-      $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message);
+      $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message, FALSE);
       $this->log->lwrite("Updated $outputdsid datastream using default thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
     }
     catch (Exception $e) {
