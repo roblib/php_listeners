@@ -30,11 +30,11 @@ class Video extends Derivative {
   function createVideoDerivative($outputdsid, $label, $params) {
     $return = MS_SUCCESS;
     $mp4_output = array();
+    $type = escapeshellarg($params['type']);
     if (empty($type)) {
       $this->log->lwrite("Failed to create video derivative no type provided", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       return MS_FEDORA_EXCEPTION;
     }
-    $type = escapeshellarg($params['type']);
     $out_file = $this->temp_file . "-video.$type";
     $command = "ffmpeg -i $this->temp_file $out_file";
     if ($type = 'mp4') {
@@ -67,6 +67,7 @@ class Video extends Derivative {
    *   0 = success
    */
   function createThumbnailFromVideo($outputdsid, $label, $params) {
+    include_once('includes/Image.php');
     $return = MS_SUCCESS;
     $out_file = $this->temp_file . '-TN.jpg';
     $vid_length_command = "ffmpeg -i $this->temp_file 2>&1";
@@ -104,39 +105,12 @@ class Video extends Derivative {
       }
       // Unable to generate with ffmpeg, add default TN.
       else {
-        $return = $this->addDefaultThumbnail($outputdsid, $label);
+        $return = $this->addDefaultThumbnail($outputdsid, $label, array('type' => 'video'));
       }
     }
     // Unable to grab duration at the default thunbnail.
     else {
-      $return = $this->addDefaultThumbnail($outputdsid, $label);
-    }
-    return $return;
-  }
-
-  /**
-   * Create a thumbnail from a jpg image.
-   *
-   * @param string $outputdsid
-   *   The output dsid
-   * @param string $label
-   *   the datastream label
-   *
-   * @return int|string
-   *   0 = success
-   */
-  function addDefaultThumbnail($outputdsid, $label) {
-    $this->log->lwrite("Could not create thumbnail derivative from video file, using default video thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'WARNING');
-    $return = MS_SUCCESS;
-    try {
-      $out_file = '../images/crystal_clear_app_camera.png';
-      $log_message = "$dsid using default video thumbnail || SUCCESS";
-      $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message);
-      $this->log->lwrite("Updated $outputdsid datastream using default video thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
-    }
-    catch (Exception $e) {
-      $return = MS_FEDORA_EXCEPTION;
-      $this->log->lwrite("Failed to add defaulte video derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+      $return = $this->addDefaultThumbnail($outputdsid, $label, array('type' => 'video'));
     }
     return $return;
   }

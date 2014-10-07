@@ -44,27 +44,6 @@ class Image extends Derivative {
     return $return;
   }
 
-  function tn($dsid = 'TN', $label = 'Thumbnail', $params = array('height' => '200', 'width' => '200')) {
-    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
-    $height = $params['height'];
-    $width = $params['width'];
-    if(!isset($height) || !isset($width)){
-      $this->log->lwrite("Could not find the height or width invalid parameter array for the Thumbail derivative ", 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-      return MS_SYSTEM_EXCEPTION;
-    }
-    $output_file = $this->temp_file . '_TN.jpg';
-    $command = "convert -thumbnail " . $height . "x" . $width . " $this->temp_file $output_file 2>&1";
-    exec($command, $tn_output = array(), $return);
-    if (file_exists($output_file)) {
-      $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
-      $return = $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
-    }
-    else {
-      $this->log->lwrite("Could not find the file '$output_file' for the Thumbail derivative!\nTesseract output: " . implode(', ', $tn_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'TN', NULL, 'ERROR');
-      $return = MS_SYSTEM_EXCEPTION;
-    }
-    return $return;
-  }
 
   /**
    * convert a file to a jpg, if resize is not equal to 0 it will also be resized

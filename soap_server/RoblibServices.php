@@ -11,6 +11,7 @@ require_once 'includes/Relationships.php';
 require_once 'includes/ObjectManagement.php';
 require_once 'includes/Transforms.php';
 require_once 'includes/Video.php';
+require_once 'includes/Audio.php';
 
 class RoblibServices extends IslandoraService{
 
@@ -126,7 +127,33 @@ class RoblibServices extends IslandoraService{
     /**
      * <b>video thumbnail</b> processing in Video.php
      */
-    $this->__dispatch_map['tn_from_video'] = array(
+    $this->__dispatch_map['tnFromVideo'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
+     * <b>audio thumbnail</b> processing in audio.php
+     */
+    $this->__dispatch_map['tnForAudio'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
+     * <b>mp3 derivative</b> processing in Audio.php
+     */
+    $this->__dispatch_map['mp3'] = array(
       'in' => array(
         'pid' => 'string',
         'dsid' => 'string',
@@ -149,20 +176,6 @@ class RoblibServices extends IslandoraService{
       'out' => array('exit_status' => 'int')
     );
 
-    /**
-     * <b>tn</b> processing Thumbnail in Image.php
-     */
-    $this->__dispatch_map['tn'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'outputdsid' => 'string',
-        'label' => 'string',
-        'height' => 'int',
-        'width' => 'int'
-      ),
-      'out' => array('exit_status' => 'int')
-    );
 
     /**
      * <b>techmd</b> processing in Technical.php
@@ -437,8 +450,31 @@ class RoblibServices extends IslandoraService{
    *
    *  @return int
    */
-  function tn_from_video($pid, $dsid, $outputdsid, $label){
+  function tnFromVideo($pid, $dsid, $outputdsid, $label){
     $params = array('class' => 'Video', 'function' => 'createThumbnailFromVideo');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
+  }
+
+  /**
+   * This function adds thumbnail derivative from default files
+   *
+   * @param string $pid
+   *  The pID of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *  The dsid of fedora Object which to read
+   *
+   * @param string $outputdsid
+   *  The dsid of fedora Object to write back
+   *
+   * @param string $label
+   *  The label of fedora Object to write
+   *
+   *  @return int
+   */
+  function tnForAudio($pid, $dsid, $outputdsid, $label){
+    $params = array('class' => 'Derivative', 'function' => 'addDefaultThumbnail',
+    'type' => 'audio');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
   
@@ -461,34 +497,6 @@ class RoblibServices extends IslandoraService{
    */
   function jp2($pid, $dsid = "OBJ", $outputdsid = "JP2", $label = "Compressed jp2") {
     $params = array('class' => 'Image', 'function' => 'jp2');
-    return $this->service($pid, $dsid, $outputdsid, $label, $params);
-  }
-
-  /**
-   * This is function is to process thumbnail.
-   * 
-   * @param string $pid
-   *  The pID of fedora Object which to read and write
-   * 
-   * @param string $dsid
-   *  The dsid of fedora Object which to read 
-   * 
-   * @param string $outputdsid
-   *  The dsid of fedora Object to write back
-   * 
-   * @param string $label
-   *  The label of fedora Object to write 
-   * 
-   * @param type $height
-   *  The thumbnails' hight
-   * 
-   * @param type $width
-   *  The thumbnails' width
-   * 
-   * @return int
-   */
-  function tn($pid, $dsid = "JPG", $outputdsid = "TN", $label = "Thumbnail", $height = 200, $width = 200) {
-    $params = array('class' => 'Image', 'function' => 'tn', 'height'=>$height, 'width' => $width);
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 

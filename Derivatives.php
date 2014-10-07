@@ -72,6 +72,50 @@ class Derivative {
   }
 
   /**
+   * add a thumbnail from a jpg image.
+   *
+   * @param string $outputdsid
+   *   The output dsid
+   * @param string $label
+   *   the datastream label
+   * @param array $params
+   *   $params should include the type of thumbnail video or audio
+   *
+   * @return int|string
+   *   0 = success
+   */
+  function addDefaultThumbnail($outputdsid, $label, $params) {
+    $type = escapeshellarg($params['type']);
+    if (empty($type)) {
+      $this->log->lwrite("Failed to create thumbnail derivative no type provided", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+      return MS_FEDORA_EXCEPTION;
+    }
+    switch ($type) {
+      case 'video':
+        $out_file = '../images/crystal_clear_app_camera.png';
+        break;
+
+      case 'audio':
+        $out_file = '../images/audio-TN.jpg';
+        break;
+
+      default:
+        $out_file = '../images/folder.jpg';
+    }
+    $return = MS_SUCCESS;
+    try {
+      $log_message = "$dsid using default thumbnail || SUCCESS";
+      $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message);
+      $this->log->lwrite("Updated $outputdsid datastream using default thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
+    }
+    catch (Exception $e) {
+      $return = MS_FEDORA_EXCEPTION;
+      $this->log->lwrite("Failed to add default thumbnail for $outputdsid derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+    }
+    return $return;
+  }
+
+  /**
    * calls tuque to add the datastream to the object.  Also logs success or failure
    * @param type $dsid
    * @param type $label
