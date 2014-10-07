@@ -31,15 +31,21 @@ class Audio extends Derivative {
     $out_file = $this->temp_file . "-audio.mp3";
     $file = $this->temp_file;
     $command = "lame -V5 --vbr-new \"$file\" \"$out_file\"";
-    try {
-      exec($command, $mp3_output, $return);
-      $log_message = "$dsid derivative created using lame - $command || SUCCESS";
-      $this->add_derivative($outputdsid, $label, $out_file, 'audio/mp3', $log_message);
-      $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
-    }
-    catch (Exception $e) {
-      $return = MS_FEDORA_EXCEPTION;
-      $this->log->lwrite("Failed to create audio derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+    $ret = FALSE;
+    exec($command, $mp3_output, $ret);
+    if ($ret === 0) {
+      $log_message = "$outputdsid derivative created using lame - $command || SUCCESS";
+      try {
+        $this->add_derivative($outputdsid, $label, $out_file, 'audio/mp3', $log_message);
+        $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
+      }
+      catch (Exception $e) {
+        $return = MS_FEDORA_EXCEPTION;
+        $this->log->lwrite("Failed to add audio derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+      }
+    } else {
+      $return = MS_SYSTEM_EXCEPTION;
+      $this->log->lwrite("Failed to add audio derivative" . implode(', ', $mp3_output), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
     }
     return $return;
   }
