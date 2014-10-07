@@ -1,7 +1,7 @@
 <?php
 /**
  * Class to create derivatives and ingets them into Fedora
- * 
+ *
  * @author Richard Wincewicz
  */
 define('MS_FEDORA_EXCEPTION', -100);
@@ -65,9 +65,10 @@ class Derivative {
       $file_handle = fopen($tempfile, 'w');
       fwrite($file_handle, $datastream->content);
       fclose($file_handle);
-      } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       $this->log->lwrite('Could not create temp file from datastream ' . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $dsid);
-      }
+    }
     return $tempfile;
   }
 
@@ -85,32 +86,39 @@ class Derivative {
    *   0 = success
    */
   function addDefaultThumbnail($outputdsid, $label, $params) {
-    $type = escapeshellarg($params['type']);
+    $type = $params['type'];
+    $out_file = realpath(dirname(__FILE__));
     if (empty($type)) {
       $this->log->lwrite("Failed to create thumbnail derivative no type provided", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       return MS_FEDORA_EXCEPTION;
     }
     switch ($type) {
-      case 'video':
-        $out_file = 'images/crystal_clear_app_camera.png';
+      case "video":
+        $out_file .= '/images/crystal_clear_app_camera.png';
         break;
 
-      case 'audio':
-        $out_file = 'images/audio-TN.jpg';
+      case "audio":
+        $out_file .= '/images/audio-TN.jpg';
         break;
 
       default:
-        $out_file = 'images/folder.jpg';
+        $out_file .= '/images/folder.png';
     }
     $return = MS_SUCCESS;
-    try {
-      $log_message = "created $outputdsid using default thumbnail || SUCCESS";
-      $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message, FALSE);
-      $this->log->lwrite("Updated $outputdsid datastream using default thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
+    if (file_exists($out_file)) {
+      try {
+        $log_message = "created $outputdsid using default thumbnail || SUCCESS";
+        $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message, FALSE);
+        $this->log->lwrite("Updated $outputdsid datastream using default thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
+      }
+      catch (Exception $e) {
+        $return = MS_FEDORA_EXCEPTION;
+        $this->log->lwrite("Failed to add default thumbnail for $outputdsid derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+      }
     }
-    catch (Exception $e) {
-      $return = MS_FEDORA_EXCEPTION;
-      $this->log->lwrite("Failed to add default thumbnail for $outputdsid derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+    else {
+      $this->log->lwrite("Could not add default thumbnail - file not found $out_file", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+      $return = MS_SYSTEM_EXCEPTION;
     }
     return $return;
   }
@@ -126,11 +134,11 @@ class Derivative {
    * @param type $from_file
    * @param type $stream_type
    * @return string
-   *   
+   *
    */
   protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE, $stream_type = "M") {
     $return = MS_SUCCESS;
-    if(!isset($this->fedora_object)){
+    if (!isset($this->fedora_object)) {
       $this->log->lwrite("Could not create the $dsid derivative! The object does not exist", 'OBJECT_DELETED', $this->pid, $dsid, NULL, 'INFO');
       //we want to acknowledge that we have received and processed the message
       return $return;
@@ -145,10 +153,11 @@ class Derivative {
       if ($log_message) {
         $arr['logMessage'] = $log_message;
       }
-      try{
+      try {
         $this->fedora_object->repository->api->m->modifyDatastream($this->fedora_object->id, $dsid, $arr);
-      }catch(Exception $e){
-        $this->log->lwrite("Could not update the $dsid derivative! " . $e->getMessage().' '. $e->getTraceAsString(), 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'ERROR');
+      }
+      catch (Exception $e) {
+        $this->log->lwrite("Could not update the $dsid derivative! " . $e->getMessage() . ' ' . $e->getTraceAsString(), 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'ERROR');
         $return = MS_FEDORA_EXCEPTION;
       }
     }
@@ -168,14 +177,15 @@ class Derivative {
       if ($log_message) {
         $datastream->logMessage = $log_message;
       }
-      try{
+      try {
         $return = $this->fedora_object->ingestDatastream($datastream);
         if ($return == FALSE) {
           $this->log->lwrite("Could not create the $dsid derivative! it may have already existed in this object", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
           //we have to return success here or we will get in an endless loop if the workflows are configured to loop until success.  this scenario should not happen very often
         }
         $return = MS_SUCCESS; //in microservices 0 = success
-      } catch (Exception $e){
+      }
+      catch (Exception $e) {
         $return = MS_FEDORA_EXCEPTION;
         $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage() . ' ' . $e->getTraceAsString(), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       }
@@ -190,4 +200,4 @@ class Derivative {
   }
 
 }
-?>
+
