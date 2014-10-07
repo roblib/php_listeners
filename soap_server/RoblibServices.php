@@ -10,6 +10,7 @@ require_once 'includes/Pdf.php';
 require_once 'includes/Relationships.php';
 require_once 'includes/ObjectManagement.php';
 require_once 'includes/Transforms.php';
+require_once 'includes/Video.php';
 
 class RoblibServices extends IslandoraService{
 
@@ -104,6 +105,33 @@ class RoblibServices extends IslandoraService{
         'outputdsid' => 'string',
         'label' => 'string',
         'resize' => 'int'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
+     * <b>video</b> processing in Video.php
+     */
+    $this->__dispatch_map['video'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+        'type' => 'string'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
+     * <b>video thumbnail</b> processing in Video.php
+     */
+    $this->__dispatch_map['tn_from_video'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -343,7 +371,7 @@ class RoblibServices extends IslandoraService{
 
   
   /**
-   * This file is to process JPG files
+   * This function creates jpg derivatives from other image files
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
@@ -366,9 +394,56 @@ class RoblibServices extends IslandoraService{
     $params = array('class' => 'Image', 'function' => 'jpg','resize' => $resize);
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
+
+  /**
+   * This function creates video derivatives from other video files
+   *
+   * @param string $pid
+   *  The pID of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *  The dsid of fedora Object which to read
+   *
+   * @param string $outputdsid
+   *  The dsid of fedora Object to write back
+   *
+   * @param string $label
+   *  The label of fedora Object to write
+   *
+   * @param string $type
+   *  the type of video to create currently supports mp4 or mkv
+   *
+   * @return int
+   */
+  function video($pid, $dsid, $outputdsid, $label, $type){
+    $params = array('class' => 'Video', 'function' => 'createVideoDerivative','type' => $type);
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
+  }
+
+  /**
+   * This function creates video thumbnail derivatives from video files
+   *
+   * @param string $pid
+   *  The pID of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *  The dsid of fedora Object which to read
+   *
+   * @param string $outputdsid
+   *  The dsid of fedora Object to write back
+   *
+   * @param string $label
+   *  The label of fedora Object to write
+   *
+   *  @return int
+   */
+  function tn_from_video($pid, $dsid, $outputdsid, $label){
+    $params = array('class' => 'Video', 'function' => 'createThumbnailFromVideo');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
+  }
   
   /**
-   * This file is to process JP2 files
+   * This function creates jp2 derivatives from other tiffs
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
