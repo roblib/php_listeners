@@ -30,7 +30,7 @@ class Audio extends Derivative {
     $mp3_output = array();
     $out_file = $this->temp_file . "-audio.mp3";
     $file = $this->temp_file;
-    $command = "lame -V5 --vbr-new \"$file\" \"$outfile\"";
+    $command = "lame -V5 --vbr-new \"$file\" \"$out_file\"";
     try {
       exec($command, $mp3_output, $return);
       $log_message = "$dsid derivative created using lame - $command || SUCCESS";
