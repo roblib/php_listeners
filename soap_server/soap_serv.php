@@ -295,6 +295,11 @@ class IslandoraService {
       return MS_SERVICE_NOT_FOUND;
     }
 
+    if(!method_exists($service, $function)){
+      $this->log->lwrite("method not found - $function ", 'SOAP_LOG', $pid, $dsid, NULL, 'ERROR');
+      return MS_SERVICE_NOT_FOUND;
+    }
+
     $funcresult = $service->{$function}($outputdsid, $label, $params);
     $result = $this->getFunctionStatus($function, $funcresult, $pid, $dsid);
 

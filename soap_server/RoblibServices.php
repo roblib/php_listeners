@@ -477,6 +477,28 @@ class RoblibServices extends IslandoraService{
     'type' => 'audio');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
+
+  /**
+   * This function creates an mp3 derivative from audio streams
+   *
+   * @param string $pid
+   *  The pID of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *  The dsid of fedora Object which to read
+   *
+   * @param string $outputdsid
+   *  The dsid of fedora Object to write back
+   *
+   * @param string $label
+   *  The label of fedora Object to write
+   *
+   *  @return int
+   */
+  function mp3($pid, $dsid, $outputdsid, $label){
+    $params = array('class' => 'Audio', 'function' => 'createMP3Derivative');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
+  }
   
   /**
    * This function creates jp2 derivatives from other tiffs

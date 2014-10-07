@@ -104,7 +104,7 @@ class Derivative {
     }
     $return = MS_SUCCESS;
     try {
-      $log_message = "$dsid using default thumbnail || SUCCESS";
+      $log_message = "created $outputdsid using default thumbnail || SUCCESS";
       $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message);
       $this->log->lwrite("Updated $outputdsid datastream using default thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
     }

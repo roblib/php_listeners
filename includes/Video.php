@@ -94,7 +94,7 @@ class Video extends Derivative {
       exec($tn_creation_command, $output, $return_value);
       if ($return_value === 0) {
         try {
-          $log_message = "$dsid derivative created using ffmpg - $tn_creation_command || SUCCESS";
+          $log_message = "$outputdsid derivative created using ffmpg - $tn_creation_command || SUCCESS";
           $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message);
           $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
         }
