@@ -217,6 +217,19 @@ class RoblibServices extends IslandoraService{
     );
 
     /**
+     * <b>pdf</b> processing in Pdf.php
+     */
+    $this->__dispatch_map['pdfToFullText'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string'
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
      * <b>addImageDimensionsToRels</b> processing in Relationships.php
      */
     $this->__dispatch_map['addImageDimensionsToRels'] = array(
@@ -589,7 +602,7 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * This file will call pdf command Pdf.php
+   * This function will call pdf command in Pdf.php
    * 
    * @param string $pid
    *  The pID of fedora Object which to read and write
@@ -606,8 +619,30 @@ class RoblibServices extends IslandoraService{
    *  @return int
    */
   function pdf($pid, $dsid = 'OBJ', $outputdsid = "PDF", $label = 'PDF') {
-    $params = array('class' => 'Pdf', 'function' => 'toPdf');
+    $params = array('class' => 'Pdf', 'function' => 'pdf', 'type' => 'pdf');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
+  }
+
+  /**
+   * This function will call pdf command in Pdf.php
+   *
+   * @param string $pid
+   *  The pID of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *  The dsid of fedora Object which to read
+   *
+   * @param string $outputdsid
+   *  The dsid of fedora Object to write back
+   *
+   * @param string $label
+   *  The label of fedora Object to write
+   *
+   *  @return int
+   */
+  function pdfToFullText($pid, $dsid = 'OBJ', $outputdsid = "FULL_TEXT", $label = 'FULL_TEXT') {
+    $params = array('class' => 'Pdf', 'function' => 'pdf', 'type' => 'txt');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 }
-?>
+
