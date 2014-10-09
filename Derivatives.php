@@ -4,9 +4,11 @@
  *
  * @author Richard Wincewicz
  */
-define('MS_FEDORA_EXCEPTION', -100);
-define('MS_SYSTEM_EXCEPTION', -1); //errors returned from imagemagick or other system calls
+define('MS_FEDORA_EXCEPTION', 1);  // Fedora errors are probably recoverable, ie if we try again it will likely work (ie there may have been more then one thread trying to update the same object causing a conflict)
 define('MS_SUCCESS', 0);
+define('MS_SYSTEM_EXCEPTION', -1); //errors returned from imagemagick or other system calls fatal errors (retrying will probably not succeed)
+define('MS_OBJECT_NOT_FOUND', -2);
+define('MS_SERVICE_NOT_FOUND', -3);
 
 class Derivative {
 

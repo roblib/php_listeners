@@ -6,8 +6,7 @@
 /**
  * read a config file of soap to determin the location of microservices.
  */
-define('MS_OBJECT_NOT_FOUND', -2);
-define('MS_SERVICE_NOT_FOUND', -3);
+
 $data = get_listener_config_data();
 $location = $data['location'];
 
