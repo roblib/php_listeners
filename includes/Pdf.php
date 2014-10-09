@@ -73,6 +73,7 @@ class Pdf extends Derivative {
       $this->log->lwrite("Failed to create derivative for $dsid no type provided", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       return MS_FEDORA_EXCEPTION;
     }
+    $output_file = $this->temp_file . "_pdf.$type";
     switch ($type) {
       case "pdf":
         $command = 'convert ' . $this->temp_file . ' ' . $output_file . ' 2>&1';
@@ -90,7 +91,6 @@ class Pdf extends Derivative {
     }
     $return = MS_SUCCESS;
     if (file_exists($this->temp_file)) {
-      $output_file = $this->temp_file . "_pdf.$type";
       $pdf_output = array();
       exec($command, $pdf_output, $return);
       if (file_exists($output_file)) {
