@@ -94,6 +94,9 @@ class Pdf extends Derivative {
       $pdf_output = array();
       exec($command, $pdf_output, $return);
       if (file_exists($output_file)) {
+        if($type == 'txt'){
+          $this->sanitizeText($output_file);
+        }
         $log_message = "$dsid derivative created with command - $command || SUCCESS";
         try {
           $this->add_derivative($dsid, $label, $output_file, $mimetype, $log_message);
@@ -114,6 +117,12 @@ class Pdf extends Derivative {
     }
     return $return;
   }
+
+  function sanitizeText($file){
+    $full_text = file_get_contents($file);
+    $full_text = preg_replace('/[^\x9\xA\xD\x20-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', ' ', $full_text);
+    file_put_contents($file, $full_text);
+
+  }
 }
 
-?>
