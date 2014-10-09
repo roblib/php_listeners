@@ -73,7 +73,6 @@ class Pdf extends Derivative {
       $this->log->lwrite("Failed to create derivative for $dsid no type provided", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       return MS_FEDORA_EXCEPTION;
     }
-    $output_file = $this->temp_file . '_pdf.pdf';
     switch ($type) {
       case "pdf":
         $command = 'convert ' . $this->temp_file . ' ' . $output_file . ' 2>&1';
@@ -97,9 +96,10 @@ class Pdf extends Derivative {
       if (file_exists($output_file)) {
         $log_message = "$dsid derivative created with command - $command || SUCCESS";
         try {
-          $return = $this->add_derivative($dsid, $label, $output_file, $mimetype, $log_message);
+          $this->add_derivative($dsid, $label, $output_file, $mimetype, $log_message);
         }
         catch (Exception $e) {
+          $return = MS_FEDORA_EXCEPTION;
           $this->log->lwrite("Could not add the $dsid derivative!", $return, 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
         }
       }
@@ -109,7 +109,7 @@ class Pdf extends Derivative {
       }
     }
     else {
-      $this->log->lwrite("Could not create the $dsid derivative! could not find file $this->temp_file or the mimetype is not application/pdf " . $return . ' ' . implode($pdf_output), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      $this->log->lwrite("Could not create the $dsid derivative! could not find file $this->temp_file " . $return . ' ' . implode($pdf_output), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       $return = MS_OBJECT_NOT_FOUND;
     }
     return $return;
