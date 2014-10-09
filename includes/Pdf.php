@@ -65,7 +65,7 @@ class Pdf extends Derivative {
    * @return int|string
    *   0 = success
    */
-  function pdf($dsid = 'PDF', $label = 'PDF', $params) {
+  function createDerivative($dsid = 'PDF', $label = 'PDF', $params) {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     $type = $params['type'];
 
@@ -115,3 +115,5 @@ class Pdf extends Derivative {
     return $return;
   }
 }
+
+?>

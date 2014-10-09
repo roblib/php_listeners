@@ -287,7 +287,8 @@ class IslandoraService {
       // Tavarna stops looping if it is configured to loop until it succeeds
       return MS_SUCCESS;
     }
-    if ($service = new $class($fedora_object, $dsid, NULL, $this->log, null)) {
+    $service = new $class($fedora_object, $dsid, NULL, $this->log, null);
+    if(!empty($service)){
       $this->log->lwrite("$class class loaded", 'SOAP_LOG', $pid, $dsid, NULL, 'INFO');
     }
     else {

@@ -619,7 +619,7 @@ class RoblibServices extends IslandoraService{
    *  @return int
    */
   function pdf($pid, $dsid = 'OBJ', $outputdsid = "PDF", $label = 'PDF') {
-    $params = array('class' => 'Pdf', 'function' => 'pdf', 'type' => 'pdf');
+    $params = array('class' => 'Pdf', 'function' => 'createDerivative', 'type' => 'pdf');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 
@@ -641,7 +641,7 @@ class RoblibServices extends IslandoraService{
    *  @return int
    */
   function pdfToFullText($pid, $dsid = 'OBJ', $outputdsid = "FULL_TEXT", $label = 'FULL_TEXT') {
-    $params = array('class' => 'Pdf', 'function' => 'pdf', 'type' => 'txt');
+    $params = array('class' => 'Pdf', 'function' => 'createDerivative', 'type' => 'txt');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 }
