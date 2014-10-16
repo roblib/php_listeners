@@ -10,14 +10,13 @@ class Technical extends Derivative {
     $return = MS_SYSTEM_EXCEPTION;
     //check for env variable for location of fits in case it is in a different location
     $fits = getenv('LISTENER_FITS_PATH');
-    if(empty($fits)){
+    if (empty($fits)) {
       $fits = '/opt/fits/fits.sh';
     }
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
 
     $output_file = $this->temp_file . '_TECHMD.xml';
     $command = "$fits -i $this->temp_file -xc -o $output_file 2>&1";
-    //exec($command, $techmd_output = array(), $return);
     $valid_fits = FALSE;
     exec($command, $output = array(), $return);
     if ($return == MS_SUCCESS) {
@@ -45,19 +44,25 @@ class Technical extends Derivative {
         }
       }
     }
-      if ($valid_fits) {
-        $log_message = "$dsid derivative created using FITS with command - $command || SUCCESS";
-        $return = $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
+    if ($valid_fits) {
+      $log_message = "$dsid derivative created using FITS with command - $command || SUCCESS";
+      try {
+        $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
       }
-      else {
-        $this->log->lwrite("Could not find the file '$output_file' for the Techmd derivative!" . implode(', ', $output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'techmd', NULL, 'ERROR');
+      catch (Exception $e) {
+        $return = MS_FEDORA_EXCEPTION;
+        $this->log->lwrite("Could not add the $dsid derivative!", $return, 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       }
+    }
+    else {
+      $this->log->lwrite("Could not find the file '$output_file' for the Techmd derivative!" . implode(', ', $output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'techmd', NULL, 'ERROR');
+    }
     return $return;
   }
 
   /**
    * Helper to verify the fits xml file size is greater then 0.
-   * 
+   *
    * borrowed from the islandora_fits module
    *
    * This function does not verify the contents of the provided xml file.

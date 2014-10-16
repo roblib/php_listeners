@@ -30,19 +30,19 @@ class Video extends Derivative {
   function createVideoDerivative($outputdsid, $label, $params) {
     $return = MS_SUCCESS;
     $mp4_output = array();
-    $type = escapeshellarg($params['type']);
+    $type = $params['type'];
     if (empty($type)) {
       $this->log->lwrite("Failed to create video derivative no type provided", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       return MS_FEDORA_EXCEPTION;
     }
     $out_file = $this->temp_file . "-video.$type";
-    $command = "ffmpeg -i $this->temp_file $out_file";
+    $command = "ffmpeg -i $this->temp_file $out_file 2>&1";
     if ($type = 'mp4') {
-      $command = "ffmpeg -i $this->temp_file -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file";
+      $command = "ffmpeg -i $this->temp_file -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file 2>&1";
     }
     try {
       exec($command, $mp4_output, $return);
-      $log_message = "$dsid derivative created using ffmpg - $command || SUCCESS";
+      $log_message = "$outputdsid derivative created using ffmpg - $command || SUCCESS";
       $this->add_derivative($outputdsid, $label, $out_file, 'video/mp4', $log_message);
       $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
     }

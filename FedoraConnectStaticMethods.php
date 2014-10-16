@@ -55,14 +55,23 @@ function system_mime_type_extensions() {
   $file = fopen('/etc/mime.types', 'r');
   while (($line = fgets($file)) !== false) {
     $line = trim(preg_replace('/#.*/', '', $line));
-    if (!$line)
+    if (!$line) {
       continue;
+    }
     $parts = preg_split('/\s+/', $line);
-    if (count($parts) == 1)
+    if (count($parts) == 1) {
       continue;
+    }
     $type = array_shift($parts);
-    if (!isset($out[$type]))
+    if (!isset($out[$type])) {
       $out[$type] = array_shift($parts);
+    }
+    // we only support mp3s for now and lame expects the extentsion to be mp3
+    // not mpga which is what is coming from the mimetype file.
+    if ($type == 'audio/mpeg') {
+      $out[$type] = 'mp3';
+    }
+
   }
   fclose($file);
   return $out;
