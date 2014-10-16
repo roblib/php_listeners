@@ -3,7 +3,7 @@
 *.bak
 config.xml
 *.xslt
-tuque
+tuque/
 *.inc
 listener_test*
 /nbproject
