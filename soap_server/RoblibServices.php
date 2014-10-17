@@ -54,30 +54,16 @@ class RoblibServices extends IslandoraService{
       'out' => array('exit_status' => 'int')
     );
 
-    /**
-     * <b>allOcr</b> processing in Text.php 
-     */
-    $this->__dispatch_map['allOcr'] = array(
-      'in' => array(
-        'pid' => 'string',
-        'dsid' => 'string',
-        'outputdsid' => 'string',
-        'label' => 'string',
-        'language' => 'string'
-      ),
-      'out' => array('exit_status' => 'int')
-    );
 
     /**
      * <b>ocr</b> processing in Text.php
      */
-    $this->__dispatch_map['ocr'] = array(
+    $this->__dispatch_map['ocrFromHocr'] = array(
       'in' => array(
         'pid' => 'string',
         'dsid' => 'string',
         'outputdsid' => 'string',
         'label' => 'string',
-        'language' => 'string'
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -320,31 +306,6 @@ class RoblibServices extends IslandoraService{
   }
 
   /**
-   * This function creates an HOCR and OCR datastream
-   * 
-   * @param string $pid
-   *  The pID of fedora Object which to read and write
-   * 
-   * @param string $dsid
-   *  The dsid of fedora Object which to read 
-   * 
-   * @param string $outputdsid
-   *  The dsid of fedora Object to write back
-   * 
-   * @param string $label
-   *  The label of fedora Object to write 
-   * 
-   * @param string $language
-   *  The language of ocr
-   * 
-   * @return int
-   */
-  function allOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
-    $params = array('class' => 'Text', 'function' => 'allOcr', 'language' => $language);
-    return $this->service($pid, $dsid, $outputdsid, $label, $params);
-  }
-
-  /**
    * This function creates an OCR datastream
    * 
    * @param string $pid
@@ -364,8 +325,8 @@ class RoblibServices extends IslandoraService{
    * 
    * @return int
    */
-  function ocr($pid, $dsid = 'OCR', $outputdsid = 'OCR', $label = 'Scanned text', $language = 'eng') {
-    $params = array('class' => 'Text', 'function' => 'ocr', 'language' => $language);
+  function ocrFromHocr($pid, $dsid = 'HOCR', $outputdsid = 'FULL_TEXT', $label = 'FULL_TEXT') {
+    $params = array('class' => 'Text', 'function' => 'ocrFromHocr');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
     
   }
@@ -391,7 +352,7 @@ class RoblibServices extends IslandoraService{
    * @return int
    */
   function hOcr($pid, $dsid = 'JPEG', $outputdsid = 'HOCR', $label = 'HOCR', $language = 'eng') {
-    $params = array('class' => 'Text', 'function' => 'ocr', 'language' => $language, 'hocr' => 'hocr');
+    $params = array('class' => 'Text', 'function' => 'hOcr', 'language' => $language, 'type' => 'hocr');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 

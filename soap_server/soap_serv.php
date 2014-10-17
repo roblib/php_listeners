@@ -230,7 +230,8 @@ class IslandoraService {
   /**
    * This funciton sanitizes error codes/status and writes to the log file. all
    * services should return 0 on success.  On failure they should return a
-   * negative int
+   * negative int for a fatal error and positive int for a potentially recoverable
+   * error
    *
    * @param string $funcname
    * @param mixed $funcresult
