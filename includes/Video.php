@@ -40,15 +40,16 @@ class Video extends Derivative {
     if ($type = 'mp4') {
       $command = "ffmpeg -i $this->temp_file -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file 2>&1";
     }
-    try {
-      exec($command, $mp4_output, $return);
+    exec($command, $mp4_output, $return);
+    if (file_exists($out_file)) {
       $log_message = "$outputdsid derivative created using ffmpg - $command || SUCCESS";
-      $this->add_derivative($outputdsid, $label, $out_file, 'video/mp4', $log_message);
+      $return = $this->add_derivative($outputdsid, $label, $out_file, 'video/mp4', $log_message);
+    }
+    if ($return == MS_SUCCESS) {
       $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
     }
-    catch (Exception $e) {
-      $return = MS_FEDORA_EXCEPTION;
-      $this->log->lwrite("Failed to create video derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+    else {
+      $this->log->lwrite("Failed to create video derivative" . implode(',', $mp4_output) ., 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
     }
     return $return;
   }
@@ -93,15 +94,11 @@ class Video extends Derivative {
       $return_value = FALSE;
       exec($tn_creation_command, $output, $return_value);
       if ($return_value === 0) {
-        try {
-          $log_message = "$outputdsid derivative created using ffmpg - $tn_creation_command || SUCCESS";
-          $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message);
-          $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
-        }
-        catch (Exception $e){
-          $return = MS_FEDORA_EXCEPTION;
-          $this->log->lwrite("Failed to add video derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
-        }
+        $log_message = "$outputdsid derivative created using ffmpg - $tn_creation_command || SUCCESS";
+        $return = $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message);
+      }
+      if ($return == MS_SUCCESS) {
+        $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
       }
       // Unable to generate with ffmpeg, add default TN.
       else {
