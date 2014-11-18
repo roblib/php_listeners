@@ -49,7 +49,7 @@ class Video extends Derivative {
       $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
     }
     else {
-      $this->log->lwrite("Failed to create video derivative" . implode(',', $mp4_output) ., 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+      $this->log->lwrite("Failed to create video derivative" . implode(',', $mp4_output) . 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
     }
     return $return;
   }
