@@ -64,12 +64,10 @@ class Derivative {
         $this->extension = system_mime_type_extension($mime_type);
       }
       $tempfile = temp_filename($this->extension);
-      $file_handle = fopen($tempfile, 'w');
-      fwrite($file_handle, $datastream->content);
-      fclose($file_handle);
+      $datastream->getContent($tempfile);
     }
     catch (Exception $e) {
-      $this->log->lwrite('Could not create temp file from datastream ' . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $dsid);
+      $this->log->lwrite('Could not create temp file from datastream ' . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
     }
     return $tempfile;
   }
