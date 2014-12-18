@@ -59,7 +59,7 @@ class Image extends Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     $pathinfo = pathinfo($this->temp_file);
     $output_file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'] . '_JPG.jpg';
-    $command_prefix = "convert $this->temp_file[0] -quality 72 -colorspace RGB -flatten";
+    $command_prefix = "convert $this->temp_file[0] -quality 72 -colorspace sRGB -flatten";
     if ($resize == '0') {
       $command = "$command_prefix $output_file 2>&1";
     }
@@ -69,12 +69,9 @@ class Image extends Derivative {
     exec($command, $jpg_output = array(), $return);
     if (file_exists($output_file)) {
       $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
-      try {
-        $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
-      }
-      catch (Exception $e){
-        $return = MS_FEDORA_EXCEPTION;
-        $this->log->lwrite("Could not add the $dsid derivative!", $return, 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      $return = $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
+      if ($return == MS_SUCCESS) {
+        $this->log->lwrite("Successfully added the $dsid derivative!", $return, 'SUCCESS', $this->pid, $dsid, NULL, 'INFO');
       }
     }
     else {

@@ -98,12 +98,9 @@ class Pdf extends Derivative {
           $this->sanitizeText($output_file);
         }
         $log_message = "$dsid derivative created with command - $command || SUCCESS";
-        try {
-          $this->add_derivative($dsid, $label, $output_file, $mimetype, $log_message);
-        }
-        catch (Exception $e) {
-          $return = MS_FEDORA_EXCEPTION;
-          $this->log->lwrite("Could not add the $dsid derivative!", $return, 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $return = $this->add_derivative($dsid, $label, $output_file, $mimetype, $log_message);
+        if ($return == MS_SUCCESS) {
+          $this->log->lwrite("Successfully added the $dsid derivative!", $return, 'SUCCESS', $this->pid, $dsid, NULL, 'INFO');
         }
       }
       else {
