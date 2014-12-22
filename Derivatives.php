@@ -124,16 +124,30 @@ class Derivative {
   }
 
   /**
-   * calls tuque to add the datastream to the object.  Also logs success or failure
-   * @param type $dsid
-   * @param type $label
-   * @param type $content
-   * @param type $mimetype
+   * Calls tuque to add or update the datastream to the object.
+   *
+   * Also logs success or failure and will update the audit trail if log_message
+   * is set.
+   *
+   * @param string $dsid
+   *   The dastream id
+   * @param string $label
+   *   The datastream label
+   * @param string $content
+   *   The content for the datastream or a path to a file
+   * @param string $mimetype
+   *   The mimetype for the datastream
    * @param type $log_message
-   * @param type $delete
-   * @param type $from_file
+   *   A message that will be added to the audit trail
+   * @param boolean $delete
+   *   Do we want to delete the temp file
+   * @param boolean $from_file
+   *   Is content a path to a file or actual data
    * @param type $stream_type
-   * @return string
+   *   The type of stream M=managed X=inline xml currently does not support
+   * E or R
+   * @return int
+   *   0 = success, + int is a recoverable error, - int is unrecoverable error
    *
    */
   protected function add_derivative($dsid, $label, $content, $mimetype, $log_message = NULL, $delete = TRUE, $from_file = TRUE, $stream_type = "M") {
@@ -143,48 +157,52 @@ class Derivative {
       //we want to acknowledge that we have received and processed the message
       return $return;
     }
+    $datastream = null;
     //TODO we are don't seem to be sending custom log message for updates only ingests
     if (isset($this->fedora_object[$dsid])) {
       $this->log->lwrite("updating the datastream $dsid derivative! ", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
-      if ($from_file) {
-        $content = file_get_contents($content);
-      }
-      $arr = array('dsString' => $content);
-      if ($log_message) {
-        $arr['logMessage'] = $log_message;
-      }
-      try {
-        $this->fedora_object->repository->api->m->modifyDatastream($this->fedora_object->id, $dsid, $arr);
-      }
-      catch (Exception $e) {
-        $this->log->lwrite("Could not update the $dsid derivative! " . $e->getMessage() . ' ' . $e->getTraceAsString(), 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'ERROR');
-        $return = MS_FEDORA_EXCEPTION;
-      }
+      $datastream = $this->fedora_object[$dsid];
     }
     else {
       $datastream = new NewFedoraDatastream($dsid, $stream_type, $this->fedora_object, $this->fedora_object->repository);
-      if ($from_file) {
-        $datastream->setContentFromFile($content);
-      }
-      else {
-        $datastream->setContentFromString($content);
-      }
-      $datastream->label = $label;
-      $datastream->mimetype = $mimetype;
+      $versionable = FALSE;
+      // considering setting versionable to TRUE for RELS- datastreams
+      // but we usually won't be creating rels via workflow
+      // we could also ask for this info from the workflow? this would mean
+      // workflow designers would have to know what to do
+      // since dervitives are just derivatives they probably don't need to
+      // be versioned.
+      // We are also assumig that if a datastream exists we are just updating
+      // the datastream comments.  We may want to revisit this in case we
+      // actually want to change the mimetype or label?
+
       $datastream->state = 'A';
+      $datastream->versionable = $versionable;
       $datastream->checksum = TRUE;
       $datastream->checksumType = 'MD5';
-      if ($log_message) {
-        $datastream->logMessage = $log_message;
-      }
-      try {
-        $this->fedora_object->ingestDatastream($datastream);
-      }
-      catch (Exception $e) {
-        $return = MS_FEDORA_EXCEPTION;
-        $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage() . ' ' . $e->getTraceAsString(), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
-      }
+      $datastream->label = $label;
+      $datastream->mimetype = $mimetype;
+
     }
+
+    if ($from_file) {
+      $datastream->setContentFromFile($content);
+    }
+    else {
+      $datastream->setContentFromString($content);
+    }
+
+    if ($log_message) {
+      $datastream->logMessage = $log_message;
+    }
+    try {
+      $this->fedora_object->ingestDatastream($datastream);
+    }
+    catch (Exception $e) {
+      $return = MS_FEDORA_EXCEPTION;
+      $this->log->lwrite("Could not create the $dsid derivative! " . $e->getMessage() . ' ' . $e->getTraceAsString(), 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+    }
+
     if ($delete && $from_file) {
       unlink($content);
     }
