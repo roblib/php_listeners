@@ -70,16 +70,22 @@ class Text extends Derivative {
    * the temp files path
    */
   function ocrFromHocr($dsid = 'FULL_TEXT', $label = 'FULL_TEXT', $params = array('language' => 'eng')) {
-    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
-    $return = MS_SUCCESS;
+    $this->log->lwrite('Starting processing ocrFromHocr', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     if (file_exists($this->temp_file)) {
       $hocr_xml = new DOMDocument();
-      $hocr_xml->load($this->temp_file);
-      $raw_ocr = strip_tags($hocr_xml->saveHTML());
-      $log_message = "OCR derivative created from hocr by stripping tags || SUCCESS";
-      $return = $this->add_derivative($dsid, $label, $raw_ocr, 'text/plain', $log_message, TRUE, FALSE);
+      $isLoaded = $hocr_xml->load($this->temp_file);
+      if($isLoaded) {
+        $raw_ocr = strip_tags($hocr_xml->saveHTML());
+        $log_message = "OCR derivative created from hocr by stripping tags || SUCCESS";
+        $return = $this->add_derivative($dsid, $label, $raw_ocr, 'text/plain', $log_message, TRUE, FALSE);
+      } else {
+        $this->log->lwrite("Could not parse the hocr xml file for the $dsid",
+          'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+        $return = MS_FEDORA_EXCEPTION;   // Try again the datastream maybe available
+      }
     } else {
-      $this->log->lwrite('ERROR PROCESSING', 'PROCESS_DATASTREAM', $this->pid, $dsid);
+      $this->log->lwrite("Could not find the hocr xml file for the $dsid",
+        'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
       $return = MS_SYSTEM_EXCEPTION;
     }
     return $return;

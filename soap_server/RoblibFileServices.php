@@ -27,6 +27,18 @@ class RoblibFileServices extends IslandoraService {
       ),
       'out' => array('exit_status' => 'int')
     );
+
+    $this->__dispatch_map['addExternalReferenceDatastream'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'output_dsid' => 'string',
+        'label' => 'string',
+        'location_url' => 'string',
+        'type' => 'string',
+        'mimetype' => 'string',
+        ),
+      'out' => array('exit_status' => 'int')
+    );
   }
 
   /**
@@ -75,6 +87,18 @@ class RoblibFileServices extends IslandoraService {
       'pathToIdentityFile' => $path_to_identity_file,
     );
     return $this->service($pid, $dsid, $dsid, $dsid, $params);
+  }
+
+  function addExternalReferenceDatastream($pid, $output_dsid, $label, $location_url, $type, $mimetype) {
+
+    $params = array(
+      'class' => 'FileServices',
+      'function' => 'addExternalReferenceDatastream',
+      'locationUrl' => $location_url,
+      'type' => $type,
+      'mimetype' => $mimetype,
+    );
+    return $this->service($pid, NULL, $output_dsid, $label, $params);
   }
 
 }

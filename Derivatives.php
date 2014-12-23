@@ -35,9 +35,9 @@ class Derivative {
     $this->extension = $extension;
     if ($this->incoming_dsid != NULL) {
       $this->temp_file = $this->create_temp_file();
+      $extension_array = explode('.', $this->temp_file);
+      $extension = $extension_array[1];
     }
-    $extension_array = explode('.', $this->temp_file);
-    $extension = $extension_array[1];
   }
 
   function __destruct() {
@@ -134,7 +134,9 @@ class Derivative {
    * @param string $label
    *   The datastream label
    * @param string $content
-   *   The content for the datastream or a path to a file
+   *   The content for the datastream, or a path to a file, or a url.
+   * If the stream_type is E or R then it expects this parameter to be a URL.
+   * If $from_file = true then it expects this string to be a path to a file
    * @param string $mimetype
    *   The mimetype for the datastream
    * @param type $log_message
@@ -158,6 +160,7 @@ class Derivative {
       return $return;
     }
     $datastream = null;
+    try {
     //TODO we are don't seem to be sending custom log message for updates only ingests
     if (isset($this->fedora_object[$dsid])) {
       $this->log->lwrite("updating the datastream $dsid derivative! ", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
@@ -178,14 +181,19 @@ class Derivative {
 
       $datastream->state = 'A';
       $datastream->versionable = $versionable;
-      $datastream->checksum = TRUE;
-      $datastream->checksumType = 'MD5';
+      if($stream_type != 'R' && $stream_type != 'E') {
+        $datastream->checksum = TRUE;
+        $datastream->checksumType = 'MD5';
+      }
       $datastream->label = $label;
       $datastream->mimetype = $mimetype;
 
     }
 
-    if ($from_file) {
+    if($stream_type == 'R' || $stream_type == 'E'){
+      $datastream->url = $content;
+    }
+    elseif ($from_file) {
       $datastream->setContentFromFile($content);
     }
     else {
@@ -195,7 +203,7 @@ class Derivative {
     if ($log_message) {
       $datastream->logMessage = $log_message;
     }
-    try {
+
       $this->fedora_object->ingestDatastream($datastream);
     }
     catch (Exception $e) {
