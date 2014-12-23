@@ -168,7 +168,7 @@ class Derivative {
     }
     else {
       $datastream = new NewFedoraDatastream($dsid, $stream_type, $this->fedora_object, $this->fedora_object->repository);
-      $versionable = FALSE;
+
       // considering setting versionable to TRUE for RELS- datastreams
       // but we usually won't be creating rels via workflow
       // we could also ask for this info from the workflow? this would mean
@@ -180,7 +180,7 @@ class Derivative {
       // actually want to change the mimetype or label?
 
       $datastream->state = 'A';
-      $datastream->versionable = $versionable;
+      $datastream->versionable = FALSE;
       if($stream_type != 'R' && $stream_type != 'E') {
         $datastream->checksum = TRUE;
         $datastream->checksumType = 'MD5';

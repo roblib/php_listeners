@@ -45,7 +45,7 @@ class FileServices extends Derivative {
     extract($params, EXTR_SKIP);
     $file_name = str_replace(':', '-', $this->pid) . '-' . $outputdsid . '.' . $outputFileExtension;
     $command = <<<TAG
-scp -i $pathToIdentityFile -o StrictHostKeyChecking=no $this->temp_file $scpUsername@$serverIpOrDomain:$serverDirectory/$file_name
+scp -i $pathToIdentityFile -o StrictHostKeyChecking=no $this->temp_file $scpUsername@$serverIpOrDomain:$serverDirectory/$file_name 2>&1
 TAG;
 
     exec($command, $scp_output = array(), $return);
