@@ -43,6 +43,17 @@ class RoblibContentModelServices extends IslandoraService {
       ),
       'out' => array('exit_status' => 'int')
     );
+
+    /**
+     * <b>update a pageCmodels RELS-EXT so that islandora 7.x can read it
+     */
+    $this->__dispatch_map['correctPageRelsExt'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
+    );
   }
 
   /**
@@ -103,6 +114,26 @@ class RoblibContentModelServices extends IslandoraService {
     );
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
+
+    /**
+     * This function updates a Page objects RELS-EXT to meet islandora 7 requirements
+     *
+     * @param string $pid
+     *  The pID of fedora Object which to read and write
+     *
+     * @param string $dsid
+     *    The dsid of fedora Object which to read
+     *
+     *
+     * @return int
+     */
+    function correctPageRelsExt($pid, $dsid = 'RELS-EXT') {
+      $params = array(
+        'class' => 'Relationship',
+        'function' => 'correctPageRelsExt',
+      );
+      return $this->service($pid, $dsid, "RELS-EXT", "RELS-EXT", $params);
+    }
 }
 
 ?>

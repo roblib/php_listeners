@@ -53,7 +53,8 @@ TAG;
       $this->log->lwrite("Failed to run scp service " . implode($scp_output), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       return MS_SYSTEM_EXCEPTION;
     }
-    return $return;
+    unlink($this->temp_file);
+    return MS_SUCCESS;
   }
 
   /**

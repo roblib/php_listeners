@@ -246,7 +246,16 @@ class RoblibServices extends IslandoraService{
    *  
    */
   function read($pid, $dsid, $extension) {
-    try {
+
+    /*
+     TODO implement this function as a service similar to this
+      $params = array(
+      'class' => 'ObjectManagement',
+      'function' => 'readDatastream',
+      'extension' =>$extension,
+    );
+    return $this->service($pid, $dsid, $dsid, $dsid, $params);  */
+   try {
       $fedora_user = new stdClass();
       $fedora_user->name = $this->config->fedora->username;
       $fedora_user->pass = $this->config->fedora->password;
@@ -282,6 +291,16 @@ class RoblibServices extends IslandoraService{
    * @return string
    */
   function write($pid, $dsid, $label, $base64_content, $mimetype) {
+    /*
+     TODO implement this as a service similar to this
+      $params = array(
+      'class' => 'ObjectManagement',
+      'function' => 'writeDatastream',
+      'content' => $base64_content,
+      'mimetype' => $mimetype,
+      );
+
+    return $this->service($pid, NULL, $dsid, $label, $params); */
     return $this->fedora_connect->addDerivative($pid, $dsid, $label, base64_decode($base64_content), $mimetype, null, true, false);
   }
 

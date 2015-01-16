@@ -36,13 +36,22 @@ class Video extends Derivative {
       return MS_FEDORA_EXCEPTION;
     }
     $out_file = $this->temp_file . "-video.$type";
-    $command = "ffmpeg -i $this->temp_file $out_file 2>&1";
+
     if ($type = 'mp4') {
       $command = "ffmpeg -i $this->temp_file -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file 2>&1";
+    } else if ($type = "bdh") {
+      // bdh is a bowing down home mp4
+      // TODO pass the command line parameters in the workflow so we don't need these hacks to pass different parameters
+      $out_file = $this->temp_file . "-video.mp4";
+      $command = "ffmpeg -i $this->temp_file -vf yadif -vcodec h264 -acodec libfdk_aac $out_file 2>&1";
+    } else {
+      $command = "ffmpeg -i $this->temp_file $out_file 2>&1";
     }
+
     exec($command, $mp4_output, $return);
     if (file_exists($out_file)) {
       $log_message = "$outputdsid derivative created using ffmpg - $command || SUCCESS";
+      // TODO may need to correct mimetype below if we support different video formats.
       $return = $this->add_derivative($outputdsid, $label, $out_file, 'video/mp4', $log_message);
     }
     if ($return == MS_SUCCESS) {

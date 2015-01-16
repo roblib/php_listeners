@@ -108,6 +108,50 @@ XML;
   }
 
   /**
+   * TAkes an old Drupal 6 pageCmodel rels-ext and corrects namespaces.
+   * Also changes some relationships to use literals.
+   * @param $outputdsid
+   * @param string $label
+   * @param $params
+   */
+  function correctPageRelsExt($outputdsid, $label = "RELS-EXT", $params) {
+    $page_object = $this->fedora_object;
+    $page_number_arr = $page_object->relationships->get("info:islandora/islandora-system:def/pageinfo#", 'isPageNumber');
+    if (empty($page_number_arr)) {
+      // This script may have already been run and updated the isPageNumber namespace so we'll try with the new namespace
+      $page_number_arr = $page_object->relationships->get("http://islandora.ca/ontology/relsext#", 'isPageNumber');
+    }
+    $page_number = $page_number_arr[0]['object']['value'];
+    $this->log->lwrite('Started correctPageRelsExt function with page number ' + $page_number,
+      'PROCESS_DATASTREAM', $this->pid, $outputdsid);
+
+    // Assumes only one parent
+    $parent_pid_arr = $page_object->relationships->get("info:fedora/fedora-system:def/relations-external#", "isMemberOf");
+    $parent_pid = $parent_pid_arr[0]['object']['value'];
+    $return = MS_SUCCESS;
+
+    try {
+      $page_object->relationships->remove('info:islandora/islandora-system:def/pageinfo#', 'isSequenceNumber');
+      $page_object->relationships->remove("info:islandora/islandora-system:def/pageinfo#", 'isPageNumber');
+      $page_object->relationships->remove("info:islandora/islandora-system:def/pageinfo#", 'isPageOf');
+      $page_object->relationships->remove('http://islandora.ca/ontology/relsext#', 'isSequenceNumber');
+      $page_object->relationships->remove("http://islandora.ca/ontology/relsext#", 'isPageNumber');
+      $page_object->relationships->remove("http://islandora.ca/ontology/relsext#", 'isPageOf');
+      $page_object->relationships->remove("http://islandora.ca/ontology/relsext#", 'hasLanguage');
+      $page_object->relationships->add("http://islandora.ca/ontology/relsext#", 'isPageNumber', $page_number, TRUE);
+      $page_object->relationships->add("http://islandora.ca/ontology/relsext#", 'isSequenceNumber', $page_number, TRUE);
+      $page_object->relationships->add("http://islandora.ca/ontology/relsext#", "hasLanguage", "eng", TRUE);
+      $page_object->relationships->add("http://islandora.ca/ontology/relsext#", "isPageOf", $parent_pid, FALSE);
+      $this->log->lwrite("updated RELS-EXT relationships successfully added.", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
+    }
+    catch (Exception $e) {
+      $return = MS_FEDORA_EXCEPTION;
+      $this->log->lwrite("Failed updating relationships.", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+    }
+    return $return;
+  }
+
+  /**
    * Update the object RELS-EXT datastream to remove given cmodel type. We are using the standard islandora RELS-EXT namespace
    * @param string $outputdsid
    *   The output dsid

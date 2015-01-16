@@ -55,7 +55,9 @@ class Derivative {
     }
 
     if (!in_array($this->incoming_dsid, $datastream_array)) {
-      print "Could not find the $this->incoming_dsid datastream!";
+      // Some services like writeDatastream may not work with an existing datastream
+      $this->log->lwrite('Could not create temp file from datastream, DATASTREAM NOT FOUND', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
+      return ;
     }
     try {
       $datastream = $this->fedora_object->getDatastream($this->incoming_dsid);
@@ -161,7 +163,7 @@ class Derivative {
     }
     $datastream = null;
     try {
-    //TODO we are don't seem to be sending custom log message for updates only ingests
+    //TODO we don't seem to be sending custom log message for updates only ingests
     if (isset($this->fedora_object[$dsid])) {
       $this->log->lwrite("updating the datastream $dsid derivative! ", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
       $datastream = $this->fedora_object[$dsid];
