@@ -101,6 +101,7 @@ class Video extends Derivative {
       $tn_creation_command = "ffmpeg -itsoffset -2 -ss $output_time -i $this->temp_file -vcodec mjpeg -vframes 1 -an -f rawvideo $out_file";
 
       $return_value = FALSE;
+      $return = MS_SYSTEM_EXCEPTION;
       exec($tn_creation_command, $output, $return_value);
       if ($return_value === 0) {
         $log_message = "$outputdsid derivative created using ffmpg - $tn_creation_command || SUCCESS";
@@ -109,10 +110,7 @@ class Video extends Derivative {
       if ($return == MS_SUCCESS) {
         $this->log->lwrite("Updated $outputdsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
       }
-      // Unable to generate with ffmpeg, add default TN.
-      else {
-        $return = $this->addDefaultThumbnail($outputdsid, $label, array('type' => 'video'));
-      }
+
     }
     // Unable to grab duration at the default thunbnail.
     else {

@@ -270,7 +270,7 @@ class Connect {
       $this->log->lwrite($e->getMessage() . ' ' . $e->getCode(), 'TAVERNA_ERROR', $pid, $dsID, NULL, 'ERROR');
       $responseString = $e->getMessage();
       $response = $taverna_sender->delete_t2flow($uuid); //try to delete the failed attempt on the taverna server
-      //we rest and retry here as the most common taverna error will probable be a 403 forbidden
+      //we rest and retry here as the most common taverna error will probable be a 403 forbidden or 503 unavailable
       //due to the server being overloaded.  
       sleep(10);
       if ($count <= 10) {
