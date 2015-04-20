@@ -108,6 +108,11 @@ class Image extends Derivative {
     return $return;
   }
 
+  function addBinaryThumbnail($dsid = 'TN', $label = 'JPEG image', $params = array('resize'=> '800')) {
+    $return = $this->addDefaultThumbnail($dsid, $label, array('type' => 'binary'));
+    return $return;
+  }
+
 }
 
 ?>

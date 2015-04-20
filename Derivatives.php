@@ -104,18 +104,18 @@ class Derivative {
         break;
 
       default:
-        $out_file .= '/images/folder.png';
+        $out_file .= $this->findImageByMimetype();
     }
     $return = MS_SUCCESS;
     if (file_exists($out_file)) {
-      try {
-        $log_message = "created $outputdsid using default thumbnail || SUCCESS";
-        $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message, FALSE);
+      $log_message = "created $outputdsid using default thumbnail || SUCCESS";
+      // TODO check for and correct the mime type as some of the defaults are pngs
+      $return = $this->add_derivative($outputdsid, $label, $out_file, 'image/jpeg', $log_message, FALSE);
+      if ($return == MS_SUCCESS) {
         $this->log->lwrite("Updated $outputdsid datastream using default thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
       }
-      catch (Exception $e) {
-        $return = MS_FEDORA_EXCEPTION;
-        $this->log->lwrite("Failed to add default thumbnail for $outputdsid derivative" . $e->getMessage(), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+      else {
+        $this->log->lwrite("Failed Updating $outputdsid datastream using default thumbnail", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       }
     }
     else {
@@ -123,6 +123,59 @@ class Derivative {
       $return = MS_SYSTEM_EXCEPTION;
     }
     return $return;
+  }
+
+  /**
+   * Return the path to a thumbnail image based on mimetype.
+   *
+   * @return string
+   *   Path to the thumbnail image
+   */
+  function findImageByMimetype() {
+    $tn_path;
+    switch ($this->fedora_object['OBJ']->mimetype) {
+      case "application/vnd.ms-excel":
+      case "application/vnd.oasis.opendocument.spreadsheet":
+      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        $tn_path = "/images/spreadsheet128.png";
+        break;
+
+      case "text/csv":
+        $tn_path = "/images/csv128.png";
+        break;
+
+      case "application/x-gzip":
+      case "application/x-zip":
+        $tn_path = "/images/zipped128.png";
+        break;
+
+      case "application/vnd.ms-powerpoint":
+        $tn_path = "/images/ppt128.png";
+        break;
+
+      case "text/plain":
+      case "text/richtext":
+      case "text/tab-separated-values":
+        $tn_path = "/images/text128.png";
+        break;
+
+      case "application/xhtml+xml":
+      case "text/xml":
+      case "application/xml":
+        $tn_path = "/images/text1_xml28.png";
+        break;
+
+      case "application/msword":
+      case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      case "application/wordperfect":
+        $tn_path = "/images/msword128.png";
+        break;
+
+      default:
+        $tn_path = "/images/binary_file.png";
+        break;
+    }
+    return $tn_path;
   }
 
   /**

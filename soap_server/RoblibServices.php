@@ -137,6 +137,19 @@ class RoblibServices extends IslandoraService{
     );
 
     /**
+     * <b>binary thumbnail</b> processing in Derivatives.php
+     */
+    $this->__dispatch_map['tnForBinary'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    /**
      * <b>mp3 derivative</b> processing in Audio.php
      */
     $this->__dispatch_map['mp3'] = array(
@@ -468,6 +481,29 @@ class RoblibServices extends IslandoraService{
   function tnForAudio($pid, $dsid, $outputdsid, $label){
     $params = array('class' => 'Derivative', 'function' => 'addDefaultThumbnail',
     'type' => 'audio');
+    return $this->service($pid, $dsid, $outputdsid, $label, $params);
+  }
+
+  /**
+   * This function adds thumbnail derivative from default files for the binary solution pack.
+   *
+   * @param string $pid
+   *  The pID of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *  The dsid of fedora Object which to read
+   *
+   * @param string $outputdsid
+   *  The dsid of fedora Object to write back
+   *
+   * @param string $label
+   *  The label of fedora Object to write
+   *
+   *  @return int
+   */
+  function tnForBinary($pid, $dsid, $outputdsid, $label){
+    $params = array('class' => 'Image', 'function' => 'addBinaryThumbnail',
+      'type' => 'binary');
     return $this->service($pid, $dsid, $outputdsid, $label, $params);
   }
 

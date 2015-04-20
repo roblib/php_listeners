@@ -33,7 +33,7 @@ class Text extends Derivative {
       exec($command, $hocr_output, $return);
       $this->log->lwrite(implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
       if (file_exists($output_file . '.hocr')) {
-        //TODO correct hardcoded version text
+        // TODO correct hardcoded version text.
         $log_message = "HOCR derivative created by tesseract v3.03 using command - $command || SUCCESS";
         $return = $this->add_derivative($dsid, $label, $output_file . '.hocr', 'text/html', $log_message);
       }

@@ -35,6 +35,7 @@ class Video extends Derivative {
       $this->log->lwrite("Failed to create video derivative no type provided", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       return MS_FEDORA_EXCEPTION;
     }
+
     $out_file = $this->temp_file . "-video.$type";
 
     if ($type = 'mp4') {
