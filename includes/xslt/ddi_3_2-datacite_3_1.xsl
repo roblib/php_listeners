@@ -29,15 +29,15 @@
     <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
     <!--
-    Document   : ddi_3_1-datacite_3_1.xsl
+    Document   : ddi_3_2-datacite_3_1.xsl
     Version    : development
-    Created on : 9th of December 2014
-    Description: Extract metadata from DDI 3.1 to DataCite 3 metadata
+
+    Description: Extract metadata from DDI 3.2 to DataCite 3 metadata
     
     DOC: http://schema.datacite.org/meta/kernel-3/doc/DataCite-MetadataKernel_v3.1.pdf
     
-    progress:
-    id     | datacite              | ddi3.1
+    progress: needs testing
+    id     | datacite              | ddi3.2
     =======================================
     1       +Identifier
     2       +Creator
