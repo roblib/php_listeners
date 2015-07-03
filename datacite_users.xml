@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<namespaces>
+    <namespace name="namespace1">
+        <user username="datacite" password="datacite"></user>
+        <url_prefix>http://domain1.com/islandora/object</url_prefix>
+    </namespace>
+    <namespace name="namespace2">
+        <user username="datacite" password="datacite"></user>
+        <url_prefix>http://domain2.com/site/islandora/object</url_prefix>
+    </namespace>
+</namespaces>
+

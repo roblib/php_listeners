@@ -7,6 +7,7 @@
  */
 
 require_once 'includes/Transforms.php';
+require_once 'includes/Datacite.php';
 
 class RoblibTransformServices extends IslandoraService {
   public $namespace = 'urn:php-roblibTransform-soapservice';
@@ -21,6 +22,16 @@ class RoblibTransformServices extends IslandoraService {
         'dsid' => 'string',
         'outputdsid' => 'string',
         'itis_string' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
+    );
+
+    $this->__dispatch_map['mintDOI'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'prefix' => 'string',
+        'application' => 'string',
       ),
       'out' => array('exit_status' => 'int')
     );
@@ -52,6 +63,37 @@ class RoblibTransformServices extends IslandoraService {
       'itisString' => $itis_string,
     );
     return $this->service($pid, $dsid, $outputdsid, 'EML', $params);
+  }
+
+  /**
+   * This function mints a datacite doi.
+   *
+   * @param string $pid
+   *   The pid of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *   The dsid of fedora Object which to read
+   *
+   * @param $prefix
+   *   The institutions datacite prefix
+   * @param $url_prefix
+   *   The url_prefix for the url datacite will point to (ie. http://domain.com/islandora/object/
+   * @param $application
+   *   A localised prefix for the DOI (a doi will look like prefix/application/pid)
+   * @param $credentials_file_path
+   *   Path to a file that has the user ana password to datacite.
+   *
+   * @return int
+   * return 0 on success
+   */
+  function mintDOI($pid, $dsid, $prefix, $application) {
+    $params = array(
+      'class' => 'Datacite',
+      'function' => 'mintDOI',
+      'prefix' => $prefix,
+      'application' => $application,
+    );
+    return $this->service($pid, $dsid, $dsid, $dsid, $params);
   }
 }
 

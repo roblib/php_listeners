@@ -82,7 +82,7 @@ class TavernaSender extends Sender {
 
 
   /**
-   * This function is to set ssl verify to false
+   * Set verify ssl in case you are using an unsigned cert.
    */
   function set_ssl() {
     $this->curl_connect->sslVersion = 3;
