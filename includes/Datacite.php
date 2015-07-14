@@ -147,6 +147,7 @@ class Datacite extends Derivative {
     exec($command, $output, $ret);
     if (!empty($ret)) {
       $this->log->lwrite("output of transforming DDI to Datacite value = $ret and " . implode(', ', $output), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
+      unlink($datacite_path);
       return NULL;
     }
     $datacite_xml = file_get_contents($datacite_path);
@@ -231,7 +232,7 @@ class Datacite extends Derivative {
    */
   function sendDoiToDatacite($doi, $url) {
     $doi_endpoint = 'https://mds.datacite.org/doi';
-    $data = sprintf("doi=%s\nurl=%s", $doi, $url);
+    $data = sprintf("doi=%s\nurl=%s", $doi, $url . '/' . $this->pid);
     try {
       $response = $this->curl_connect->postRequest($doi_endpoint, 'string', $data, 'text/plain;charset=UTF-8');
     }
@@ -271,13 +272,13 @@ class Datacite extends Derivative {
     if(!$found){
       // We need to add the new identifier
       $study_unit = $xml->getElementsByTagName('StudyUnit');
-      $citation = $study_unit->getElementbyTagName('Citation');
+      $citation = $study_unit->item(0)->getElementsbyTagName('Citation');
       $internationalIdentifier = $xml->createElementNS("ddi:reusable:3_2", "r:InternationalIdentifier");
-      $citation->appendChild($internationalIdentifier);
+      $citation->item(0)->appendChild($internationalIdentifier);
       $managingAgency = $xml->createElementNS("ddi:reusable:3_2", "r:ManagingAgency", "Datacite");
       $internationalIdentifier->appendChild($managingAgency);
       $identifierContent = $xml->createElementNS("ddi:reusable:3_2", "r:IdentifierContent", $doi);
-      $internationalIdentifier->appendChilde($identifierContent);
+      $internationalIdentifier->appendChild($identifierContent);
     }
     return $xml->saveXML();
   }
