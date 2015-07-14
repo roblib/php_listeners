@@ -82,7 +82,7 @@ class Pdf extends Derivative {
 
       case "txt":
         $command = 'pdftotext ' . $this->temp_file . ' ' . $output_file . ' 2>&1';
-        $mimetype = 'text/txt';
+        $mimetype = 'text/plain';
         break;
 
       default:
