@@ -28,12 +28,12 @@ class Video extends Derivative {
    * @return int|string
    */
   function createVideoDerivative($outputdsid, $label, $params) {
-    $return = MS_SUCCESS;
+    $return = MS_SYSTEM_EXCEPTION;
     $mp4_output = array();
     $type = $params['type'];
     if (empty($type)) {
       $this->log->lwrite("Failed to create video derivative no type provided", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
-      return MS_FEDORA_EXCEPTION;
+      return $return;
     }
 
     $out_file = $this->temp_file . "-video.$type";
@@ -79,7 +79,7 @@ class Video extends Derivative {
    */
   function createThumbnailFromVideo($outputdsid, $label, $params) {
     include_once('includes/Image.php');
-    $return = MS_SUCCESS;
+    $return = MS_SYSTEM_EXCEPTION;
     $out_file = $this->temp_file . '-TN.jpg';
     $vid_length_command = "ffmpeg -i $this->temp_file 2>&1";
     exec($vid_length_command, $time_output, $ret_value);
@@ -102,7 +102,7 @@ class Video extends Derivative {
       $tn_creation_command = "ffmpeg -itsoffset -2 -ss $output_time -i $this->temp_file -vcodec mjpeg -vframes 1 -an -f rawvideo $out_file";
 
       $return_value = FALSE;
-      $return = MS_SYSTEM_EXCEPTION;
+
       exec($tn_creation_command, $output, $return_value);
       if ($return_value === 0) {
         $log_message = "$outputdsid derivative created using ffmpg - $tn_creation_command || SUCCESS";

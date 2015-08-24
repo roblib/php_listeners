@@ -27,6 +27,7 @@ class Transforms extends Derivative {
       return MS_OBJECT_NOT_FOUND;
     }
     $return = MS_SUCCESS;
+    //todo get the return value from the add_derivative function and remove the try.
     try {
       transform_service_eml_with_itis($this->temp_file, $params['itisString']);
       $log_message = "EML updated using ITIS getFullHieracrchyFromTSN web service";

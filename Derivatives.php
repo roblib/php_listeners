@@ -57,7 +57,7 @@ class Derivative {
     if (!in_array($this->incoming_dsid, $datastream_array)) {
       // Some services like writeDatastream may not work with an existing datastream
       $this->log->lwrite('Could not create temp file from datastream, DATASTREAM NOT FOUND', 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid);
-      return ;
+      return;
     }
     try {
       $datastream = $this->fedora_object->getDatastream($this->incoming_dsid);
@@ -106,7 +106,7 @@ class Derivative {
       default:
         $out_file .= $this->findImageByMimetype();
     }
-    $return = MS_SUCCESS;
+    $return = MS_SYSTEM_EXCEPTION;
     if (file_exists($out_file)) {
       $log_message = "created $outputdsid using default thumbnail || SUCCESS";
       // TODO check for and correct the mime type as some of the defaults are pngs
@@ -120,7 +120,6 @@ class Derivative {
     }
     else {
       $this->log->lwrite("Could not add default thumbnail - file not found $out_file", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
-      $return = MS_SYSTEM_EXCEPTION;
     }
     return $return;
   }
@@ -211,54 +210,53 @@ class Derivative {
     $return = MS_SUCCESS;
     if (!isset($this->fedora_object)) {
       $this->log->lwrite("Could not create the $dsid derivative! The object does not exist", 'OBJECT_DELETED', $this->pid, $dsid, NULL, 'INFO');
-      //we want to acknowledge that we have received and processed the message
+      //we want to acknowledge that we have received and processed the message and don't want to try again
       return $return;
     }
-    $datastream = null;
+    $datastream = NULL;
     try {
-    //TODO we don't seem to be sending custom log message for updates only ingests
-    if (isset($this->fedora_object[$dsid])) {
-      $this->log->lwrite("updating the datastream $dsid derivative! ", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
-      $datastream = $this->fedora_object[$dsid];
-    }
-    else {
-      $datastream = new NewFedoraDatastream($dsid, $stream_type, $this->fedora_object, $this->fedora_object->repository);
-
-      // considering setting versionable to TRUE for RELS- datastreams
-      // but we usually won't be creating rels via workflow
-      // we could also ask for this info from the workflow? this would mean
-      // workflow designers would have to know what to do
-      // since dervitives are just derivatives they probably don't need to
-      // be versioned.
-      // We are also assumig that if a datastream exists we are just updating
-      // the datastream comments.  We may want to revisit this in case we
-      // actually want to change the mimetype or label?
-
-      $datastream->state = 'A';
-      $datastream->versionable = FALSE;
-      if($stream_type != 'R' && $stream_type != 'E') {
-        $datastream->checksum = TRUE;
-        $datastream->checksumType = 'MD5';
+      //TODO we don't seem to be sending custom log message for updates only ingests
+      if (isset($this->fedora_object[$dsid])) {
+        $this->log->lwrite("updating the datastream $dsid derivative! ", 'DATASTREAM_EXISTS', $this->pid, $dsid, NULL, 'INFO');
+        $datastream = $this->fedora_object[$dsid];
       }
-      $datastream->label = $label;
-      $datastream->mimetype = $mimetype;
+      else {
+        $datastream = new NewFedoraDatastream($dsid, $stream_type, $this->fedora_object, $this->fedora_object->repository);
 
-    }
+        // considering setting versionable to TRUE for RELS- datastreams
+        // but we usually won't be creating rels via workflow
+        // we could also ask for this info from the workflow? this would mean
+        // workflow designers would have to know what to do
+        // since derivatives are just derivatives they probably don't need to
+        // be versioned.
+        // We are also assuming that if a datastream exists we are just updating
+        // the datastream contents.  We may want to revisit this in case we
+        // actually want to change the mimetype or label?
 
-    if($stream_type == 'R' || $stream_type == 'E'){
-      $datastream->url = $content;
-    }
-    elseif ($from_file) {
-      $datastream->setContentFromFile($content);
-    }
-    else {
-      $datastream->setContentFromString($content);
-    }
+        $datastream->state = 'A';
+        $datastream->versionable = FALSE;
+        if ($stream_type != 'R' && $stream_type != 'E') {
+          $datastream->checksum = TRUE;
+          $datastream->checksumType = 'MD5';
+        }
+        $datastream->label = $label;
+        $datastream->mimetype = $mimetype;
 
-    if ($log_message) {
-      $datastream->logMessage = $log_message;
-    }
+      }
 
+      if ($stream_type == 'R' || $stream_type == 'E') {
+        $datastream->url = $content;
+      }
+      elseif ($from_file) {
+        $datastream->setContentFromFile($content);
+      }
+      else {
+        $datastream->setContentFromString($content);
+      }
+
+      if ($log_message) {
+        $datastream->logMessage = $log_message;
+      }
       $this->fedora_object->ingestDatastream($datastream);
     }
     catch (Exception $e) {
@@ -270,10 +268,38 @@ class Derivative {
       unlink($content);
     }
     if ($return == MS_SUCCESS) {
-      $this->log->lwrite('Finished processing', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      $return = $this->verifyDatastreamExists($dsid);
     }
     return $return;
   }
 
+  /**
+   * Sometimes under heavy load Fedora/Tuque will return success for datastream
+   * creation even though the datastream did not get created.  Here we check
+   * the resource index as a final test to make sure our derivative was created.
+   *
+   * @param string $dsid
+   *   the datastream id
+   * @return int
+   *   0 for success 1 for a recoverable error
+   */
+  protected function verifyDatastreamExists($dsid) {
+    $query = <<<TAG
+SELECT ?pid
+FROM <#ri>
+WHERE {
+ ?pid <info:fedora/fedora-system:def/view#disseminates> <info:fedora/$this->pid/$dsid>
+}
+TAG;
+    $results = $this->fedora_object->repository->ri->sparqlQuery($query);
+    if (count($results) < 1) {
+      $this->log->lwrite('Failed processing datastream verification failed', 'FAIL_DATASTREAM', $this->pid, $dsid);
+      return MS_FEDORA_EXCEPTION;
+    }
+    else {
+      $this->log->lwrite('Finished processing datastream verified', 'COMPLETE_DATASTREAM', $this->pid, $dsid);
+      return MS_SUCCESS;
+    }
+  }
 }
 

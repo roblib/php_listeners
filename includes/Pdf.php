@@ -89,7 +89,7 @@ class Pdf extends Derivative {
         $command = 'convert ' . $this->temp_file . ' ' . $output_file . ' 2>&1';
         $mimetype = 'application/pdf';
     }
-    $return = MS_SUCCESS;
+    $return = MS_SYSTEM_EXCEPTION;
     if (file_exists($this->temp_file)) {
       $pdf_output = array();
       exec($command, $pdf_output, $return);

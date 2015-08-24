@@ -46,12 +46,9 @@ class Technical extends Derivative {
     }
     if ($valid_fits) {
       $log_message = "$dsid derivative created using FITS with command - $command || SUCCESS";
-      try {
-        $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
-      }
-      catch (Exception $e) {
-        $return = MS_FEDORA_EXCEPTION;
-        $this->log->lwrite("Could not add the $dsid derivative!", $return, 'FAIL_DATASTREAM', $this->pid, $dsid, NULL, 'ERROR');
+      $return = $this->add_derivative($dsid, $label, $output_file, 'text/xml', $log_message);
+      if ($return == MS_SUCCESS) {
+        $this->log->lwrite("Updated $dsid datastream", 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'SUCCESS');
       }
     }
     else {
