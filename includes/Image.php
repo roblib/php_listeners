@@ -40,9 +40,7 @@ class Image extends Derivative {
       }
       else {
         // We know there was an error because the output file does not exist.
-        if ($return == 0) {
-          $return = MS_SYSTEM_EXCEPTION;
-        }
+        $return = MS_SYSTEM_EXCEPTION;
         $this->log->lwrite("Could not find the file '$output_file' for output: " . implode(', ', $jp2_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JP2', NULL, 'ERROR');
       }
     }// end file exists
