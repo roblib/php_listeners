@@ -84,7 +84,7 @@ class Image extends Derivative {
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, $dsid);
     $pathinfo = pathinfo($this->temp_file);
     $output_file = $pathinfo['dirname'] . DIRECTORY_SEPARATOR . $pathinfo['filename'] . '_JPG.jpg';
-    $command_prefix = "convert $this->temp_file[0] -quality 72 -colorspace sRGB -flatten";
+    $command_prefix = "convert $this->temp_file[0] -quality 100 -colorspace sRGB -flatten";
     if ($resize == '0') {
       $command = "$command_prefix $output_file 2>&1";
     }
