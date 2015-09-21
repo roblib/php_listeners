@@ -35,6 +35,16 @@ class RoblibTransformServices extends IslandoraService {
       ),
       'out' => array('exit_status' => 'int')
     );
+    
+    $this->__dispatch_map['transformXmlToXml'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'xslt_string' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
+    );
   }
 
   /**
@@ -94,6 +104,31 @@ class RoblibTransformServices extends IslandoraService {
       'application' => $application,
     );
     return $this->service($pid, $dsid, $dsid, $dsid, $params);
+  }
+  
+  /**
+   * This transforms the xml content of one datastream to another schema and writes the 
+   * updated xml back to Fedora as another datastream.
+   *
+   * @param string $pid
+   *   The pid of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *   The dsid of fedora Object which to read
+   *
+   * @param $xslt_string
+   *   an xslt as a string saved in the workflow definition (t2flow document)
+   * 
+   * @return int
+   * return 0 on success
+   */
+  function transformXmlToXml($pid, $dsid, $outputdsid, $xslt_string) {
+    $params = array(
+      'class' => 'Transforms',
+      'function' => 'transformXmlToXml',
+      'xslt_string' => $xslt_string,
+    );
+    return $this->service($pid, $dsid, $outputdsid, $outputdsid, $params);
   }
 }
 
