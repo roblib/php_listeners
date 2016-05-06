@@ -45,6 +45,16 @@ class RoblibTransformServices extends IslandoraService {
       ),
       'out' => array('exit_status' => 'int')
     );
+
+    $this->__dispatch_map['updateTechmdMorphospace'] = array(
+      'in' => array(
+        'pid' => 'string',
+        'dsid' => 'string',
+        'outputdsid' => 'string',
+        'label' => 'string',
+      ),
+      'out' => array('exit_status' => 'int')
+    );
   }
 
   /**
@@ -127,6 +137,30 @@ class RoblibTransformServices extends IslandoraService {
       'class' => 'Transforms',
       'function' => 'transformXmlToXml',
       'xslt_string' => $xslt_string,
+    );
+    return $this->service($pid, $dsid, $outputdsid, $outputdsid, $params);
+  }
+
+  /**
+   * This updates the Technical metadata stream (usually TECHMD) with key values
+   * from a custom MORPHO_TECHMD datastream
+   *
+   * @param string $pid
+   *   The pid of fedora Object which to read and write
+   *
+   * @param string $dsid
+   *   The dsid of fedora Object which to read
+   *
+   * @param $xslt_string
+   *   an xslt as a string saved in the workflow definition (t2flow document)
+   *
+   * @return int
+   * return 0 on success
+   */
+  function updateTechmdMorphospace($pid, $dsid, $outputdsid, $label) {
+    $params = array(
+      'class' => 'Transforms',
+      'function' => 'updateTechmdMorphospace',
     );
     return $this->service($pid, $dsid, $outputdsid, $outputdsid, $params);
   }
