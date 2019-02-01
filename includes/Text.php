@@ -23,7 +23,15 @@ class Text extends Derivative {
    * @return int
    */
   function hOcr($dsid = 'HOCR', $label = 'HOCR', $params = array('language' => 'eng')) {
-    $language = $params['language'];
+    //if the workflow defines a language always use that
+    if(isset($params['language']) && $params['language'] != 'none') {
+      $language = $params['language'];
+    } else {
+      $language = $this->getOcrLanguage();
+      $this->log->lwrite("Using MODS Language of $language", 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      $language = $this->convertLanguageToTesseractParam($language);
+    }
+    $this->log->lwrite("Using Tesseract Language of $language", 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
     $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, 'HOCR');
     $return = MS_SYSTEM_EXCEPTION;
     $hocr_output = array();
@@ -60,6 +68,116 @@ class Text extends Derivative {
       $this->log->lwrite("Could not find the input file '$this->temp_file' for the HOCR derivative!", 'FAIL_DATASTREAM', $this->pid, 'allOcr', NULL, 'ERROR');
     }
     return $return;
+  }
+
+  /**
+   * Convert the language value to something Tesseract can understand.
+   *
+   * @param $language
+   *
+   * current installed languages in Tesseract
+   * enm,fra, ara, nld, frm, eng, ita_old, osd, jpn, grc, equ, hin, spa, spa_old, ita
+   *
+   *  @return string
+   * A normalized string that tessearact can use
+   */
+  public function convertLanguageToTesseractParam($language) {
+    $lang = strtolower($language);
+    $languageKey = NULL;
+    $langArr = array(
+      'eng' => array('english', 'en', 'eng')
+    , 'fra' => array('french', 'fr', 'fre', 'fra'),
+      'jpn' => array('japanese', 'jp', 'jpn'),
+      'ita' => array('italian', 'it', 'ite', 'ita'),
+      'spa' => array('spanish', 'sp', 'spa'),
+      );
+
+    foreach($langArr as $key => $arr) {
+      if(in_array($lang, array_values($arr))) {
+        $languageKey = $key;
+        break;
+      }
+    }
+    return isset($languageKey) ? $languageKey : 'eng';
+  }
+
+
+  /**
+   * Get the language to use for OCR.
+   *
+   * Internal helper function not exposed to SOAP WSDL
+   *
+   * If language exists in the MODS of this Object or it's parent Object
+   * return the language string.
+   *
+   * @return null|string
+   *   null if no language exists otherwise the language string
+   */
+  function getOcrLanguage() {
+    $item = $this->fedora_object;
+    if(empty($item)) {
+      $this->log->lwrite('Could not load the Fedora object to get the language from MODS', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+    }
+    $lang = $this->parseModsForLanguage($item);
+    if(!empty($lang)) {
+      return $lang;
+    }
+    //check the parent object MODS for language
+    if (empty($item['RELS-EXT'])) {
+      //no datastream to reference in RELS
+      $this->log->lwrite('Could not read the RELS-EXT datastream to get parent', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return NULL;//return success for now as we don't want to loop as this maybe unrecoverable as there is no datastream to get the height and width from
+    }
+
+    $rels_ds = $item['RELS-EXT'];
+    $doc = DomDocument::loadXML($rels_ds->content);
+    $memberOf = $doc->getElementsByTagName('isMemberOf');
+    if(empty($memberOf)) {
+      $this->log->lwrite('Could not load the isMemberOf from RELS-EXT to get parent.', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return NULL;
+    }
+    // we will get the parent mods of the first memberOf, usually only one anyway.
+    $memberOf = $memberOf->item(0);
+    $about = $memberOf->getAttribute('rdf:resource');
+    $parentPid = substr($about, mb_strlen('info:fedora/'));
+    $this->log->lwrite("value of iparentPID = $parentPid", 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+    $parentObject = new FedoraObject($parentPid, $item->repository);
+    if(empty($parentObject)) {
+      $this->log->lwrite("Could not load Parent Object  $parentPid", 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return NULL;
+    }
+    $lang = $this->parseModsForLanguage($parentObject);
+    if (!isset($lang)) {
+      //either the MODS or the object do not exist
+      $this->log->lwrite('Could not read the parent MODs datastream for object ' . $parentPid, 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return NULL;
+    }
+    return $lang;
+  }
+
+  /**
+   * Get the language we want to use for OCR from MODS datastream.
+   *
+   * Internal helper function not exposed to SOAP WSDL
+   *
+   * @param $object
+   *
+   * @return mixed|null
+   *   returns the language defined in the objects MODS datastream or NULL.
+   */
+  function parseModsForLanguage($object) {
+    if (empty($object) || empty($object['MODS'])) {
+      return NULL;
+    }
+    $mods = $object['MODS']->content;
+    $modsDoc = DomDocument::loadXML($mods);
+    $language = $modsDoc->getElementsByTagName('languageTerm');
+    if(isset($language)) {
+      $language = $language->item(0);
+      $language = $language->nodeValue;
+      return $language;
+    }
+    return NULL;
   }
 
   /**
