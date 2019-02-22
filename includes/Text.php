@@ -48,10 +48,11 @@ class Text extends Derivative {
       else {
         $this->log->lwrite("Initial call to create ocr failed, converting to png for another attempt", 'FAIL_DATASTREAM', $this->pid, 'HOCR', NULL, 'ERROR');
         $convert_command = "convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.png 2>&1";
-        exec($convert_command, $hocr_output = array(), $return);
+        $hocr_output = array();
+        exec($convert_command, $hocr_output, $return);
         $this->log->lwrite("attempted conversion to png: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
         $command = "tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language hocr 2>&1";
-        exec($command, $hocr_output = array(), $return);
+        exec($command, $hocr_output, $return);
         $this->log->lwrite("attempting OCR on png derivative: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
         if (file_exists($output_file . '.hocr')) {
           $log_message = "HOCR derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.03 using command - $command || SUCCESS ~~ OCR of original TIFF failed so the image was converted to a PNG and reprocessed.";
@@ -240,7 +241,8 @@ class Text extends Derivative {
     if (file_exists($this->temp_file)) {
       $output_file = $this->temp_file . '_OCR';
       $command = "tesseract $this->temp_file $output_file -l $language -psm 1 $hocr 2>&1";
-      exec($command, $ocr_output = array(), $return);
+      $ocr_output = array();
+      exec($command, $ocr_output, $return);
       if (file_exists($output_file . '.txt')) {
         $log_message = "$dsid derivative created by tesseract v3.0.1 using command - $command || SUCCESS";
         $return = $this->add_derivative($dsid, $label, $output_file . $ext, $mime_type, $log_message);
@@ -249,7 +251,8 @@ class Text extends Derivative {
         $convert_command = "/usr/bin/convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg 2>&1";
         exec($convert_command, $convert_output, $return);
         $command = "tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 $hocr 2>&1";
-        exec($command, $ocr2_output = array(), $return);
+        $ocr2_output = array();
+        exec($command, $ocr2_output, $return);
         if (file_exists($output_file . '.txt')) {
           $log_message = "$dsid derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.0.1 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a JPG and reprocessed.";
           $return = $this->add_derivative($dsid, $label, $output_file . $ext, $mime_type, $log_message);

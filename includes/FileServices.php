@@ -47,8 +47,8 @@ class FileServices extends Derivative {
     $command = <<<TAG
 scp -i $pathToIdentityFile -o StrictHostKeyChecking=no $this->temp_file $scpUsername@$serverIpOrDomain:$serverDirectory/$file_name 2>&1
 TAG;
-
-    exec($command, $scp_output = array(), $return);
+    $scp_output = array();
+    exec($command, $scp_output, $return);
     if ($return) {
       $this->log->lwrite("Failed to run scp service " . implode($scp_output), 'PROCESS_DATASTREAM', $this->pid, $this->incoming_dsid, 'ERROR');
       return MS_SYSTEM_EXCEPTION;

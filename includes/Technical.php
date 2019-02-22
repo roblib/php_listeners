@@ -18,7 +18,8 @@ class Technical extends Derivative {
     $output_file = $this->temp_file . '_TECHMD.xml';
     $command = "$fits -i $this->temp_file -xc -o $output_file 2>&1";
     $valid_fits = FALSE;
-    exec($command, $output = array(), $return);
+    $output = array();
+    exec($command, $output, $return);
     if ($return == MS_SUCCESS) {
       if ($this->verify_fits_xml($output_file)) {
         $valid_fits = TRUE;
@@ -27,7 +28,8 @@ class Technical extends Derivative {
     // It failed, lets try a simpler command 
     if (!$valid_fits) {
       $command = "$fits -i $this->temp_file -x -o $output_file 2>&1";
-      exec($command, $output = array(), $return);
+      $output = array();
+      exec($command, $output, $return);
       if ($return == MS_SUCCESS) {
         if ($this->verify_fits_xml($output_file)) {
           $valid_fits = TRUE;

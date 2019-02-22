@@ -91,7 +91,8 @@ class Image extends Derivative {
     else {
       $command = "$command_prefix -resize $resize $output_file 2>&1";
     }
-    exec($command, $jpg_output = array(), $return);
+    $jpg_output = array();
+    exec($command, $jpg_output, $return);
     if (file_exists($output_file)) {
       $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
       $return = $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);

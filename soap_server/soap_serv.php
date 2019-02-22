@@ -26,6 +26,10 @@ require_once 'Logging.php';
 $soap = new SOAP_Server;
 $service = new IslandoraService();
 $service->create_service_map($soap);
+
+if ( !isset( $HTTP_RAW_POST_DATA ) ) {
+  $HTTP_RAW_POST_DATA = file_get_contents( 'php://input' );
+}
 /**
  * SOAP server creation:
  * Supports http authentication
