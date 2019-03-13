@@ -1,6 +1,6 @@
 <?php
-/* TODO ocr function is outdated and needs work currently only using allOcr
-*/
+require_once 'Derivatives.php';
+
 class Text extends Derivative {
 
   /**
@@ -23,6 +23,7 @@ class Text extends Derivative {
    * @return int
    */
   function hOcr($dsid = 'HOCR', $label = 'HOCR', $params = array('language' => 'eng')) {
+    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, 'HOCR');
     //if the workflow defines a language always use that
     if(isset($params['language']) && $params['language'] != 'none') {
       $language = $params['language'];
@@ -32,17 +33,18 @@ class Text extends Derivative {
       $language = $this->convertLanguageToTesseractParam($language);
     }
     $this->log->lwrite("Using Tesseract Language of $language", 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
-    $this->log->lwrite('Starting processing', 'PROCESS_DATASTREAM', $this->pid, 'HOCR');
+
     $return = MS_SYSTEM_EXCEPTION;
     $hocr_output = array();
     if (file_exists($this->temp_file)) {
       $output_file = $this->temp_file . '_HOCR';
-      $command = "tesseract $this->temp_file $output_file -l $language hocr 2>&1";
+      $command = "tesseract $this->temp_file $output_file --oem 1 -l $language hocr 2>&1";
+      $this->log->lwrite("command = $command", 'PROCESS_DATASTREAM', $this->pid, 'HOCR');
       exec($command, $hocr_output, $return);
       $this->log->lwrite(implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
       if (file_exists($output_file . '.hocr')) {
         // TODO correct hardcoded version text.
-        $log_message = "HOCR derivative created by tesseract v3.03 using command - $command || SUCCESS";
+        $log_message = "HOCR derivative created by tesseract using command - $command || SUCCESS";
         $return = $this->add_derivative($dsid, $label, $output_file . '.hocr', 'text/html', $log_message);
       }
       else {
@@ -51,11 +53,11 @@ class Text extends Derivative {
         $hocr_output = array();
         exec($convert_command, $hocr_output, $return);
         $this->log->lwrite("attempted conversion to png: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
-        $command = "tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " -l $language hocr 2>&1";
+        $command = "tesseract " . $this->temp_file . "_JPG2.png " . $output_file . " --oem 1 -l $language hocr 2>&1";
         exec($command, $hocr_output, $return);
-        $this->log->lwrite("attempting OCR on png derivative: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
+        $this->log->lwrite("attempting HOCR on png derivative: " . implode(', ', $hocr_output) . "\nReturn value: $return", 'PROCESS_DATASTREAM', $this->pid, 'HOCR', NULL, 'INFO');
         if (file_exists($output_file . '.hocr')) {
-          $log_message = "HOCR derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.03 using command - $command || SUCCESS ~~ OCR of original TIFF failed so the image was converted to a PNG and reprocessed.";
+          $log_message = "HOCR derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract using command - $command || SUCCESS ~~ OCR of original TIFF failed so the image was converted to a PNG and reprocessed.";
           $return = $this->add_derivative($dsid, $label, $output_file . '.hocr', 'text/html', $log_message);
         }
         else {
@@ -83,6 +85,9 @@ class Text extends Derivative {
    * A normalized string that tessearact can use
    */
   public function convertLanguageToTesseractParam($language) {
+    if(empty($language)) {
+      return 'eng';
+    }
     $lang = strtolower($language);
     $languageKey = NULL;
     $langArr = array(
@@ -115,43 +120,56 @@ class Text extends Derivative {
    *   null if no language exists otherwise the language string
    */
   function getOcrLanguage() {
+    $defaultLang = 'eng';
     $item = $this->fedora_object;
     if(empty($item)) {
       $this->log->lwrite('Could not load the Fedora object to get the language from MODS', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return $defaultLang;
     }
     $lang = $this->parseModsForLanguage($item);
+
     if(!empty($lang)) {
       return $lang;
     }
     //check the parent object MODS for language
     if (empty($item['RELS-EXT'])) {
       //no datastream to reference in RELS
-      $this->log->lwrite('Could not read the RELS-EXT datastream to get parent', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
-      return NULL;//return success for now as we don't want to loop as this maybe unrecoverable as there is no datastream to get the height and width from
+      $this->log->lwrite('Could not read the RELS-EXT datastream to get parent using ' . $defaultLang .' for language', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return $defaultLang;
     }
 
-    $rels_ds = $item['RELS-EXT'];
-    $doc = DomDocument::loadXML($rels_ds->content);
+    $rels_ds = trim($item['RELS-EXT']->content);
+    $doc = new DOMDocument();
+    $doc->loadXML($rels_ds);
+
+    if(empty($doc)) {
+      $this->log->lwrite('Could not load the RELS-EXT datastream content to get parent using language of ' . $defaultLang, 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return $defaultLang;
+    }
     $memberOf = $doc->getElementsByTagName('isMemberOf');
     if(empty($memberOf)) {
-      $this->log->lwrite('Could not load the isMemberOf from RELS-EXT to get parent.', 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
-      return NULL;
+      $this->log->lwrite('Could not load the isMemberOf nodeList from RELS-EXT to get parent. Using language of ' . $defaultLang, 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return $defaultLang;
     }
     // we will get the parent mods of the first memberOf, usually only one anyway.
     $memberOf = $memberOf->item(0);
+    if(empty($memberOf)){
+      $this->log->lwrite('Could not load the isMemberOf item from RELS-EXT to get parent. Using language of ' . $defaultLang, 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return $defaultLang;
+    }
     $about = $memberOf->getAttribute('rdf:resource');
     $parentPid = substr($about, mb_strlen('info:fedora/'));
     $this->log->lwrite("value of iparentPID = $parentPid", 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
     $parentObject = new FedoraObject($parentPid, $item->repository);
     if(empty($parentObject)) {
-      $this->log->lwrite("Could not load Parent Object  $parentPid", 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
-      return NULL;
+      $this->log->lwrite("Could not load Parent Object  $parentPid. Usign language of $defaultLang", 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return $defaultLang;
     }
     $lang = $this->parseModsForLanguage($parentObject);
     if (!isset($lang)) {
       //either the MODS or the object do not exist
-      $this->log->lwrite('Could not read the parent MODs datastream for object ' . $parentPid, 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
-      return NULL;
+      $this->log->lwrite('Could not read the parent MODs datastream for object ' . $parentPid . ' Using language of ' . $defaultLang, 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return $defaultLang;
     }
     return $lang;
   }
@@ -171,7 +189,12 @@ class Text extends Derivative {
       return NULL;
     }
     $mods = $object['MODS']->content;
-    $modsDoc = DomDocument::loadXML($mods);
+    $modsDoc = new DOMDocument();
+    $modsDoc->loadXML($mods);
+    if(empty($modsDoc)) {
+      $this->log->lwrite('Could not load the MODS datastream content to get HOCR Language ' , 'PROCESS_DATASTREAM', $this->pid, $this->dsid);
+      return NULL;
+    }
     $language = $modsDoc->getElementsByTagName('languageTerm');
     if(isset($language)) {
       $language = $language->item(0);
@@ -240,21 +263,21 @@ class Text extends Derivative {
     $return = MS_SYSTEM_EXCEPTION;
     if (file_exists($this->temp_file)) {
       $output_file = $this->temp_file . '_OCR';
-      $command = "tesseract $this->temp_file $output_file -l $language -psm 1 $hocr 2>&1";
+      $command = "tesseract $this->temp_file $output_file --oem 1 -l $language -psm 1 $hocr 2>&1";
       $ocr_output = array();
       exec($command, $ocr_output, $return);
       if (file_exists($output_file . '.txt')) {
-        $log_message = "$dsid derivative created by tesseract v3.0.1 using command - $command || SUCCESS";
+        $log_message = "$dsid derivative created by tesseract using command - $command || SUCCESS";
         $return = $this->add_derivative($dsid, $label, $output_file . $ext, $mime_type, $log_message);
       }
       else {
         $convert_command = "/usr/bin/convert -monochrome " . $this->temp_file . " " . $this->temp_file . "_JPG2.jpg 2>&1";
         exec($convert_command, $convert_output, $return);
-        $command = "tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " -l $language -psm 1 $hocr 2>&1";
+        $command = "tesseract " . $this->temp_file . "_JPG2.jpg " . $output_file . " --oem 1 -l $language -psm 1 $hocr 2>&1";
         $ocr2_output = array();
         exec($command, $ocr2_output, $return);
         if (file_exists($output_file . '.txt')) {
-          $log_message = "$dsid derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract v3.0.1 using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a JPG and reprocessed.";
+          $log_message = "$dsid derivative created by using ImageMagick to convert to jpg using command - $convert_command - and tesseract using command - $command || SUCCESS ~~ OCR of original TIFF failed and so the image was converted to a JPG and reprocessed.";
           $return = $this->add_derivative($dsid, $label, $output_file . $ext, $mime_type, $log_message);
         }
         else {
