@@ -74,6 +74,18 @@ class Connect {
         // }
 
         $modMethod = $this->msg->headers['methodName'];
+        // we haven't used purgeObject as a trigger for a workflow in 7 years so to
+        // make caching easier and speed things up we simply acknowledge that we
+        // received the message but go no further.  So for now we can't use
+        // purgeObject as a trigger to start a workflow.
+        if($modMethod == 'purgeObject') {
+          $this->log->lwrite("We recieved a purgeObject method, The listeners
+           ack the message and return, this means we can't trigger workflows on an object purge.",
+            'DELETED_OBJECT', $pid, NULL, $message->author, 'ERROR');
+          $this->con->ack($this->msg);
+          unset($this->msg);
+          return;
+        }
         $message_dsid = isset($message->dsID) ? $message->dsID : NULL;
         $this->log->lwrite("Method: " . $modMethod, 'MODIFY_OBJECT', $pid, $message_dsid, $message->author);
         try {
