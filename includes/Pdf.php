@@ -76,8 +76,11 @@ class Pdf extends Derivative {
     $output_file = $this->temp_file . "_pdf.$type";
     switch ($type) {
       case "pdf":
-        $command = 'convert ' . $this->temp_file . ' ' . $output_file . ' 2>&1';
+        //$command = 'convert ' . $this->temp_file . ' ' . $output_file . ' 2>&1';
+        $command = 'tesseract ' . $this->temp_file . ' ' . $output_file . ' -l eng -psm 3 pdf 2>&1';
         $mimetype = 'application/pdf';
+        //tesseract adds and extentsion
+        $output_file = $output_file . '.pdf';
         break;
 
       case "txt":
@@ -86,8 +89,11 @@ class Pdf extends Derivative {
         break;
 
       default:
-        $command = 'convert ' . $this->temp_file . ' ' . $output_file . ' 2>&1';
+        //$command = 'convert ' . $this->temp_file . ' ' . $output_file . ' 2>&1';
+        $command = 'tesseract ' . $this->temp_file . ' ' . $output_file . ' -l eng -psm 3 pdf 2>&1';
         $mimetype = 'application/pdf';
+        //tesseract adds and extentsion
+        $output_file = $output_file . '.pdf';
     }
     $return = MS_SYSTEM_EXCEPTION;
     if (file_exists($this->temp_file)) {
