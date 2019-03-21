@@ -39,8 +39,8 @@ class Video extends Derivative {
     $out_file = $this->temp_file . "-video.$type";
 
     if ($type = 'mp4') {
-      $command = "ffmpeg -i $this->temp_file -f mp4 -vcodec libx264 -preset medium -acodec libfaac -ab 128k -ac 2 -async 1 -movflags faststart $out_file 2>&1";
-    } else if ($type = "bdh") {
+      $command = "ffmpeg -i $this->temp_file -f mp4 -vcodec libx264 -preset medium -acodec aac -strict -2 -ab 128k -ac 2 -async 1 -movflags faststart $out_file 2>&1";
+   :wq } else if ($type = "bdh") {
       // bdh is a bowing down home mp4
       // TODO pass the command line parameters in the workflow so we don't need these hacks to pass different parameters
       $out_file = $this->temp_file . "-video.mp4";
