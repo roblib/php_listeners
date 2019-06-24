@@ -93,12 +93,19 @@ class Image extends Derivative {
     }
     $jpg_output = array();
     exec($command, $jpg_output, $return);
+    $error_out = implode(', ', $jpg_output);
     if (file_exists($output_file)) {
       $log_message = "$dsid derivative created using ImageMagick with command - $command || SUCCESS";
       $return = $this->add_derivative($dsid, $label, $output_file, 'image/jpeg', $log_message);
       if ($return == MS_SUCCESS) {
         $this->log->lwrite("Successfully added the $dsid derivative!", $return, 'SUCCESS', $this->pid, $dsid, NULL, 'INFO');
       }
+    }
+    // Certain imagemagick errors maybe recoverable.
+    elseif (strpos($error_out, 'error/tiff.c/ReadTIFFImage/1619') !== false) {
+      $return = MS_FEDORA_EXCEPTION;
+      $this->log->lwrite("Could not find the file '$output_file' for the Thumbail derivative, will try again!\nConvert output: " . implode(', ', $jpg_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JPG', NULL, 'ERROR');
+
     }
     else {
       $this->log->lwrite("Could not find the file '$output_file' for the Thumbail derivative!\nConvert output: " . implode(', ', $jpg_output) . "\nReturn value: $return", 'FAIL_DATASTREAM', $this->pid, 'JPG', NULL, 'ERROR');
